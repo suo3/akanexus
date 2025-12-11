@@ -31,27 +31,27 @@ const Hero = () => {
         {/* Heading */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           Build faster with{" "}
-          <span className="text-gradient">premium</span>
+          <span className="text-gradient">free</span>
           <br />
           frontend solutions
         </h1>
 
         {/* Subheading */}
         <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up" style={{ animationDelay: "0.2s" }}>
-          Beautiful React components, complete templates, and custom development services. 
-          Everything you need to ship stunning interfaces faster.
+          Beautiful React components and templates — completely free. 
+          Support our work with a donation if you find them useful.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
           <Button variant="hero" size="xl" asChild>
             <Link to="/gallery">
-              Browse Components
+              Get Free Components
               <ArrowRight className="w-5 h-5" />
             </Link>
           </Button>
           <Button variant="glass" size="xl" asChild>
-            <Link to="/templates">View Templates</Link>
+            <Link to="/pricing">Support Us</Link>
           </Button>
         </div>
 

@@ -26,26 +26,26 @@ const CTA = () => {
 
           {/* Description */}
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-            Browse our marketplace for premium components and templates built on shadcn/ui and Tailwind CSS. 
-            Need something custom? Our team is ready to help.
+            All our components and templates are completely free. If you find them useful, 
+            consider supporting our work with a donation.
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button variant="hero" size="xl" asChild>
               <Link to="/gallery">
-                Browse Marketplace
+                Browse Free Components
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
             <Button variant="glass" size="xl" asChild>
-              <Link to="/contact">Get a Quote</Link>
+              <Link to="/pricing">Support Us</Link>
             </Button>
           </div>
 
           {/* Trust Badge */}
           <p className="mt-8 text-sm text-muted-foreground">
-            14-day money-back guarantee • Lifetime updates • Commercial license included
+            100% Free • Lifetime updates • Commercial license included
           </p>
         </div>
       </div>

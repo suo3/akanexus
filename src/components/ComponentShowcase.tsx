@@ -98,7 +98,7 @@ const ComponentShowcase = () => {
                     {"      "}size=<span className="text-green-400">"lg"</span>{"\n"}
                     {"      "}onClick=<span className="text-muted-foreground">{"{"}</span>() ={">"} console.log(<span className="text-green-400">'clicked'</span>)<span className="text-muted-foreground">{"}"}</span>{"\n"}
                     {"    "}<span className="text-muted-foreground/70">{">"}</span>{"\n"}
-                    {"      "}Get Started{"\n"}
+                    {"      "}Download Free{"\n"}
                     {"    "}<span className="text-muted-foreground/70">{"</"}</span><span className="text-accent">Button</span><span className="text-muted-foreground/70">{">"}</span>{"\n"}
                     {"  "});{"\n"}
                     {"}"}

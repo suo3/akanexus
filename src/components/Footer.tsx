@@ -1,10 +1,26 @@
 import { Github, Twitter, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const footerLinks = {
-  Product: ["Components", "Templates", "Pricing", "Changelog"],
-  Company: ["About", "Blog", "Careers", "Contact"],
-  Resources: ["Documentation", "Tutorials", "Examples", "Community"],
-  Legal: ["Privacy", "Terms", "License", "Security"],
+  Product: [
+    { label: "Components", href: "/gallery" },
+    { label: "Templates", href: "/templates" },
+    { label: "Pricing", href: "/pricing" },
+  ],
+  Company: [
+    { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ],
+  Resources: [
+    { label: "Documentation", href: "#" },
+    { label: "Tutorials", href: "#" },
+    { label: "Community", href: "#" },
+  ],
+  Legal: [
+    { label: "Privacy", href: "#" },
+    { label: "Terms", href: "#" },
+  ],
 };
 
 const Footer = () => {
@@ -42,13 +58,22 @@ const Footer = () => {
               <h4 className="font-semibold mb-4 text-sm">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                    >
-                      {link}
-                    </a>
+                  <li key={link.label}>
+                    {link.href.startsWith("/") ? (
+                      <Link
+                        to={link.href}
+                        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

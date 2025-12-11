@@ -1,14 +1,15 @@
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Eye, ShoppingCart, Star } from 'lucide-react';
+import { Eye, Download, Star } from 'lucide-react';
+import DonationDialog from '@/components/DonationDialog';
 
 const templates = [
   {
     id: 1,
     name: 'E-Commerce Starter',
     description: 'Complete e-commerce frontend with product listings, cart, and checkout flow.',
-    price: '$149',
     category: 'E-Commerce',
     rating: 4.9,
     reviews: 128,
@@ -18,7 +19,6 @@ const templates = [
     id: 2,
     name: 'Portfolio Pro',
     description: 'Stunning portfolio template for developers and designers.',
-    price: '$79',
     category: 'Portfolio',
     rating: 4.8,
     reviews: 95,
@@ -28,7 +28,6 @@ const templates = [
     id: 3,
     name: 'Admin Dashboard',
     description: 'Feature-rich admin panel with analytics, tables, and user management.',
-    price: '$199',
     category: 'Dashboard',
     rating: 4.9,
     reviews: 212,
@@ -38,7 +37,6 @@ const templates = [
     id: 4,
     name: 'SaaS Landing',
     description: 'High-converting landing page template for SaaS products.',
-    price: '$99',
     category: 'Landing',
     rating: 4.7,
     reviews: 67,
@@ -48,7 +46,6 @@ const templates = [
     id: 5,
     name: 'Blog Platform',
     description: 'Modern blog template with rich text support and categories.',
-    price: '$89',
     category: 'Blog',
     rating: 4.6,
     reviews: 54,
@@ -58,7 +55,6 @@ const templates = [
     id: 6,
     name: 'Agency Website',
     description: 'Professional agency website with case studies and team pages.',
-    price: '$129',
     category: 'Agency',
     rating: 4.8,
     reviews: 89,
@@ -67,6 +63,14 @@ const templates = [
 ];
 
 const Templates = () => {
+  const [donationOpen, setDonationOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+
+  const handleDownload = (templateName: string) => {
+    setSelectedTemplate(templateName);
+    setDonationOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -75,11 +79,15 @@ const Templates = () => {
         <div className="container mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-up">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              100% Free
+            </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Pre-Built <span className="text-gradient">Templates</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Launch faster with our production-ready templates. Each template is fully customizable and built with modern best practices.
+              Launch faster with our free, production-ready templates. Fully customizable and built with 
+              modern best practices. Optional donations help us keep creating.
             </p>
           </div>
 
@@ -134,10 +142,14 @@ const Templates = () => {
 
                   {/* Price and CTA */}
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-foreground">{template.price}</span>
-                    <Button variant="hero" className="gap-2">
-                      <ShoppingCart size={18} />
-                      Purchase
+                    <span className="text-lg font-bold text-primary">Free</span>
+                    <Button 
+                      variant="hero" 
+                      className="gap-2"
+                      onClick={() => handleDownload(template.name)}
+                    >
+                      <Download size={18} />
+                      Download
                     </Button>
                   </div>
                 </div>
@@ -148,6 +160,13 @@ const Templates = () => {
       </main>
 
       <Footer />
+
+      <DonationDialog
+        open={donationOpen}
+        onOpenChange={setDonationOpen}
+        itemName={selectedTemplate}
+        itemType="template"
+      />
     </div>
   );
 };

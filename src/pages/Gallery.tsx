@@ -3,17 +3,18 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Code, Eye } from 'lucide-react';
+import { Search, Filter, Download, Eye } from 'lucide-react';
+import DonationDialog from '@/components/DonationDialog';
 
 const components = [
-  { id: 1, name: 'Animated Button', category: 'Buttons', price: '$12', preview: 'Interactive button with hover animations' },
-  { id: 2, name: 'Glass Card', category: 'Cards', price: '$15', preview: 'Frosted glass effect card component' },
-  { id: 3, name: 'Data Table', category: 'Tables', price: '$25', preview: 'Sortable and filterable data table' },
-  { id: 4, name: 'Modal Dialog', category: 'Modals', price: '$18', preview: 'Accessible modal with animations' },
-  { id: 5, name: 'Toast Notifications', category: 'Feedback', price: '$10', preview: 'Stackable toast notification system' },
-  { id: 6, name: 'Date Picker', category: 'Forms', price: '$20', preview: 'Calendar date picker component' },
-  { id: 7, name: 'Dropdown Menu', category: 'Navigation', price: '$14', preview: 'Animated dropdown with submenus' },
-  { id: 8, name: 'Progress Bar', category: 'Feedback', price: '$8', preview: 'Animated progress indicators' },
+  { id: 1, name: 'Animated Button', category: 'Buttons', preview: 'Interactive button with hover animations' },
+  { id: 2, name: 'Glass Card', category: 'Cards', preview: 'Frosted glass effect card component' },
+  { id: 3, name: 'Data Table', category: 'Tables', preview: 'Sortable and filterable data table' },
+  { id: 4, name: 'Modal Dialog', category: 'Modals', preview: 'Accessible modal with animations' },
+  { id: 5, name: 'Toast Notifications', category: 'Feedback', preview: 'Stackable toast notification system' },
+  { id: 6, name: 'Date Picker', category: 'Forms', preview: 'Calendar date picker component' },
+  { id: 7, name: 'Dropdown Menu', category: 'Navigation', preview: 'Animated dropdown with submenus' },
+  { id: 8, name: 'Progress Bar', category: 'Feedback', preview: 'Animated progress indicators' },
 ];
 
 const categories = ['All', 'Buttons', 'Cards', 'Tables', 'Modals', 'Feedback', 'Forms', 'Navigation'];
@@ -21,12 +22,19 @@ const categories = ['All', 'Buttons', 'Cards', 'Tables', 'Modals', 'Feedback', '
 const Gallery = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [donationOpen, setDonationOpen] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState<string>('');
 
   const filteredComponents = components.filter(comp => {
     const matchesSearch = comp.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'All' || comp.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const handleDownload = (componentName: string) => {
+    setSelectedComponent(componentName);
+    setDonationOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,11 +44,15 @@ const Gallery = () => {
         <div className="container mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-12 animate-fade-up">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              100% Free
+            </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Component <span className="text-gradient">Gallery</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Browse our collection of premium React components. Each component is built with TypeScript and Tailwind CSS.
+              Browse our free collection of React components. Built with TypeScript and Tailwind CSS. 
+              Optional donations help us create more resources.
             </p>
           </div>
 
@@ -92,7 +104,9 @@ const Gallery = () => {
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-primary font-medium">{comp.category}</span>
-                    <span className="text-lg font-bold text-foreground">{comp.price}</span>
+                    <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full">
+                      Free
+                    </span>
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-4">{comp.name}</h3>
                   <div className="flex gap-2">
@@ -100,9 +114,14 @@ const Gallery = () => {
                       <Eye size={16} />
                       Preview
                     </Button>
-                    <Button variant="hero" size="sm" className="flex-1 gap-2">
-                      <Code size={16} />
-                      Buy
+                    <Button 
+                      variant="hero" 
+                      size="sm" 
+                      className="flex-1 gap-2"
+                      onClick={() => handleDownload(comp.name)}
+                    >
+                      <Download size={16} />
+                      Get
                     </Button>
                   </div>
                 </div>
@@ -113,6 +132,13 @@ const Gallery = () => {
       </main>
 
       <Footer />
+
+      <DonationDialog
+        open={donationOpen}
+        onOpenChange={setDonationOpen}
+        itemName={selectedComponent}
+        itemType="component"
+      />
     </div>
   );
 };

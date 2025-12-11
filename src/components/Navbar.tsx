@@ -27,6 +27,9 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
+            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">
+              Services
+            </Link>
             <Link to="/gallery" className="text-muted-foreground hover:text-foreground transition-colors">
               Components
             </Link>
@@ -64,6 +67,9 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 flex flex-col gap-4 animate-fade-up">
+            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+              Services
+            </Link>
             <Link to="/gallery" className="text-muted-foreground hover:text-foreground transition-colors py-2">
               Components
             </Link>

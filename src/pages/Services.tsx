@@ -8,8 +8,8 @@ const services = [
   {
     icon: Layers,
     title: "Component Library",
-    description: "A marketplace of premium React components and UI kits. Buttons, forms, modals, charts—all with AI-powered customizations.",
-    features: ["React & TypeScript", "Tailwind CSS", "AI Customization", "Lifetime Updates"],
+    description: "Premium React components built on shadcn/ui and Tailwind CSS. Production-ready buttons, forms, modals, charts, and more.",
+    features: ["React & TypeScript", "shadcn/ui Based", "Tailwind CSS", "Lifetime Updates"],
     cta: "Browse Components",
     link: "/gallery",
   },
@@ -27,7 +27,7 @@ const services = [
     description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations.",
     features: ["Dedicated Team", "Agile Process", "Fast Turnaround", "Ongoing Support"],
     cta: "Start Project",
-    link: "/pricing",
+    link: "/contact",
   },
 ];
 

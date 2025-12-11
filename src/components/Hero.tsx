@@ -24,7 +24,7 @@ const Hero = () => {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-up">
           <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-sm text-muted-foreground">Introducing AI-powered customizations</span>
+          <span className="text-sm text-muted-foreground">Built on shadcn/ui + Tailwind CSS</span>
         </div>
 
         {/* Heading */}

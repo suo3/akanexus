@@ -110,8 +110,12 @@ const ComponentShowcase = () => {
               <div className="px-6 pb-6 pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground mb-4">Live Preview</p>
                 <div className="flex items-center gap-4">
-                  <Button variant="hero" size="lg">Download Free</Button>
-                  <Button variant="glass" size="lg">Support Us</Button>
+                  <Button variant="hero" size="lg" asChild>
+                    <Link to="/gallery">Download Free</Link>
+                  </Button>
+                  <Button variant="glass" size="lg" asChild>
+                    <Link to="/contact">Support Us</Link>
+                  </Button>
                 </div>
               </div>
             </div>

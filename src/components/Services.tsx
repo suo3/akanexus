@@ -6,26 +6,29 @@ const services = [
   {
     icon: Layers,
     title: "Component Library",
-    description: "Premium React components built on shadcn/ui and Tailwind CSS. Production-ready buttons, forms, modals, charts, and more.",
-    features: ["React & TypeScript", "shadcn/ui Based", "Tailwind CSS", "Lifetime Updates"],
-    cta: "Browse Components",
+    description: "Free React components built on shadcn/ui and Tailwind CSS. Production-ready buttons, forms, modals, charts, and more.",
+    features: ["100% Free", "React & TypeScript", "shadcn/ui Based", "Lifetime Updates"],
+    cta: "Get Free Components",
     link: "/gallery",
+    badge: "Free",
   },
   {
     icon: Layout,
     title: "Pre-Built Templates",
-    description: "Complete frontend solutions for e-commerce, portfolios, dashboards, and more. Launch in hours, not weeks.",
-    features: ["Full Source Code", "Responsive Design", "SEO Optimized", "Easy Customization"],
-    cta: "View Templates",
+    description: "Free complete frontend solutions for e-commerce, portfolios, dashboards, and more. Launch in hours, not weeks.",
+    features: ["100% Free", "Full Source Code", "Responsive Design", "SEO Optimized"],
+    cta: "Get Free Templates",
     link: "/templates",
+    badge: "Free",
   },
   {
     icon: Code2,
     title: "Custom Development",
-    description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations.",
+    description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations tailored to your needs.",
     features: ["Dedicated Team", "Agile Process", "Fast Turnaround", "Ongoing Support"],
-    cta: "Start Project",
+    cta: "Get a Quote",
     link: "/contact",
+    badge: "Paid Service",
   },
 ];
 
@@ -45,7 +48,7 @@ const Services = () => {
             <span className="text-gradient">ship faster</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From individual components to complete solutions, we've got you covered at every stage of your project.
+            Free components and templates for everyone. Need something custom? Our team is here to help.
           </p>
         </div>
 
@@ -61,9 +64,18 @@ const Services = () => {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="relative z-10">
-                {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                  <service.icon className="w-7 h-7 text-primary" />
+                {/* Icon & Badge */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <service.icon className="w-7 h-7 text-primary" />
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    service.badge === "Free" 
+                      ? "bg-primary/10 text-primary" 
+                      : "bg-accent/10 text-accent-foreground"
+                  }`}>
+                    {service.badge}
+                  </span>
                 </div>
 
                 {/* Content */}

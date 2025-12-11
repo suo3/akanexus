@@ -5,52 +5,52 @@ import { Check, Sparkles } from 'lucide-react';
 
 const plans = [
   {
-    name: 'Starter',
-    description: 'Perfect for individual developers',
-    price: '$0',
-    period: '/forever',
+    name: 'Single Component',
+    description: 'Pay per component',
+    price: '$12',
+    period: '/each',
     features: [
-      '5 free components',
-      'Basic documentation',
-      'Community support',
-      'Personal use only',
+      'One component of your choice',
+      'Full source code',
+      'Lifetime updates',
+      'Commercial license',
     ],
-    cta: 'Get Started',
+    cta: 'Browse Components',
     variant: 'glass' as const,
     popular: false,
   },
   {
-    name: 'Pro',
-    description: 'For professional developers',
-    price: '$49',
-    period: '/month',
+    name: 'Template Bundle',
+    description: 'Complete project starter',
+    price: '$79',
+    period: '/template',
     features: [
-      'Unlimited components',
-      'All templates included',
-      'Priority support',
+      'Full template with all pages',
+      '20+ integrated components',
+      'Responsive & SEO optimized',
       'Commercial license',
-      'Source code access',
-      'Early access to new releases',
+      'Free updates for 1 year',
+      '48-hour support response',
     ],
-    cta: 'Start Pro Trial',
+    cta: 'View Templates',
     variant: 'hero' as const,
     popular: true,
   },
   {
-    name: 'Enterprise',
-    description: 'For teams and organizations',
-    price: '$199',
-    period: '/month',
+    name: 'All-Access',
+    description: 'Everything, forever',
+    price: '$299',
+    period: 'one-time',
     features: [
-      'Everything in Pro',
-      'Custom component requests',
-      'Dedicated support',
-      'Team collaboration',
-      'Private Slack channel',
-      'Custom integrations',
-      'SLA guarantee',
+      'All current components',
+      'All current templates',
+      'All future releases',
+      'Commercial license',
+      'Priority support',
+      'Early access to new releases',
+      'Request new components',
     ],
-    cta: 'Contact Sales',
+    cta: 'Get All-Access',
     variant: 'glass' as const,
     popular: false,
   },
@@ -66,10 +66,10 @@ const Pricing = () => {
           {/* Header */}
           <div className="text-center mb-16 animate-fade-up">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Simple, Transparent <span className="text-gradient">Pricing</span>
+              Flexible <span className="text-gradient">Pricing</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Choose the plan that fits your needs. All plans include access to our core component library.
+              Buy what you need. Individual components, complete templates, or get everything with All-Access.
             </p>
           </div>
 
@@ -122,12 +122,12 @@ const Pricing = () => {
           {/* FAQ or Additional Info */}
           <div className="mt-20 text-center animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <p className="text-muted-foreground">
-              All plans include a 30-day money-back guarantee. No questions asked.
+              All purchases include a 14-day money-back guarantee. No questions asked.
             </p>
             <p className="text-muted-foreground mt-2">
-              Need a custom plan?{' '}
+              Need custom development?{' '}
               <a href="/contact" className="text-primary hover:underline">
-                Contact us
+                Contact us for a quote
               </a>
             </p>
           </div>

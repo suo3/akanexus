@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CTA = () => {
   return (
@@ -25,24 +26,26 @@ const CTA = () => {
 
           {/* Description */}
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-            Join thousands of developers and teams who trust Akanexus for their frontend needs. 
-            Start building today with our components, templates, or custom services.
+            Browse our marketplace for premium components and templates built on shadcn/ui and Tailwind CSS. 
+            Need something custom? Our team is ready to help.
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="hero" size="xl">
-              Get Started Free
-              <ArrowRight className="w-5 h-5" />
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/gallery">
+                Browse Marketplace
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </Button>
-            <Button variant="glass" size="xl">
-              Talk to Sales
+            <Button variant="glass" size="xl" asChild>
+              <Link to="/contact">Get a Quote</Link>
             </Button>
           </div>
 
           {/* Trust Badge */}
           <p className="mt-8 text-sm text-muted-foreground">
-            No credit card required • Free tier available • Cancel anytime
+            14-day money-back guarantee • Lifetime updates • Commercial license included
           </p>
         </div>
       </div>

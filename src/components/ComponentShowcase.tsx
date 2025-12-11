@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Check, Copy, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ComponentShowcase = () => {
   const [copied, setCopied] = useState(false);
@@ -46,9 +47,11 @@ const ComponentShowcase = () => {
               ))}
             </div>
 
-            <Button variant="hero" size="lg">
-              Explore All Components
-              <ArrowRight className="w-5 h-5" />
+            <Button variant="hero" size="lg" asChild>
+              <Link to="/gallery">
+                Explore All Components
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             </Button>
           </div>
 

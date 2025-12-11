@@ -1,5 +1,6 @@
 import { Layers, Layout, Code2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -8,6 +9,7 @@ const services = [
     description: "Premium React components built on shadcn/ui and Tailwind CSS. Production-ready buttons, forms, modals, charts, and more.",
     features: ["React & TypeScript", "shadcn/ui Based", "Tailwind CSS", "Lifetime Updates"],
     cta: "Browse Components",
+    link: "/gallery",
   },
   {
     icon: Layout,
@@ -15,6 +17,7 @@ const services = [
     description: "Complete frontend solutions for e-commerce, portfolios, dashboards, and more. Launch in hours, not weeks.",
     features: ["Full Source Code", "Responsive Design", "SEO Optimized", "Easy Customization"],
     cta: "View Templates",
+    link: "/templates",
   },
   {
     icon: Code2,
@@ -22,6 +25,7 @@ const services = [
     description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations.",
     features: ["Dedicated Team", "Agile Process", "Fast Turnaround", "Ongoing Support"],
     cta: "Start Project",
+    link: "/contact",
   },
 ];
 
@@ -79,9 +83,11 @@ const Services = () => {
                 </ul>
 
                 {/* CTA */}
-                <Button variant="ghost" className="group/btn p-0 h-auto text-primary hover:text-primary">
-                  {service.cta}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                <Button variant="ghost" className="group/btn p-0 h-auto text-primary hover:text-primary" asChild>
+                  <Link to={service.link}>
+                    {service.cta}
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
                 </Button>
               </div>
             </div>

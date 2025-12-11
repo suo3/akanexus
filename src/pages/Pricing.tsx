@@ -1,58 +1,27 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Check, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, Coffee, Rocket } from 'lucide-react';
 
-const plans = [
+const tiers = [
   {
-    name: 'Single Component',
-    description: 'Pay per component',
-    price: '$12',
-    period: '/each',
-    features: [
-      'One component of your choice',
-      'Full source code',
-      'Lifetime updates',
-      'Commercial license',
-    ],
-    cta: 'Browse Components',
-    variant: 'glass' as const,
-    popular: false,
+    name: 'Coffee',
+    icon: Coffee,
+    suggested: '$5',
+    description: 'Buy us a coffee to show your appreciation',
   },
   {
-    name: 'Template Bundle',
-    description: 'Complete project starter',
-    price: '$79',
-    period: '/template',
-    features: [
-      'Full template with all pages',
-      '20+ integrated components',
-      'Responsive & SEO optimized',
-      'Commercial license',
-      'Free updates for 1 year',
-      '48-hour support response',
-    ],
-    cta: 'View Templates',
-    variant: 'hero' as const,
+    name: 'Supporter',
+    icon: Heart,
+    suggested: '$15',
+    description: 'Help us keep building and maintaining components',
     popular: true,
   },
   {
-    name: 'All-Access',
-    description: 'Everything, forever',
-    price: '$299',
-    period: 'one-time',
-    features: [
-      'All current components',
-      'All current templates',
-      'All future releases',
-      'Commercial license',
-      'Priority support',
-      'Early access to new releases',
-      'Request new components',
-    ],
-    cta: 'Get All-Access',
-    variant: 'glass' as const,
-    popular: false,
+    name: 'Champion',
+    icon: Rocket,
+    suggested: '$50+',
+    description: 'Become a champion and get a shoutout on our site',
   },
 ];
 
@@ -65,70 +34,87 @@ const Pricing = () => {
         <div className="container mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-up">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Sparkles size={16} />
+              100% Free & Open
+            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Flexible <span className="text-gradient">Pricing</span>
+              Pay What You <span className="text-gradient">Want</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Buy what you need. Individual components, complete templates, or get everything with All-Access.
+              All components and templates are completely free. If you find them useful, consider supporting our work with a donation.
             </p>
           </div>
 
-          {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
+          {/* Donation Tiers */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
+            {tiers.map((tier, index) => (
               <div
-                key={plan.name}
-                className={`relative glass rounded-2xl p-8 animate-fade-up ${
-                  plan.popular ? 'border-primary ring-2 ring-primary/20' : ''
+                key={tier.name}
+                className={`relative glass rounded-2xl p-8 text-center animate-fade-up ${
+                  tier.popular ? 'border-primary ring-2 ring-primary/20' : ''
                 }`}
                 style={{ animationDelay: `${0.1 + index * 0.1}s` }}
               >
-                {plan.popular && (
+                {tier.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <div className="flex items-center gap-1 bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-medium">
-                      <Sparkles size={14} />
-                      Most Popular
+                      <Heart size={14} />
+                      Most Chosen
                     </div>
                   </div>
                 )}
 
-                <div className="text-center mb-8">
-                  <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-6">{plan.description}</p>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
-                  </div>
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <tier.icon className="w-8 h-8 text-primary" />
                 </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <Check size={12} className="text-primary" />
-                      </div>
-                      <span className="text-foreground text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button variant={plan.variant} className="w-full">
-                  {plan.cta}
+                <h3 className="text-xl font-bold text-foreground mb-2">{tier.name}</h3>
+                <div className="text-3xl font-bold text-foreground mb-2">{tier.suggested}</div>
+                <p className="text-muted-foreground text-sm mb-6">{tier.description}</p>
+                <Button variant={tier.popular ? 'hero' : 'glass'} className="w-full">
+                  Donate {tier.suggested}
                 </Button>
               </div>
             ))}
           </div>
 
-          {/* FAQ or Additional Info */}
-          <div className="mt-20 text-center animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            <p className="text-muted-foreground">
-              All purchases include a 14-day money-back guarantee. No questions asked.
+          {/* Custom Amount */}
+          <div className="glass rounded-2xl p-8 max-w-2xl mx-auto text-center animate-fade-up" style={{ animationDelay: '0.4s' }}>
+            <h3 className="text-xl font-bold text-foreground mb-2">Custom Amount</h3>
+            <p className="text-muted-foreground mb-6">
+              Want to donate a different amount? Every contribution helps us continue building free resources for the community.
             </p>
-            <p className="text-muted-foreground mt-2">
-              Need custom development?{' '}
-              <a href="/contact" className="text-primary hover:underline">
-                Contact us for a quote
-              </a>
+            <Button variant="outline" className="px-8">
+              Choose Your Amount
+            </Button>
+          </div>
+
+          {/* What You Get */}
+          <div className="mt-20 text-center animate-fade-up" style={{ animationDelay: '0.5s' }}>
+            <h2 className="text-2xl font-bold text-foreground mb-8">What's Included — For Free</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              {[
+                'All components',
+                'All templates',
+                'Full source code',
+                'Commercial license',
+                'Lifetime updates',
+                'Community support',
+                'Documentation',
+                'Code examples',
+              ].map((item) => (
+                <div key={item} className="glass rounded-xl p-4">
+                  <span className="text-foreground font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer note */}
+          <div className="mt-16 text-center animate-fade-up" style={{ animationDelay: '0.6s' }}>
+            <p className="text-muted-foreground">
+              Your support helps us maintain and improve these resources.{' '}
+              <span className="text-primary">Thank you for being part of our community!</span>
             </p>
           </div>
         </div>

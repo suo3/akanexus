@@ -22,18 +22,21 @@ const ComponentShowcase = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-medium mb-4">
+              <span>100% Free</span>
+            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               Components that{" "}
               <span className="text-gradient">just work</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Production-ready React components built with TypeScript and Tailwind CSS. 
-              Copy, paste, and customize—it's that simple.
+              Free to use, with optional donations to support development.
             </p>
 
             <div className="space-y-4 mb-8">
               {[
-                "Fully typed with TypeScript",
+                "Completely free to download and use",
                 "Built on Radix UI primitives",
                 "Dark mode support out of the box",
                 "Accessible and keyboard navigable",

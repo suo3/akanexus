@@ -52,7 +52,7 @@ const ComponentShowcase = () => {
 
             <Button variant="hero" size="lg" asChild>
               <Link to="/gallery">
-                Explore All Components
+                Get Free Components
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>

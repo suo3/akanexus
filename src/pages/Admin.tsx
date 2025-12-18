@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, Package, Layout, BarChart3, LogOut, 
-  ArrowLeft, Search, MoreVertical 
+  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -13,7 +13,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface Profile {
   id: string;
@@ -22,13 +35,26 @@ interface Profile {
   created_at: string;
 }
 
+interface UserRole {
+  user_id: string;
+  role: 'admin' | 'moderator' | 'user';
+}
+
 const Admin = () => {
   const { user, loading, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('users');
   const [users, setUsers] = useState<Profile[]>([]);
+  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    userId: string;
+    action: 'promote' | 'demote';
+    userName: string;
+  }>({ open: false, userId: '', action: 'promote', userName: '' });
 
   useEffect(() => {
     if (!loading) {
@@ -43,6 +69,7 @@ const Admin = () => {
   useEffect(() => {
     if (isAdmin) {
       fetchUsers();
+      fetchUserRoles();
     }
   }, [isAdmin]);
 
@@ -57,6 +84,87 @@ const Admin = () => {
       setUsers(data);
     }
     setLoadingUsers(false);
+  };
+
+  const fetchUserRoles = async () => {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('user_id, role');
+    
+    if (!error && data) {
+      setUserRoles(data as UserRole[]);
+    }
+  };
+
+  const getUserRole = (userId: string): 'admin' | 'moderator' | 'user' | null => {
+    const role = userRoles.find(r => r.user_id === userId);
+    return role?.role || null;
+  };
+
+  const handlePromoteToAdmin = async (userId: string) => {
+    setUpdatingRole(userId);
+    
+    // Check if user already has a role entry
+    const existingRole = userRoles.find(r => r.user_id === userId);
+    
+    if (existingRole) {
+      // Update existing role
+      const { error } = await (supabase
+        .from('user_roles') as any)
+        .update({ role: 'admin' })
+        .eq('user_id', userId);
+      
+      if (error) {
+        toast.error('Failed to promote user: ' + error.message);
+      } else {
+        toast.success('User promoted to admin');
+        fetchUserRoles();
+      }
+    } else {
+      // Insert new role
+      const { error } = await (supabase
+        .from('user_roles') as any)
+        .insert({ user_id: userId, role: 'admin' });
+      
+      if (error) {
+        toast.error('Failed to promote user: ' + error.message);
+      } else {
+        toast.success('User promoted to admin');
+        fetchUserRoles();
+      }
+    }
+    
+    setUpdatingRole(null);
+    setConfirmDialog({ open: false, userId: '', action: 'promote', userName: '' });
+  };
+
+  const handleDemoteFromAdmin = async (userId: string) => {
+    if (userId === user?.id) {
+      toast.error("You can't demote yourself");
+      return;
+    }
+    
+    setUpdatingRole(userId);
+    
+    const { error } = await supabase
+      .from('user_roles')
+      .delete()
+      .eq('user_id', userId)
+      .eq('role', 'admin');
+    
+    if (error) {
+      toast.error('Failed to demote user: ' + error.message);
+    } else {
+      toast.success('Admin role removed');
+      fetchUserRoles();
+    }
+    
+    setUpdatingRole(null);
+    setConfirmDialog({ open: false, userId: '', action: 'demote', userName: '' });
+  };
+
+  const openConfirmDialog = (userId: string, action: 'promote' | 'demote', userName: string) => {
+    setConfirmDialog({ open: true, userId, action, userName });
   };
 
   const handleSignOut = async () => {
@@ -158,6 +266,7 @@ const Admin = () => {
                   <tr>
                     <th className="text-left px-6 py-4 text-sm font-medium text-muted-foreground">User</th>
                     <th className="text-left px-6 py-4 text-sm font-medium text-muted-foreground">Email</th>
+                    <th className="text-left px-6 py-4 text-sm font-medium text-muted-foreground">Role</th>
                     <th className="text-left px-6 py-4 text-sm font-medium text-muted-foreground">Joined</th>
                     <th className="text-right px-6 py-4 text-sm font-medium text-muted-foreground">Actions</th>
                   </tr>
@@ -165,53 +274,102 @@ const Admin = () => {
                 <tbody className="divide-y divide-border">
                   {loadingUsers ? (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">
+                      <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
                         Loading users...
                       </td>
                     </tr>
                   ) : filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">
+                      <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
                         No users found
                       </td>
                     </tr>
                   ) : (
-                    filteredUsers.map((profile) => (
-                      <tr key={profile.id} className="hover:bg-secondary/30 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                              <span className="text-primary font-medium">
-                                {profile.full_name?.charAt(0) || profile.email?.charAt(0) || '?'}
-                              </span>
+                    filteredUsers.map((profile) => {
+                      const role = getUserRole(profile.id);
+                      const isCurrentUser = profile.id === user?.id;
+                      const isUpdating = updatingRole === profile.id;
+                      
+                      return (
+                        <tr key={profile.id} className="hover:bg-secondary/30 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                <span className="text-primary font-medium">
+                                  {profile.full_name?.charAt(0) || profile.email?.charAt(0) || '?'}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="font-medium text-foreground block">
+                                  {profile.full_name || 'Unknown'}
+                                </span>
+                                {isCurrentUser && (
+                                  <span className="text-xs text-muted-foreground">(You)</span>
+                                )}
+                              </div>
                             </div>
-                            <span className="font-medium text-foreground">
-                              {profile.full_name || 'Unknown'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-muted-foreground">{profile.email}</td>
-                        <td className="px-6 py-4 text-muted-foreground">
-                          {new Date(profile.created_at).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreVertical size={16} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Role</DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive">
-                                Delete User
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                          <td className="px-6 py-4 text-muted-foreground">{profile.email}</td>
+                          <td className="px-6 py-4">
+                            {role === 'admin' ? (
+                              <Badge className="bg-primary/20 text-primary border-primary/30">
+                                <Shield size={12} className="mr-1" />
+                                Admin
+                              </Badge>
+                            ) : role === 'moderator' ? (
+                              <Badge variant="secondary">Moderator</Badge>
+                            ) : (
+                              <Badge variant="outline" className="text-muted-foreground">User</Badge>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-muted-foreground">
+                            {new Date(profile.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" disabled={isUpdating}>
+                                  {isUpdating ? (
+                                    <Loader2 size={16} className="animate-spin" />
+                                  ) : (
+                                    <MoreVertical size={16} />
+                                  )}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>View Details</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                {role === 'admin' ? (
+                                  <DropdownMenuItem 
+                                    onClick={() => openConfirmDialog(
+                                      profile.id, 
+                                      'demote', 
+                                      profile.full_name || profile.email || 'this user'
+                                    )}
+                                    disabled={isCurrentUser}
+                                    className="text-destructive focus:text-destructive"
+                                  >
+                                    <ShieldOff size={14} className="mr-2" />
+                                    {isCurrentUser ? "Can't demote yourself" : 'Remove Admin'}
+                                  </DropdownMenuItem>
+                                ) : (
+                                  <DropdownMenuItem 
+                                    onClick={() => openConfirmDialog(
+                                      profile.id, 
+                                      'promote', 
+                                      profile.full_name || profile.email || 'this user'
+                                    )}
+                                  >
+                                    <Shield size={14} className="mr-2" />
+                                    Make Admin
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -249,6 +407,37 @@ const Admin = () => {
           </div>
         )}
       </main>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={confirmDialog.open} onOpenChange={(open) => 
+        setConfirmDialog(prev => ({ ...prev, open }))
+      }>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmDialog.action === 'promote' ? 'Promote to Admin?' : 'Remove Admin Role?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmDialog.action === 'promote' 
+                ? `This will give ${confirmDialog.userName} full admin access to manage users, components, and templates.`
+                : `This will remove admin privileges from ${confirmDialog.userName}. They will no longer be able to access the admin dashboard.`
+              }
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => confirmDialog.action === 'promote' 
+                ? handlePromoteToAdmin(confirmDialog.userId)
+                : handleDemoteFromAdmin(confirmDialog.userId)
+              }
+              className={confirmDialog.action === 'demote' ? 'bg-destructive hover:bg-destructive/90' : ''}
+            >
+              {confirmDialog.action === 'promote' ? 'Promote' : 'Remove Admin'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

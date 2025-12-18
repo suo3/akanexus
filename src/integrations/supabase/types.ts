@@ -14,6 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
+      marketplace_components: {
+        Row: {
+          category: string
+          code_snippet: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          downloads: number | null
+          id: string
+          is_premium: boolean | null
+          is_published: boolean | null
+          name: string
+          preview_image_url: string | null
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          code_snippet?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          name: string
+          preview_image_url?: string | null
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          code_snippet?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          name?: string
+          preview_image_url?: string | null
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      marketplace_templates: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          demo_url: string | null
+          description: string | null
+          downloads: number | null
+          features: string[] | null
+          id: string
+          is_premium: boolean | null
+          is_published: boolean | null
+          name: string
+          preview_image_url: string | null
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          demo_url?: string | null
+          description?: string | null
+          downloads?: number | null
+          features?: string[] | null
+          id?: string
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          name: string
+          preview_image_url?: string | null
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          demo_url?: string | null
+          description?: string | null
+          downloads?: number | null
+          features?: string[] | null
+          id?: string
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          name?: string
+          preview_image_url?: string | null
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

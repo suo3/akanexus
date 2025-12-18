@@ -27,6 +27,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { ComponentManager } from '@/components/admin/ComponentManager';
+import { TemplateManager } from '@/components/admin/TemplateManager';
 
 interface Profile {
   id: string;
@@ -377,25 +379,9 @@ const Admin = () => {
           </div>
         )}
 
-        {activeTab === 'components' && (
-          <div className="animate-fade-up">
-            <h1 className="text-2xl font-bold text-foreground mb-8">Component Management</h1>
-            <div className="glass rounded-xl p-12 text-center">
-              <Package className="mx-auto text-muted-foreground mb-4" size={48} />
-              <p className="text-muted-foreground">Component management coming soon</p>
-            </div>
-          </div>
-        )}
+        {activeTab === 'components' && <ComponentManager />}
 
-        {activeTab === 'templates' && (
-          <div className="animate-fade-up">
-            <h1 className="text-2xl font-bold text-foreground mb-8">Template Management</h1>
-            <div className="glass rounded-xl p-12 text-center">
-              <Layout className="mx-auto text-muted-foreground mb-4" size={48} />
-              <p className="text-muted-foreground">Template management coming soon</p>
-            </div>
-          </div>
-        )}
+        {activeTab === 'templates' && <TemplateManager />}
 
         {activeTab === 'analytics' && (
           <div className="animate-fade-up">

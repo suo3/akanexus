@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, Package, Layout, BarChart3, LogOut, 
-  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText
+  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -31,6 +31,7 @@ import { ComponentManager } from '@/components/admin/ComponentManager';
 import { TemplateManager } from '@/components/admin/TemplateManager';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { DocumentationManager } from '@/components/admin/DocumentationManager';
+import { TutorialManager } from '@/components/admin/TutorialManager';
 
 interface Profile {
   id: string;
@@ -194,6 +195,7 @@ const Admin = () => {
     { id: 'components', label: 'Components', icon: Package },
     { id: 'templates', label: 'Templates', icon: Layout },
     { id: 'documentation', label: 'Documentation', icon: FileText },
+    { id: 'tutorials', label: 'Tutorials', icon: Play },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
@@ -387,6 +389,8 @@ const Admin = () => {
         {activeTab === 'templates' && <TemplateManager />}
 
         {activeTab === 'documentation' && <DocumentationManager />}
+
+        {activeTab === 'tutorials' && <TutorialManager />}
 
         {activeTab === 'analytics' && <AnalyticsDashboard />}
       </main>

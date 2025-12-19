@@ -1,64 +1,20 @@
-import { Play, Clock, User, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Play, Clock, User, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
-const tutorials = [
-  {
-    id: 1,
-    title: "Building Your First Dashboard",
-    description: "Learn how to create a beautiful admin dashboard from scratch using Akanexus components.",
-    duration: "45 min",
-    level: "Beginner",
-    author: "Sarah Chen",
-    thumbnail: "Dashboard",
-  },
-  {
-    id: 2,
-    title: "Creating Custom Themes",
-    description: "Master the theming system and create stunning custom themes for your applications.",
-    duration: "30 min",
-    level: "Intermediate",
-    author: "Marcus Johnson",
-    thumbnail: "Theming",
-  },
-  {
-    id: 3,
-    title: "Advanced Form Patterns",
-    description: "Build complex forms with validation, multi-step wizards, and dynamic fields.",
-    duration: "60 min",
-    level: "Advanced",
-    author: "Emily Rodriguez",
-    thumbnail: "Forms",
-  },
-  {
-    id: 4,
-    title: "Responsive Layouts Masterclass",
-    description: "Create pixel-perfect responsive layouts that work beautifully on all devices.",
-    duration: "40 min",
-    level: "Intermediate",
-    author: "David Park",
-    thumbnail: "Layouts",
-  },
-  {
-    id: 5,
-    title: "Animation & Micro-interactions",
-    description: "Add delightful animations and micro-interactions to enhance user experience.",
-    duration: "35 min",
-    level: "Intermediate",
-    author: "Sarah Chen",
-    thumbnail: "Animation",
-  },
-  {
-    id: 6,
-    title: "E-commerce Storefront Setup",
-    description: "Build a complete e-commerce storefront with product pages, cart, and checkout.",
-    duration: "90 min",
-    level: "Advanced",
-    author: "Marcus Johnson",
-    thumbnail: "E-commerce",
-  },
-];
+interface Tutorial {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  duration: string | null;
+  level: string;
+  author: string | null;
+  thumbnail_url: string | null;
+  video_url: string | null;
+}
 
 const getLevelColor = (level: string) => {
   switch (level) {
@@ -74,6 +30,26 @@ const getLevelColor = (level: string) => {
 };
 
 const Tutorials = () => {
+  const [tutorials, setTutorials] = useState<Tutorial[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTutorials = async () => {
+      const { data, error } = await (supabase
+        .from('tutorials') as any)
+        .select('id, title, slug, description, duration, level, author, thumbnail_url, video_url')
+        .eq('is_published', true)
+        .order('order_index', { ascending: true });
+
+      if (!error && data) {
+        setTutorials(data);
+      }
+      setLoading(false);
+    };
+
+    fetchTutorials();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -95,44 +71,68 @@ const Tutorials = () => {
             </div>
 
             {/* Tutorials Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {tutorials.map((tutorial) => (
-                <article
-                  key={tutorial.id}
-                  className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
-                >
-                  <div className="h-40 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative">
-                    <span className="text-2xl font-bold text-primary/30">{tutorial.thumbnail}</span>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/50">
-                      <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
-                        <Play className="w-6 h-6 text-primary-foreground ml-1" />
+            {loading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="animate-spin text-primary" size={32} />
+              </div>
+            ) : tutorials.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Play className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No tutorials available yet. Check back soon!</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {tutorials.map((tutorial) => (
+                  <article
+                    key={tutorial.id}
+                    className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 cursor-pointer"
+                    onClick={() => tutorial.video_url && window.open(tutorial.video_url, '_blank')}
+                  >
+                    <div className="h-40 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
+                      {tutorial.thumbnail_url ? (
+                        <img
+                          src={tutorial.thumbnail_url}
+                          alt={tutorial.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-2xl font-bold text-primary/30">{tutorial.title.split(' ')[0]}</span>
+                      )}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/50">
+                        <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
+                          <Play className="w-6 h-6 text-primary-foreground ml-1" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className={`text-xs font-medium px-2 py-1 rounded ${getLevelColor(tutorial.level)}`}>
-                        {tutorial.level}
-                      </span>
-                      <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {tutorial.duration}
-                      </span>
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`text-xs font-medium px-2 py-1 rounded ${getLevelColor(tutorial.level)}`}>
+                          {tutorial.level}
+                        </span>
+                        {tutorial.duration && (
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {tutorial.duration}
+                          </span>
+                        )}
+                      </div>
+                      <h2 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                        {tutorial.title}
+                      </h2>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {tutorial.description}
+                      </p>
+                      {tutorial.author && (
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <User className="w-3 h-3" />
+                          {tutorial.author}
+                        </div>
+                      )}
                     </div>
-                    <h2 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {tutorial.title}
-                    </h2>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {tutorial.description}
-                    </p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <User className="w-3 h-3" />
-                      {tutorial.author}
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

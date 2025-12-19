@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface DocumentationSection {
   id: string;
+  slug: string;
   title: string;
   description: string | null;
   icon: string;
@@ -32,36 +33,42 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const fallbackSections = [
   {
     id: "1",
+    slug: "getting-started",
     icon: "Zap",
     title: "Getting Started",
     description: "Quick start guide to get up and running with Akanexus components in minutes.",
   },
   {
     id: "2",
+    slug: "installation",
     icon: "Code",
     title: "Installation",
     description: "Learn how to install and configure Akanexus in your React project.",
   },
   {
     id: "3",
+    slug: "theming",
     icon: "Palette",
     title: "Theming",
     description: "Customize colors, fonts, and styles to match your brand perfectly.",
   },
   {
     id: "4",
+    slug: "components-api",
     icon: "Book",
     title: "Components API",
     description: "Detailed API reference for all components with props and examples.",
   },
   {
     id: "5",
+    slug: "configuration",
     icon: "Settings",
     title: "Configuration",
     description: "Advanced configuration options for fine-tuning your setup.",
   },
   {
     id: "6",
+    slug: "best-practices",
     icon: "Shield",
     title: "Best Practices",
     description: "Recommended patterns and practices for building with Akanexus.",
@@ -76,7 +83,7 @@ const Documentation = () => {
     const fetchSections = async () => {
       const { data, error } = await (supabase
         .from('documentation_sections') as any)
-        .select('id, title, description, icon, content, order_index')
+        .select('id, slug, title, description, icon, content, order_index')
         .eq('is_published', true)
         .order('order_index', { ascending: true });
 
@@ -137,7 +144,7 @@ const Documentation = () => {
                   return (
                     <Link
                       key={section.id}
-                      to={`/documentation/${section.id}`}
+                      to={`/documentation/${section.slug}`}
                       className="group glass rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
                     >
                       <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">

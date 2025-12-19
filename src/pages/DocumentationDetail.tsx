@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 interface DocumentationSection {
   id: string;
+  slug: string;
   title: string;
   description: string | null;
   icon: string;
@@ -31,7 +32,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const DocumentationDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [section, setSection] = useState<DocumentationSection | null>(null);
   const [allSections, setAllSections] = useState<DocumentationSection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ const DocumentationDetail = () => {
       // Fetch all published sections for navigation
       const { data: sections } = await (supabase
         .from('documentation_sections') as any)
-        .select('id, title, description, icon, content, order_index')
+        .select('id, slug, title, description, icon, content, order_index')
         .eq('is_published', true)
         .order('order_index', { ascending: true });
 
@@ -49,11 +50,11 @@ const DocumentationDetail = () => {
         setAllSections(sections);
       }
 
-      // Fetch the specific section
+      // Fetch the specific section by slug
       const { data, error } = await (supabase
         .from('documentation_sections') as any)
-        .select('id, title, description, icon, content, order_index')
-        .eq('id', id)
+        .select('id, slug, title, description, icon, content, order_index')
+        .eq('slug', slug)
         .eq('is_published', true)
         .maybeSingle();
 
@@ -64,9 +65,9 @@ const DocumentationDetail = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [slug]);
 
-  const currentIndex = allSections.findIndex(s => s.id === id);
+  const currentIndex = allSections.findIndex(s => s.slug === slug);
   const prevSection = currentIndex > 0 ? allSections[currentIndex - 1] : null;
   const nextSection = currentIndex < allSections.length - 1 ? allSections[currentIndex + 1] : null;
 
@@ -166,14 +167,14 @@ const DocumentationDetail = () => {
                 </Link>
                 
                 <nav className="space-y-1">
-                  {allSections.map((s) => {
+                {allSections.map((s) => {
                     const SectionIcon = iconMap[s.icon] || Book;
                     return (
                       <Link
                         key={s.id}
-                        to={`/documentation/${s.id}`}
+                        to={`/documentation/${s.slug}`}
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                          s.id === id
+                          s.slug === slug
                             ? 'bg-primary/10 text-primary font-medium'
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                         }`}
@@ -216,7 +217,7 @@ const DocumentationDetail = () => {
                 <div className="flex justify-between items-center mt-12 pt-8 border-t border-border/50">
                   {prevSection ? (
                     <Link
-                      to={`/documentation/${prevSection.id}`}
+                      to={`/documentation/${prevSection.slug}`}
                       className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <ArrowLeft className="w-4 h-4" />
@@ -227,7 +228,7 @@ const DocumentationDetail = () => {
                   )}
                   {nextSection && (
                     <Link
-                      to={`/documentation/${nextSection.id}`}
+                      to={`/documentation/${nextSection.slug}`}
                       className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <span className="text-sm">{nextSection.title}</span>

@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Plus, Search, MoreVertical, Eye, EyeOff, Pencil, Trash2, Loader2, Layout, ExternalLink } from 'lucide-react';
+import { Plus, Search, MoreVertical, Eye, EyeOff, Pencil, Trash2, Loader2, Layout, ExternalLink, Upload, X } from 'lucide-react';
 
 interface MarketplaceTemplate {
   id: string;
@@ -66,6 +66,8 @@ export const TemplateManager = () => {
     is_published: false,
     features: '',
   });
+  const [uploading, setUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTemplates();
@@ -97,6 +99,7 @@ export const TemplateManager = () => {
       features: '',
     });
     setEditingTemplate(null);
+    setImagePreview(null);
   };
 
   const openEditDialog = (template: MarketplaceTemplate) => {
@@ -112,7 +115,54 @@ export const TemplateManager = () => {
       is_published: template.is_published,
       features: template.features?.join(', ') || '',
     });
+    setImagePreview(template.preview_image_url);
     setIsDialogOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `templates/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('component-previews')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('component-previews')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, preview_image_url: publicUrl });
+      setImagePreview(publicUrl);
+      toast.success('Image uploaded successfully');
+    } catch (error: any) {
+      toast.error('Failed to upload image: ' + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setFormData({ ...formData, preview_image_url: '' });
+    setImagePreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -260,25 +310,61 @@ export const TemplateManager = () => {
                   />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="preview_image_url">Preview Image URL</Label>
-                    <Input
-                      id="preview_image_url"
-                      value={formData.preview_image_url}
-                      onChange={(e) => setFormData({ ...formData, preview_image_url: e.target.value })}
-                      placeholder="https://..."
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="demo_url">Demo URL</Label>
-                    <Input
-                      id="demo_url"
-                      value={formData.demo_url}
-                      onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
-                      placeholder="https://..."
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label>Preview Image</Label>
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-40 object-cover rounded-lg border border-border"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 h-8 w-8"
+                        onClick={removeImage}
+                      >
+                        <X size={16} />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="template-image-upload"
+                        disabled={uploading}
+                      />
+                      <label htmlFor="template-image-upload" className="cursor-pointer">
+                        {uploading ? (
+                          <div className="flex flex-col items-center gap-2">
+                            <Loader2 size={24} className="animate-spin text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Uploading...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center gap-2">
+                            <Upload size={24} className="text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Click to upload image</span>
+                            <span className="text-xs text-muted-foreground">Max 5MB</span>
+                          </div>
+                        )}
+                      </label>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="demo_url">Demo URL</Label>
+                  <Input
+                    id="demo_url"
+                    value={formData.demo_url}
+                    onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
+                    placeholder="https://..."
+                  />
                 </div>
                 
                 <div className="space-y-2">

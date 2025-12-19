@@ -13,6 +13,7 @@ import About from "@/pages/About";
 import Blog from "@/pages/Blog";
 import Contact from "@/pages/Contact";
 import Documentation from "@/pages/Documentation";
+import DocumentationDetail from "@/pages/DocumentationDetail";
 import Tutorials from "@/pages/Tutorials";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
@@ -36,6 +37,7 @@ const AnimatedRoutes = () => {
         <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
         <Route path="/documentation" element={<PageTransition><Documentation /></PageTransition>} />
+        <Route path="/documentation/:id" element={<PageTransition><DocumentationDetail /></PageTransition>} />
         <Route path="/tutorials" element={<PageTransition><Tutorials /></PageTransition>} />
         <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
         <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />

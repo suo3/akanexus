@@ -119,18 +119,7 @@ const Documentation = () => {
               </p>
             </div>
 
-            {/* Quick Start */}
-            <div className="max-w-4xl mx-auto mb-16">
-              <div className="glass rounded-2xl p-8">
-                <h2 className="text-xl font-semibold mb-4">Quick Start</h2>
-                <div className="bg-background/50 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-                  <p className="text-muted-foreground mb-2"># Install Akanexus components</p>
-                  <p className="text-primary">npm install @akanexus/ui</p>
-                  <p className="text-muted-foreground mt-4 mb-2"># Import and use</p>
-                  <p className="text-foreground">import {"{ Button }"} from '@akanexus/ui'</p>
-                </div>
-              </div>
-            </div>
+
 
             {/* Doc Sections Grid */}
             {loading ? (

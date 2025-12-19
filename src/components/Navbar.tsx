@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
@@ -27,18 +28,34 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors">
+            <NavLink 
+              to="/services" 
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+            >
               Services
-            </Link>
-            <Link to="/gallery" className="text-muted-foreground hover:text-foreground transition-colors">
+            </NavLink>
+            <NavLink 
+              to="/gallery" 
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+            >
               Components
-            </Link>
-            <Link to="/templates" className="text-muted-foreground hover:text-foreground transition-colors">
+            </NavLink>
+            <NavLink 
+              to="/templates" 
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+            >
               Templates
-            </Link>
-            <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+            </NavLink>
+            <NavLink 
+              to="/pricing" 
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+            >
               Pricing
-            </Link>
+            </NavLink>
           </div>
 
           <div className="hidden md:flex items-center gap-4">
@@ -67,18 +84,34 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 flex flex-col gap-4 animate-fade-up">
-            <Link to="/services" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+            <NavLink 
+              to="/services" 
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              activeClassName="text-foreground font-medium border-l-primary"
+            >
               Services
-            </Link>
-            <Link to="/gallery" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+            </NavLink>
+            <NavLink 
+              to="/gallery" 
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              activeClassName="text-foreground font-medium border-l-primary"
+            >
               Components
-            </Link>
-            <Link to="/templates" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+            </NavLink>
+            <NavLink 
+              to="/templates" 
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              activeClassName="text-foreground font-medium border-l-primary"
+            >
               Templates
-            </Link>
-            <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors py-2">
+            </NavLink>
+            <NavLink 
+              to="/pricing" 
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              activeClassName="text-foreground font-medium border-l-primary"
+            >
               Pricing
-            </Link>
+            </NavLink>
             <div className="flex flex-col gap-2 pt-4 border-t border-border">
               {user ? (
                 <>

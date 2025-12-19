@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Book, Code, Zap, Settings, Palette, Shield, FileText, Lightbulb, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Book, Code, Zap, Settings, Palette, Shield, FileText, Lightbulb, Loader2, Layout, Rocket, BookOpen, HelpCircle, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +23,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Shield,
   FileText,
   Lightbulb,
+  Layout,
+  Rocket,
+  BookOpen,
+  HelpCircle,
 };
 
 const fallbackSections = [
@@ -130,9 +135,9 @@ const Documentation = () => {
                 {sections.map((section) => {
                   const IconComponent = iconMap[section.icon] || Book;
                   return (
-                    <a
+                    <Link
                       key={section.id}
-                      href="#"
+                      to={`/documentation/${section.id}`}
                       className="group glass rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
                     >
                       <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
@@ -141,8 +146,11 @@ const Documentation = () => {
                       <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
                         {section.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground">{section.description}</p>
-                    </a>
+                      <p className="text-sm text-muted-foreground mb-4">{section.description}</p>
+                      <span className="inline-flex items-center text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        Read more <ArrowRight className="w-4 h-4 ml-1" />
+                      </span>
+                    </Link>
                   );
                 })}
               </div>

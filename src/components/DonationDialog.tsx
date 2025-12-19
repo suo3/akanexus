@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Heart, Download, Coffee, Award, Trophy } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface DonationDialogProps {
   open: boolean;
@@ -33,11 +34,15 @@ const DonationDialog = ({ open, onOpenChange, itemName, itemType }: DonationDial
     
     if (finalAmount > 0) {
       // In a real implementation, this would redirect to Stripe/payment
-      console.log(`Processing donation of $${finalAmount} for ${itemName}`);
+      toast.success(`Thank you for your $${finalAmount} donation!`, {
+        description: `Downloading ${itemName}...`
+      });
+    } else {
+      toast.success(`Downloading ${itemName}`, {
+        description: 'Thank you for using our components!'
+      });
     }
     
-    // Simulate download
-    console.log(`Downloading ${itemName}`);
     onOpenChange(false);
     
     // Reset state

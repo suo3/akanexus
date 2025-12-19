@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      documentation_sections: {
+        Row: {
+          content: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          icon: string
+          id: string
+          is_published: boolean | null
+          order_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          is_published?: boolean | null
+          order_index?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          is_published?: boolean | null
+          order_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketplace_components: {
         Row: {
           category: string

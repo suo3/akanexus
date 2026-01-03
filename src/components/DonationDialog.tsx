@@ -8,8 +8,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Heart, Download, Coffee, Award, Trophy } from 'lucide-react';
+import { Heart, Download, Coffee, Trophy, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface DonationDialogProps {
   open: boolean;
@@ -28,15 +29,35 @@ const donationTiers = [
 const DonationDialog = ({ open, onOpenChange, itemName, itemType }: DonationDialogProps) => {
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const finalAmount = customAmount ? parseFloat(customAmount) : selectedAmount;
     
     if (finalAmount > 0) {
-      // In a real implementation, this would redirect to Stripe/payment
-      toast.success(`Thank you for your $${finalAmount} donation!`, {
-        description: `Downloading ${itemName}...`
-      });
+      // Redirect to Stripe Checkout
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke('create-donation', {
+          body: { amount: finalAmount, itemName, itemType }
+        });
+
+        if (error) throw error;
+
+        if (data?.url) {
+          window.open(data.url, '_blank');
+          toast.success('Redirecting to checkout...', {
+            description: 'Complete your donation in the new tab.'
+          });
+        }
+      } catch (error) {
+        console.error('Error creating donation:', error);
+        toast.error('Failed to process donation', {
+          description: 'Please try again later.'
+        });
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       toast.success(`Downloading ${itemName}`, {
         description: 'Thank you for using our components!'
@@ -118,8 +139,14 @@ const DonationDialog = ({ open, onOpenChange, itemName, itemType }: DonationDial
             onClick={handleDownload} 
             className="w-full gap-2"
             variant="hero"
+            disabled={isLoading}
           >
-            {displayAmount > 0 ? (
+            {isLoading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Processing...
+              </>
+            ) : displayAmount > 0 ? (
               <>
                 <Heart size={18} />
                 Donate ${displayAmount} & Download

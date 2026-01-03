@@ -36,7 +36,7 @@ const Gallery = () => {
   const [previewComponent, setPreviewComponent] = useState<MarketplaceComponent | null>(null);
   const [copied, setCopied] = useState(false);
   const [donationOpen, setDonationOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState<string>('');
+  const [selectedComponent, setSelectedComponent] = useState<MarketplaceComponent | null>(null);
 
   useEffect(() => {
     fetchComponents();
@@ -66,7 +66,7 @@ const Gallery = () => {
       .update({ downloads: component.downloads + 1 })
       .eq('id', component.id);
     
-    setSelectedComponent(component.name);
+    setSelectedComponent(component);
     setDonationOpen(true);
     
     // Refresh to update download count
@@ -310,7 +310,8 @@ const Gallery = () => {
       <DonationDialog
         open={donationOpen}
         onOpenChange={setDonationOpen}
-        itemName={selectedComponent}
+        itemName={selectedComponent?.name || ''}
+        itemId={selectedComponent?.id || ''}
         itemType="component"
       />
     </div>

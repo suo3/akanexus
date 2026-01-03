@@ -16,6 +16,7 @@ interface DonationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   itemName: string;
+  itemId: string;
   itemType: 'component' | 'template';
 }
 
@@ -26,49 +27,87 @@ const donationTiers = [
   { amount: 50, label: 'Champion', icon: Trophy, description: 'Champion supporter' },
 ];
 
-const DonationDialog = ({ open, onOpenChange, itemName, itemType }: DonationDialogProps) => {
+const DonationDialog = ({ open, onOpenChange, itemName, itemId, itemType }: DonationDialogProps) => {
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const triggerDownload = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-download', {
+        body: { itemId, itemType }
+      });
+
+      if (error) throw error;
+
+      if (data?.zipData && data?.fileName) {
+        // Convert base64 to blob and download
+        const byteCharacters = atob(data.zipData);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/zip' });
+        
+        // Create download link
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        toast.success(`Downloaded ${itemName}`, {
+          description: 'Check your downloads folder!'
+        });
+      }
+    } catch (error) {
+      console.error('Error downloading:', error);
+      toast.error('Failed to download', {
+        description: 'Please try again later.'
+      });
+    }
+  };
+
   const handleDownload = async () => {
     const finalAmount = customAmount ? parseFloat(customAmount) : selectedAmount;
+    setIsLoading(true);
     
-    if (finalAmount > 0) {
-      // Redirect to Stripe Checkout
-      setIsLoading(true);
-      try {
+    try {
+      if (finalAmount > 0) {
+        // Redirect to Stripe Checkout for donation
         const { data, error } = await supabase.functions.invoke('create-donation', {
-          body: { amount: finalAmount, itemName, itemType }
+          body: { amount: finalAmount, itemName, itemId, itemType }
         });
 
         if (error) throw error;
 
         if (data?.url) {
+          // Store the itemId in sessionStorage so we can download after payment
+          sessionStorage.setItem('pendingDownload', JSON.stringify({ itemId, itemType, itemName }));
           window.open(data.url, '_blank');
           toast.success('Redirecting to checkout...', {
-            description: 'Complete your donation in the new tab.'
+            description: 'Complete your donation in the new tab. Download will start after.'
           });
         }
-      } catch (error) {
-        console.error('Error creating donation:', error);
-        toast.error('Failed to process donation', {
-          description: 'Please try again later.'
-        });
-      } finally {
-        setIsLoading(false);
+      } else {
+        // Free download - trigger immediately
+        await triggerDownload();
       }
-    } else {
-      toast.success(`Downloading ${itemName}`, {
-        description: 'Thank you for using our components!'
+    } catch (error) {
+      console.error('Error processing:', error);
+      toast.error('Failed to process', {
+        description: 'Please try again later.'
       });
+    } finally {
+      setIsLoading(false);
+      onOpenChange(false);
+      setSelectedAmount(0);
+      setCustomAmount('');
     }
-    
-    onOpenChange(false);
-    
-    // Reset state
-    setSelectedAmount(0);
-    setCustomAmount('');
   };
 
   const displayAmount = customAmount ? parseFloat(customAmount) || 0 : selectedAmount;

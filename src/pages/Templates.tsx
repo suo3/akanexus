@@ -36,7 +36,7 @@ const Templates = () => {
   const [categories, setCategories] = useState<string[]>(['All']);
   const [previewTemplate, setPreviewTemplate] = useState<MarketplaceTemplate | null>(null);
   const [donationOpen, setDonationOpen] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+  const [selectedTemplate, setSelectedTemplate] = useState<MarketplaceTemplate | null>(null);
 
   useEffect(() => {
     fetchTemplates();
@@ -66,7 +66,7 @@ const Templates = () => {
       .update({ downloads: template.downloads + 1 })
       .eq('id', template.id);
     
-    setSelectedTemplate(template.name);
+    setSelectedTemplate(template);
     setDonationOpen(true);
     
     // Refresh to update download count
@@ -347,7 +347,8 @@ const Templates = () => {
       <DonationDialog
         open={donationOpen}
         onOpenChange={setDonationOpen}
-        itemName={selectedTemplate}
+        itemName={selectedTemplate?.name || ''}
+        itemId={selectedTemplate?.id || ''}
         itemType="template"
       />
     </div>

@@ -24,8 +24,8 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
     logStep("Stripe key verified");
 
-    const { amount, itemName, itemType } = await req.json();
-    logStep("Request body parsed", { amount, itemName, itemType });
+    const { amount, itemName, itemId, itemType } = await req.json();
+    logStep("Request body parsed", { amount, itemName, itemId, itemType });
 
     if (!amount || amount <= 0) {
       throw new Error("Invalid donation amount");
@@ -53,7 +53,7 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      success_url: `${req.headers.get("origin")}/donation-success?item=${encodeURIComponent(itemName)}&type=${itemType}`,
+      success_url: `${req.headers.get("origin")}/donation-success?item=${encodeURIComponent(itemName)}&type=${itemType}&id=${itemId}`,
       cancel_url: `${req.headers.get("origin")}/${itemType === 'component' ? 'gallery' : 'templates'}`,
       submit_type: "donate",
     });

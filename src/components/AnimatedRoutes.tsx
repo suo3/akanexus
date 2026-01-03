@@ -17,6 +17,7 @@ import DocumentationDetail from "@/pages/DocumentationDetail";
 import Tutorials from "@/pages/Tutorials";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
+import DonationSuccess from "@/pages/DonationSuccess";
 import NotFound from "@/pages/NotFound";
 
 const AnimatedRoutes = () => {
@@ -41,6 +42,7 @@ const AnimatedRoutes = () => {
         <Route path="/tutorials" element={<PageTransition><Tutorials /></PageTransition>} />
         <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
         <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+        <Route path="/donation-success" element={<PageTransition><DonationSuccess /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

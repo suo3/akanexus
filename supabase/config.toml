@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-download]
 verify_jwt = false
+
+[functions.seed-products]
+verify_jwt = false

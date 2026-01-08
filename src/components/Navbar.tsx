@@ -50,6 +50,13 @@ const Navbar = () => {
               Templates
             </NavLink>
             <NavLink 
+              to="/products" 
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+            >
+              Products
+            </NavLink>
+            <NavLink 
               to="/pricing" 
               className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
@@ -104,6 +111,13 @@ const Navbar = () => {
               activeClassName="text-foreground font-medium border-l-primary"
             >
               Templates
+            </NavLink>
+            <NavLink 
+              to="/products" 
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              activeClassName="text-foreground font-medium border-l-primary"
+            >
+              Products
             </NavLink>
             <NavLink 
               to="/pricing" 

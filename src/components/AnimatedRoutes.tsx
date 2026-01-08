@@ -7,6 +7,7 @@ import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import Gallery from "@/pages/Gallery";
 import Templates from "@/pages/Templates";
+import Products from "@/pages/Products";
 import Pricing from "@/pages/Pricing";
 import Services from "@/pages/Services";
 import About from "@/pages/About";
@@ -32,6 +33,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
         <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
         <Route path="/templates" element={<PageTransition><Templates /></PageTransition>} />
+        <Route path="/products" element={<PageTransition><Products /></PageTransition>} />
         <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
         <Route path="/services" element={<PageTransition><Services /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />

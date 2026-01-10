@@ -60,11 +60,8 @@ const Gallery = () => {
   };
 
   const handleDownload = async (component: MarketplaceComponent) => {
-    // Increment download count
-    await (supabase
-      .from('marketplace_components') as any)
-      .update({ downloads: component.downloads + 1 })
-      .eq('id', component.id);
+    // Increment download count using secure RPC function
+    await (supabase.rpc as any)('increment_component_downloads', { _component_id: component.id });
     
     setSelectedComponent(component);
     setDonationOpen(true);

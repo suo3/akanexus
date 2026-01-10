@@ -60,11 +60,8 @@ const Templates = () => {
   };
 
   const handleDownload = async (template: MarketplaceTemplate) => {
-    // Increment download count
-    await (supabase
-      .from('marketplace_templates') as any)
-      .update({ downloads: template.downloads + 1 })
-      .eq('id', template.id);
+    // Increment download count using secure RPC function
+    await (supabase.rpc as any)('increment_template_downloads', { _template_id: template.id });
     
     setSelectedTemplate(template);
     setDonationOpen(true);

@@ -317,6 +317,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_component_downloads: {
+        Args: { _component_id: string }
+        Returns: undefined
+      }
+      increment_template_downloads: {
+        Args: { _template_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

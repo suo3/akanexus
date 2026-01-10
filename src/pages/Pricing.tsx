@@ -1,31 +1,106 @@
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Heart, Sparkles, Coffee, Rocket } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Heart, Sparkles, Coffee, Rocket, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const tiers = [
   {
     name: 'Coffee',
     icon: Coffee,
-    suggested: '$5',
+    amount: 5,
     description: 'Buy us a coffee to show your appreciation',
   },
   {
     name: 'Supporter',
     icon: Heart,
-    suggested: '$15',
+    amount: 15,
     description: 'Help us keep building and maintaining components',
     popular: true,
   },
   {
     name: 'Champion',
     icon: Rocket,
-    suggested: '$50+',
+    amount: 50,
     description: 'Become a champion and get a shoutout on our site',
   },
 ];
 
 const Pricing = () => {
+  const [loadingTier, setLoadingTier] = useState<string | null>(null);
+  const [customAmount, setCustomAmount] = useState('');
+  const [loadingCustom, setLoadingCustom] = useState(false);
+
+  const handleDonation = async (amount: number, tierName: string) => {
+    if (amount <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+
+    setLoadingTier(tierName);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-donation', {
+        body: {
+          amount,
+          itemName: `${tierName} Donation`,
+          itemId: tierName.toLowerCase(),
+          itemType: 'donation',
+        },
+      });
+
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Donation error:', error);
+      toast.error('Failed to start checkout. Please try again.');
+    } finally {
+      setLoadingTier(null);
+    }
+  };
+
+  const handleCustomDonation = async () => {
+    const amount = parseFloat(customAmount);
+    if (isNaN(amount) || amount <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+
+    setLoadingCustom(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-donation', {
+        body: {
+          amount,
+          itemName: 'Custom Donation',
+          itemId: 'custom',
+          itemType: 'donation',
+        },
+      });
+
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Donation error:', error);
+      toast.error('Failed to start checkout. Please try again.');
+    } finally {
+      setLoadingCustom(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -69,10 +144,22 @@ const Pricing = () => {
                   <tier.icon className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{tier.name}</h3>
-                <div className="text-3xl font-bold text-foreground mb-2">{tier.suggested}</div>
+                <div className="text-3xl font-bold text-foreground mb-2">${tier.amount}</div>
                 <p className="text-muted-foreground text-sm mb-6">{tier.description}</p>
-                <Button variant={tier.popular ? 'hero' : 'glass'} className="w-full">
-                  Donate {tier.suggested}
+                <Button 
+                  variant={tier.popular ? 'hero' : 'glass'} 
+                  className="w-full"
+                  onClick={() => handleDonation(tier.amount, tier.name)}
+                  disabled={loadingTier === tier.name}
+                >
+                  {loadingTier === tier.name ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    `Donate $${tier.amount}`
+                  )}
                 </Button>
               </div>
             ))}
@@ -84,9 +171,31 @@ const Pricing = () => {
             <p className="text-muted-foreground mb-6">
               Want to donate a different amount? Every contribution helps us continue building free resources for the community.
             </p>
-            <Button variant="outline" className="px-8">
-              Choose Your Amount
-            </Button>
+            <div className="flex gap-3 max-w-sm mx-auto">
+              <div className="relative flex-1">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="Enter amount"
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(e.target.value)}
+                  className="pl-7"
+                />
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={handleCustomDonation}
+                disabled={loadingCustom || !customAmount}
+              >
+                {loadingCustom ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Donate'
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* What You Get */}

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, Package, Layout, BarChart3, LogOut, 
-  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box
+  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box, UserPlus, Eye, EyeOff
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -27,6 +28,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ComponentManager } from '@/components/admin/ComponentManager';
 import { TemplateManager } from '@/components/admin/TemplateManager';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
@@ -61,6 +70,14 @@ const Admin = () => {
     action: 'promote' | 'demote';
     userName: string;
   }>({ open: false, userId: '', action: 'promote', userName: '' });
+  
+  // Create user dialog state
+  const [createUserDialog, setCreateUserDialog] = useState(false);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserFullName, setNewUserFullName] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -178,6 +195,48 @@ const Admin = () => {
     navigate('/');
   };
 
+  const handleCreateUser = async () => {
+    if (!newUserEmail || !newUserPassword) {
+      toast.error('Email and password are required');
+      return;
+    }
+    
+    if (newUserPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    
+    setCreatingUser(true);
+    
+    try {
+      // Use Supabase Admin API via edge function
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: { 
+          email: newUserEmail, 
+          password: newUserPassword,
+          fullName: newUserFullName 
+        }
+      });
+      
+      if (error) {
+        toast.error('Failed to create user: ' + error.message);
+      } else if (data?.error) {
+        toast.error('Failed to create user: ' + data.error);
+      } else {
+        toast.success('User created successfully');
+        setCreateUserDialog(false);
+        setNewUserEmail('');
+        setNewUserPassword('');
+        setNewUserFullName('');
+        fetchUsers();
+      }
+    } catch (err: any) {
+      toast.error('Failed to create user: ' + (err.message || 'Unknown error'));
+    }
+    
+    setCreatingUser(false);
+  };
+
   if (loading || !isAdmin) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -258,14 +317,20 @@ const Admin = () => {
                 <h1 className="text-2xl font-bold text-foreground mb-1">User Management</h1>
                 <p className="text-muted-foreground">Manage registered users and their roles</p>
               </div>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                <Input
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-secondary border-border"
-                />
+              <div className="flex items-center gap-4">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                  <Input
+                    placeholder="Search users..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 bg-secondary border-border"
+                  />
+                </div>
+                <Button onClick={() => setCreateUserDialog(true)}>
+                  <UserPlus size={18} className="mr-2" />
+                  Create User
+                </Button>
               </div>
             </div>
 
@@ -429,6 +494,75 @@ const Admin = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Create User Dialog */}
+      <Dialog open={createUserDialog} onOpenChange={setCreateUserDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New User</DialogTitle>
+            <DialogDescription>
+              Create a new user account. They will be able to sign in with these credentials.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="newUserFullName">Full Name</Label>
+              <Input
+                id="newUserFullName"
+                placeholder="John Doe"
+                value={newUserFullName}
+                onChange={(e) => setNewUserFullName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newUserEmail">Email *</Label>
+              <Input
+                id="newUserEmail"
+                type="email"
+                placeholder="user@example.com"
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newUserPassword">Password *</Label>
+              <div className="relative">
+                <Input
+                  id="newUserPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={newUserPassword}
+                  onChange={(e) => setNewUserPassword(e.target.value)}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">Must be at least 6 characters</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateUserDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateUser} disabled={creatingUser}>
+              {creatingUser ? (
+                <>
+                  <Loader2 size={16} className="mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                'Create User'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -11,18 +11,17 @@ import { z } from 'zod';
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 
-type AuthMode = 'signIn' | 'signUp' | 'forgotPassword';
+type AuthMode = 'signIn' | 'forgotPassword';
 
 const Auth = () => {
   const [mode, setMode] = useState<AuthMode>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   
-  const { signIn, signUp, resetPassword, user } = useAuth();
+  const { signIn, resetPassword, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -74,28 +73,6 @@ const Auth = () => {
           });
           setMode('signIn');
         }
-      } else if (mode === 'signUp') {
-        const { error } = await signUp(email, password, fullName);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            toast({
-              title: 'Account exists',
-              description: 'This email is already registered. Please sign in instead.',
-              variant: 'destructive',
-            });
-          } else {
-            toast({
-              title: 'Sign up failed',
-              description: error.message,
-              variant: 'destructive',
-            });
-          }
-        } else {
-          toast({
-            title: 'Account created',
-            description: 'Welcome! Redirecting to your dashboard...',
-          });
-        }
       } else {
         const { error } = await signIn(email, password);
         if (error) {
@@ -113,7 +90,6 @@ const Auth = () => {
 
   const getTitle = () => {
     switch (mode) {
-      case 'signUp': return 'Create your account';
       case 'forgotPassword': return 'Reset your password';
       default: return 'Welcome back';
     }
@@ -121,7 +97,6 @@ const Auth = () => {
 
   const getSubtitle = () => {
     switch (mode) {
-      case 'signUp': return 'Start building with premium components';
       case 'forgotPassword': return "Enter your email and we'll send you a reset link";
       default: return 'Sign in to access your dashboard';
     }
@@ -162,20 +137,6 @@ const Auth = () => {
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-5">
-            {mode === 'signUp' && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  placeholder="John Doe"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="bg-secondary border-border focus:border-primary"
-                />
-              </div>
-            )}
-            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -245,14 +206,13 @@ const Auth = () => {
               disabled={isLoading}
             >
               {isLoading ? 'Loading...' : (
-                mode === 'signUp' ? 'Create Account' : 
                 mode === 'forgotPassword' ? 'Send Reset Link' : 'Sign In'
               )}
             </Button>
           </form>
           
           <div className="mt-6 text-center">
-            {mode === 'forgotPassword' ? (
+            {mode === 'forgotPassword' && (
               <p className="text-muted-foreground">
                 Remember your password?{' '}
                 <button
@@ -263,19 +223,6 @@ const Auth = () => {
                   className="text-primary hover:underline font-medium"
                 >
                   Sign in
-                </button>
-              </p>
-            ) : (
-              <p className="text-muted-foreground">
-                {mode === 'signUp' ? 'Already have an account?' : "Don't have an account?"}{' '}
-                <button
-                  onClick={() => {
-                    setMode(mode === 'signUp' ? 'signIn' : 'signUp');
-                    setErrors({});
-                  }}
-                  className="text-primary hover:underline font-medium"
-                >
-                  {mode === 'signUp' ? 'Sign in' : 'Sign up'}
                 </button>
               </p>
             )}

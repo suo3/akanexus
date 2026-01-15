@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { LiveProvider, LivePreview, LiveError } from 'react-live';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Download, Eye, Package, X, Copy, Check, Crown, Code } from 'lucide-react';
+import { Search, Filter, Download, Eye, Package, X, Copy, Check, Crown, Code, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import {
@@ -16,33 +17,81 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import DonationDialog from '@/components/DonationDialog';
 
-// Code preview component - shows actual code snippet
-const CodePreview = ({ codeSnippet, size = 'small' }: { codeSnippet: string | null; size?: 'small' | 'large' }) => {
+// Scope of available components for live preview
+const liveScope = {
+  Button,
+  Input,
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Switch,
+  Checkbox,
+  Alert,
+  AlertDescription,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Avatar,
+  AvatarFallback,
+  useState,
+  useEffect,
+};
+
+// Transform code snippet to be renderable
+const transformCode = (code: string): string => {
+  if (!code) return '';
+  
+  // Remove import statements
+  let transformed = code.replace(/^import\s+.*?;?\s*$/gm, '');
+  
+  // Remove export statements but keep the content
+  transformed = transformed.replace(/^export\s+(default\s+)?/gm, '');
+  
+  // If it's a function component definition, extract just the JSX
+  const functionMatch = transformed.match(/(?:const|function)\s+\w+\s*(?:=\s*(?:\([^)]*\)|[^=])*=>|[^{]*)\s*\{[\s\S]*?return\s*\(([\s\S]*)\)\s*;?\s*\}[\s\S]*$/);
+  if (functionMatch) {
+    transformed = functionMatch[1].trim();
+  }
+  
+  // If code is wrapped in parentheses, keep it; otherwise wrap in fragment if multiple elements
+  transformed = transformed.trim();
+  
+  // Remove trailing semicolons
+  transformed = transformed.replace(/;\s*$/, '');
+  
+  return transformed;
+};
+
+// Live component preview - renders actual React code
+const LiveComponentPreview = ({ codeSnippet, size = 'small' }: { codeSnippet: string | null; size?: 'small' | 'large' }) => {
   if (!codeSnippet) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
         <Code className="mr-2 h-4 w-4" />
-        No code
+        No preview
       </div>
     );
   }
 
   const isSmall = size === 'small';
-  
-  // Truncate code for small preview
-  const displayCode = isSmall 
-    ? codeSnippet.split('\n').slice(0, 8).join('\n') + (codeSnippet.split('\n').length > 8 ? '\n...' : '')
-    : codeSnippet;
+  const transformedCode = transformCode(codeSnippet);
 
   return (
-    <div className={`h-full w-full overflow-hidden ${isSmall ? 'p-2' : 'p-4'}`}>
-      <pre className={`h-full overflow-hidden rounded bg-secondary/80 p-2 ${isSmall ? 'text-[9px]' : 'text-xs'} leading-tight`}>
-        <code className="text-muted-foreground whitespace-pre-wrap break-words font-mono">
-          {displayCode}
-        </code>
-      </pre>
+    <div className={`h-full w-full flex items-center justify-center ${isSmall ? 'p-2' : 'p-6'} overflow-hidden`}>
+      <LiveProvider code={transformedCode} scope={liveScope} noInline={false}>
+        <div className={`${isSmall ? 'scale-75' : ''} transform-origin-center`}>
+          <LivePreview />
+        </div>
+        <LiveError className="text-destructive text-xs p-2 bg-destructive/10 rounded" />
+      </LiveProvider>
     </div>
   );
 };
@@ -190,7 +239,7 @@ const Gallery = () => {
                 >
                   <div className="aspect-video bg-secondary/50 flex items-center justify-center border-b border-border relative overflow-hidden">
                     {/* Live Component Preview */}
-                    <CodePreview codeSnippet={comp.code_snippet} size="small" />
+                    <LiveComponentPreview codeSnippet={comp.code_snippet} size="small" />
                     {comp.is_premium && (
                       <div className="absolute top-2 right-2">
                         <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30">
@@ -264,7 +313,7 @@ const Gallery = () => {
           <div className="flex-1 overflow-auto space-y-4">
             {/* Live Preview */}
             <div className="rounded-lg border border-border bg-secondary/30 p-8 min-h-[200px] flex items-center justify-center">
-              <CodePreview codeSnippet={previewComponent?.code_snippet || null} size="large" />
+              <LiveComponentPreview codeSnippet={previewComponent?.code_snippet || null} size="large" />
             </div>
             
             {/* Description */}

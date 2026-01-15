@@ -18,140 +18,31 @@ import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import DonationDialog from '@/components/DonationDialog';
 
-// Live component preview renderer based on code snippet analysis
-const ComponentPreview = ({ codeSnippet, size = 'small' }: { codeSnippet: string | null; size?: 'small' | 'large' }) => {
+// Code preview component - shows actual code snippet
+const CodePreview = ({ codeSnippet, size = 'small' }: { codeSnippet: string | null; size?: 'small' | 'large' }) => {
   if (!codeSnippet) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
         <Code className="mr-2 h-4 w-4" />
-        No preview
+        No code
       </div>
     );
   }
 
-  const code = codeSnippet.toLowerCase();
   const isSmall = size === 'small';
+  
+  // Truncate code for small preview
+  const displayCode = isSmall 
+    ? codeSnippet.split('\n').slice(0, 8).join('\n') + (codeSnippet.split('\n').length > 8 ? '\n...' : '')
+    : codeSnippet;
 
-  // Button component
-  if (code.includes('button')) {
-    return (
-      <div className={`flex items-center justify-center gap-2 h-full ${isSmall ? 'scale-90' : ''}`}>
-        <Button size={isSmall ? 'sm' : 'default'}>Primary</Button>
-        <Button size={isSmall ? 'sm' : 'default'} variant="outline">Outline</Button>
-        {!isSmall && <Button size="default" variant="secondary">Secondary</Button>}
-      </div>
-    );
-  }
-
-  // Card component
-  if (code.includes('card')) {
-    return (
-      <div className={`flex items-center justify-center h-full p-2 ${isSmall ? 'scale-75' : 'scale-90'}`}>
-        <Card className="w-full max-w-[200px]">
-          <CardHeader className="p-3">
-            <CardTitle className="text-sm">Card Title</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            <p className="text-xs text-muted-foreground">Card content preview</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Input component
-  if (code.includes('input') || code.includes('textarea')) {
-    return (
-      <div className={`flex flex-col items-center justify-center gap-2 h-full px-4 ${isSmall ? 'scale-90' : ''}`}>
-        <Input placeholder="Text input..." className={isSmall ? 'h-8 text-xs' : ''} />
-        {!isSmall && <Input type="email" placeholder="Email input..." />}
-      </div>
-    );
-  }
-
-  // Badge component
-  if (code.includes('badge')) {
-    return (
-      <div className={`flex items-center justify-center gap-2 h-full flex-wrap px-2 ${isSmall ? 'scale-90' : ''}`}>
-        <Badge>Default</Badge>
-        <Badge variant="secondary">Secondary</Badge>
-        <Badge variant="outline">Outline</Badge>
-        {!isSmall && <Badge variant="destructive">Destructive</Badge>}
-      </div>
-    );
-  }
-
-  // Switch component
-  if (code.includes('switch') || code.includes('toggle')) {
-    return (
-      <div className="flex items-center justify-center gap-4 h-full">
-        <Switch defaultChecked />
-        <Switch />
-      </div>
-    );
-  }
-
-  // Checkbox component
-  if (code.includes('checkbox')) {
-    return (
-      <div className="flex items-center justify-center gap-4 h-full">
-        <div className="flex items-center gap-2">
-          <Checkbox id="c1" defaultChecked />
-          <label htmlFor="c1" className="text-sm">Option 1</label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="c2" />
-          <label htmlFor="c2" className="text-sm">Option 2</label>
-        </div>
-      </div>
-    );
-  }
-
-  // Alert component
-  if (code.includes('alert')) {
-    return (
-      <div className="flex items-center justify-center h-full px-3">
-        <div className="border rounded-lg p-3 bg-muted/50 text-sm w-full">
-          <strong className="text-foreground">Alert:</strong>
-          <span className="text-muted-foreground ml-1">This is a preview</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Tabs component
-  if (code.includes('tabs')) {
-    return (
-      <div className="flex items-center justify-center h-full px-3">
-        <div className="flex bg-muted rounded-lg p-1 gap-1">
-          <div className="px-3 py-1.5 bg-background rounded text-sm font-medium">Tab 1</div>
-          <div className="px-3 py-1.5 text-muted-foreground text-sm">Tab 2</div>
-          <div className="px-3 py-1.5 text-muted-foreground text-sm">Tab 3</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Avatar component
-  if (code.includes('avatar')) {
-    return (
-      <div className="flex items-center justify-center gap-3 h-full">
-        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">A</div>
-        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground font-semibold">B</div>
-        <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold">C</div>
-      </div>
-    );
-  }
-
-  // Default fallback - show code icon
   return (
-    <div className="flex items-center justify-center h-full">
-      <div className="bg-muted/50 rounded-lg p-4 border border-dashed border-border">
-        <code className="text-xs text-muted-foreground flex items-center gap-2">
-          <Code className="h-4 w-4" />
-          {"<Component />"}
+    <div className={`h-full w-full overflow-hidden ${isSmall ? 'p-2' : 'p-4'}`}>
+      <pre className={`h-full overflow-hidden rounded bg-secondary/80 p-2 ${isSmall ? 'text-[9px]' : 'text-xs'} leading-tight`}>
+        <code className="text-muted-foreground whitespace-pre-wrap break-words font-mono">
+          {displayCode}
         </code>
-      </div>
+      </pre>
     </div>
   );
 };
@@ -299,7 +190,7 @@ const Gallery = () => {
                 >
                   <div className="aspect-video bg-secondary/50 flex items-center justify-center border-b border-border relative overflow-hidden">
                     {/* Live Component Preview */}
-                    <ComponentPreview codeSnippet={comp.code_snippet} size="small" />
+                    <CodePreview codeSnippet={comp.code_snippet} size="small" />
                     {comp.is_premium && (
                       <div className="absolute top-2 right-2">
                         <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30">
@@ -373,7 +264,7 @@ const Gallery = () => {
           <div className="flex-1 overflow-auto space-y-4">
             {/* Live Preview */}
             <div className="rounded-lg border border-border bg-secondary/30 p-8 min-h-[200px] flex items-center justify-center">
-              <ComponentPreview codeSnippet={previewComponent?.code_snippet || null} size="large" />
+              <CodePreview codeSnippet={previewComponent?.code_snippet || null} size="large" />
             </div>
             
             {/* Description */}

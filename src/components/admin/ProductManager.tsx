@@ -29,6 +29,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, ExternalLink, Star, Search } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 interface Product {
   id: string;
@@ -291,11 +292,33 @@ const ProductManager = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {ICONS.map((icon) => (
-                        <SelectItem key={icon} value={icon}>{icon}</SelectItem>
-                      ))}
+                      {ICONS.map((iconName) => {
+                        const IconComp = (LucideIcons as any)[iconName];
+                        return (
+                          <SelectItem key={iconName} value={iconName}>
+                            <span className="flex items-center gap-2">
+                              {IconComp && <IconComp size={16} />}
+                              {iconName}
+                            </span>
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              {/* Icon Preview */}
+              <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50 border border-border">
+                <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                  {(() => {
+                    const PreviewIcon = (LucideIcons as any)[formData.icon];
+                    return PreviewIcon ? <PreviewIcon className="text-primary" size={32} /> : null;
+                  })()}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">Icon Preview</p>
+                  <p>This icon displays when no preview image is set</p>
                 </div>
               </div>
 

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -15,17 +16,35 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
+
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name")?.toString().trim() || "";
+    const email = formData.get("email")?.toString().trim() || "";
+    const subject = formData.get("subject")?.toString().trim() || "";
+    const message = formData.get("message")?.toString().trim() || "";
+
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: { name, email, subject, message },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you as soon as possible.",
+      });
+      (e.currentTarget as HTMLFormElement).reset();
+    } catch (error: any) {
+      console.error("Contact form error:", error);
+      toast({
+        title: "Failed to send message",
+        description: "Please try again later or email us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

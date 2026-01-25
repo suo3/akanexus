@@ -37,6 +37,17 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
+    // Determine cancel URL based on item type
+    const getCancelUrl = () => {
+      const origin = req.headers.get("origin");
+      switch (itemType) {
+        case 'component': return `${origin}/gallery`;
+        case 'template': return `${origin}/templates`;
+        case 'tool': return `${origin}/mastering`;
+        default: return `${origin}/`;
+      }
+    };
+
     // Create a one-time payment session with price_data for custom amounts
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -45,7 +56,9 @@ serve(async (req) => {
             currency: "usd",
             product_data: {
               name: `Donation for ${itemName}`,
-              description: `Thank you for supporting us! Downloading ${itemType}: ${itemName}`,
+              description: itemType === 'tool' 
+                ? `Thank you for supporting ${itemName}!`
+                : `Thank you for supporting us! Downloading ${itemType}: ${itemName}`,
             },
             unit_amount: amountInCents,
           },
@@ -54,7 +67,7 @@ serve(async (req) => {
       ],
       mode: "payment",
       success_url: `${req.headers.get("origin")}/donation-success?item=${encodeURIComponent(itemName)}&type=${itemType}&id=${itemId}`,
-      cancel_url: `${req.headers.get("origin")}/${itemType === 'component' ? 'gallery' : 'templates'}`,
+      cancel_url: getCancelUrl(),
       submit_type: "donate",
     });
 

@@ -23,6 +23,20 @@ interface Product {
   is_internal?: boolean;
 }
 
+// Category color mapping using semantic design tokens
+const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  'Tools': { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/30' },
+  'Components': { bg: 'bg-accent/10', text: 'text-accent', border: 'border-accent/30' },
+  'Templates': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  'Utilities': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
+  'Integrations': { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' },
+  'Design': { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/30' },
+};
+
+const getCategoryColors = (category: string) => {
+  return CATEGORY_COLORS[category] || { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border' };
+};
+
 // Internal tools that are part of the Akanexus platform
 const INTERNAL_TOOLS: Product[] = [
   {
@@ -196,7 +210,9 @@ const Products = () => {
                                   Built-in Tool
                                 </Badge>
                               )}
-                              <span className="text-xs text-muted-foreground">{product.category}</span>
+                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
+                                {product.category}
+                              </span>
                             </div>
                             <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                               {product.name}
@@ -248,7 +264,7 @@ const Products = () => {
                             </div>
                           )}
                           <div>
-                            <span className="text-xs font-medium text-primary px-2 py-1 bg-primary/10 rounded-full">
+                            <span className={`text-xs font-medium px-2 py-1 rounded-full border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
                               {product.category}
                             </span>
                           </div>

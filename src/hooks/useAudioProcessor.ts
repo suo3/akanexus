@@ -409,18 +409,78 @@ export function useAudioProcessor() {
   }, []);
 
   const applyAISettings = useCallback((aiSettings: Partial<MasteringSettings>) => {
-    setSettings(prev => ({
-      ...prev,
-      ...aiSettings,
-      eqBands: aiSettings.eqBands || prev.eqBands,
-      compression: { ...prev.compression, ...aiSettings.compression },
-      limiter: { ...prev.limiter, ...aiSettings.limiter },
-    }));
+    setSettings(prev => {
+      const newSettings = {
+        ...prev,
+        ...aiSettings,
+        eqBands: aiSettings.eqBands || prev.eqBands,
+        compression: { ...prev.compression, ...aiSettings.compression },
+        limiter: { ...prev.limiter, ...aiSettings.limiter },
+      };
+
+      // Sync EQ nodes immediately
+      if (aiSettings.eqBands) {
+        aiSettings.eqBands.forEach((band, index) => {
+          if (eqNodesRef.current[index]) {
+            eqNodesRef.current[index].gain.value = band.gain;
+          }
+        });
+      }
+
+      // Sync compressor nodes immediately
+      if (aiSettings.compression) {
+        if (compressorNodeRef.current) {
+          if (aiSettings.compression.threshold !== undefined) {
+            compressorNodeRef.current.threshold.value = aiSettings.compression.threshold;
+          }
+          if (aiSettings.compression.ratio !== undefined) {
+            compressorNodeRef.current.ratio.value = aiSettings.compression.ratio;
+          }
+          if (aiSettings.compression.attack !== undefined) {
+            compressorNodeRef.current.attack.value = aiSettings.compression.attack;
+          }
+          if (aiSettings.compression.release !== undefined) {
+            compressorNodeRef.current.release.value = aiSettings.compression.release;
+          }
+        }
+      }
+
+      // Sync limiter nodes immediately
+      if (aiSettings.limiter && limiterNodeRef.current) {
+        if (aiSettings.limiter.threshold !== undefined) {
+          limiterNodeRef.current.threshold.value = aiSettings.limiter.threshold;
+        }
+      }
+
+      // Sync output gain immediately
+      if (aiSettings.outputGain !== undefined && gainNodeRef.current) {
+        gainNodeRef.current.gain.value = Math.pow(10, aiSettings.outputGain / 20);
+      }
+
+      return newSettings;
+    });
     setIsProcessed(true);
   }, []);
 
   const resetSettings = useCallback(() => {
     setSettings(DEFAULT_SETTINGS);
+    
+    // Sync nodes to default values
+    eqNodesRef.current.forEach((node, index) => {
+      node.gain.value = 0;
+    });
+    if (compressorNodeRef.current) {
+      compressorNodeRef.current.threshold.value = -24;
+      compressorNodeRef.current.ratio.value = 4;
+      compressorNodeRef.current.attack.value = 0.003;
+      compressorNodeRef.current.release.value = 0.25;
+    }
+    if (limiterNodeRef.current) {
+      limiterNodeRef.current.threshold.value = -1;
+    }
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = 1;
+    }
   }, []);
 
   const exportAudio = useCallback(async (): Promise<Blob | null> => {

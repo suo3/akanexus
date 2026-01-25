@@ -253,14 +253,115 @@ export function useAudioProcessor() {
 
   const toggleProcessing = useCallback(() => {
     const wasPlaying = isPlaying;
-    if (wasPlaying) {
-      pause();
+    const currentPosition = pauseTimeRef.current || (audioContextRef.current ? audioContextRef.current.currentTime - startTimeRef.current : 0);
+    
+    if (wasPlaying && sourceNodeRef.current) {
+      sourceNodeRef.current.stop();
+      sourceNodeRef.current.disconnect();
+      sourceNodeRef.current = null;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     }
-    setIsProcessed(prev => !prev);
-    if (wasPlaying) {
-      setTimeout(play, 50);
-    }
-  }, [isPlaying, pause, play]);
+    
+    // Store position before toggling
+    pauseTimeRef.current = currentPosition;
+    
+    setIsProcessed(prev => {
+      const newValue = !prev;
+      
+      // Restart playback after state update if was playing
+      if (wasPlaying && audioBuffer) {
+        setTimeout(() => {
+          const ctx = getAudioContext();
+          if (ctx.state === 'suspended') {
+            ctx.resume();
+          }
+          
+          const source = ctx.createBufferSource();
+          source.buffer = audioBuffer;
+          sourceNodeRef.current = source;
+          
+          // Rebuild processing chain with new isProcessed value
+          const gainNode = ctx.createGain();
+          gainNode.gain.value = Math.pow(10, settings.outputGain / 20);
+          gainNodeRef.current = gainNode;
+
+          const eqNodes: BiquadFilterNode[] = [];
+          settings.eqBands.forEach((band, index) => {
+            const filter = ctx.createBiquadFilter();
+            filter.type = index === 0 ? 'lowshelf' : index === settings.eqBands.length - 1 ? 'highshelf' : 'peaking';
+            filter.frequency.value = band.frequency;
+            filter.gain.value = band.gain;
+            filter.Q.value = band.Q;
+            eqNodes.push(filter);
+          });
+          eqNodesRef.current = eqNodes;
+
+          const compressor = ctx.createDynamicsCompressor();
+          compressor.threshold.value = settings.compression.threshold;
+          compressor.ratio.value = settings.compression.ratio;
+          compressor.attack.value = settings.compression.attack;
+          compressor.release.value = settings.compression.release;
+          compressor.knee.value = 6;
+          compressorNodeRef.current = compressor;
+
+          const limiter = ctx.createDynamicsCompressor();
+          limiter.threshold.value = settings.limiter.threshold;
+          limiter.ratio.value = 20;
+          limiter.attack.value = 0.001;
+          limiter.release.value = 0.1;
+          limiter.knee.value = 0;
+          limiterNodeRef.current = limiter;
+
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 256;
+          analyserNodeRef.current = analyser;
+
+          // Connect based on newValue (the toggled state)
+          if (newValue) {
+            let currentNode: AudioNode = source;
+            eqNodes.forEach(filter => {
+              currentNode.connect(filter);
+              currentNode = filter;
+            });
+            currentNode.connect(compressor);
+            compressor.connect(limiter);
+            limiter.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(ctx.destination);
+          } else {
+            source.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(ctx.destination);
+          }
+
+          startTimeRef.current = ctx.currentTime - currentPosition;
+          source.start(0, currentPosition);
+          setIsPlaying(true);
+
+          source.onended = () => {
+            if (ctx.currentTime - startTimeRef.current >= audioBuffer.duration - currentPosition) {
+              setIsPlaying(false);
+              pauseTimeRef.current = 0;
+              setCurrentTime(0);
+            }
+          };
+
+          const updateTime = () => {
+            if (sourceNodeRef.current && audioContextRef.current) {
+              const elapsed = audioContextRef.current.currentTime - startTimeRef.current;
+              setCurrentTime(Math.min(elapsed, audioBuffer.duration));
+              animationFrameRef.current = requestAnimationFrame(updateTime);
+            }
+          };
+          updateTime();
+        }, 10);
+      }
+      
+      return newValue;
+    });
+  }, [isPlaying, audioBuffer, settings, getAudioContext]);
 
   const updateEQBand = useCallback((index: number, gain: number) => {
     setSettings(prev => ({

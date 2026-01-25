@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import SupportDialog from '@/components/SupportDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
@@ -26,6 +27,7 @@ import {
   Loader2,
   FileAudio,
   Sparkles,
+  Heart,
 } from 'lucide-react';
 import { useAudioProcessor, MasteringSettings, EQBand } from '@/hooks/useAudioProcessor';
 
@@ -146,6 +148,7 @@ export default function Mastering() {
   const [isAIMastering, setIsAIMastering] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [activePreset, setActivePreset] = useState<string | null>(null);
+  const [showSupportDialog, setShowSupportDialog] = useState(false);
 
   const {
     audioFile,
@@ -627,8 +630,8 @@ export default function Mastering() {
                   </TabsContent>
                 </Tabs>
 
-                {/* Export Button */}
-                <div className="flex justify-center pt-4">
+                {/* Export & Support Buttons */}
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
                   <Button
                     onClick={handleExport}
                     disabled={isExporting || !audioFile}
@@ -648,6 +651,15 @@ export default function Mastering() {
                       </>
                     )}
                   </Button>
+                  <Button
+                    onClick={() => setShowSupportDialog(true)}
+                    size="lg"
+                    variant="outline"
+                    className="min-w-[200px] border-primary/30 hover:bg-primary/10"
+                  >
+                    <Heart className="mr-2 h-5 w-5 text-primary" />
+                    Support This Tool
+                  </Button>
                 </div>
               </motion.div>
             )}
@@ -655,6 +667,13 @@ export default function Mastering() {
         </motion.div>
       </main>
       <Footer />
+      
+      {/* Support Dialog */}
+      <SupportDialog
+        open={showSupportDialog}
+        onOpenChange={setShowSupportDialog}
+        toolName="Audio Mastering Studio"
+      />
     </div>
   );
 }

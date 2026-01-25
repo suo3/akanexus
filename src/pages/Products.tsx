@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, ExternalLink, Package, Star } from 'lucide-react';
+import { Search, ExternalLink, Package, Star, Music2, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import * as LucideIcons from 'lucide-react';
@@ -15,10 +17,25 @@ interface Product {
   category: string;
   url: string;
   icon: string | null;
-  preview_image_url: string | null;
+  preview_image_url?: string | null;
   is_featured: boolean;
-  order_index: number;
+  order_index?: number;
+  is_internal?: boolean;
 }
+
+// Internal tools that are part of the Akanexus platform
+const INTERNAL_TOOLS: Product[] = [
+  {
+    id: 'mastering-studio',
+    name: 'Audio Mastering Studio',
+    description: 'Professional audio mastering with AI-powered enhancement. Upload your track, fine-tune the mix with EQ and compression, and export studio-quality audio.',
+    category: 'Tools',
+    url: '/mastering',
+    icon: 'Music2',
+    is_featured: true,
+    is_internal: true,
+  },
+];
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -41,13 +58,16 @@ const Products = () => {
     
     if (!error && data) {
       setProducts(data);
-      const uniqueCategories = ['All', ...new Set(data.map((p: Product) => p.category))];
+      const allCategories = [...data.map((p: Product) => p.category), ...INTERNAL_TOOLS.map(t => t.category)];
+      const uniqueCategories = ['All', ...new Set(allCategories)];
       setCategories(uniqueCategories as string[]);
     }
     setLoading(false);
   };
 
-  const filteredProducts = products.filter(product => {
+  const allProducts = [...INTERNAL_TOOLS, ...products];
+
+  const filteredProducts = allProducts.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
@@ -65,6 +85,11 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Products & Tools"
+        description="Discover Akanexus tools and products designed to help you build better applications. Audio mastering, development utilities, and more."
+        keywords="developer tools, audio mastering, web development, React tools"
+      />
       <Navbar />
       
       <main className="pt-24 pb-16">
@@ -134,12 +159,16 @@ const Products = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     {featuredProducts.map((product, index) => {
                       const IconComponent = getIcon(product.icon);
+                      const isInternal = product.is_internal;
+                      const CardWrapper = isInternal ? Link : 'a';
+                      const cardProps = isInternal 
+                        ? { to: product.url }
+                        : { href: product.url, target: '_blank', rel: 'noopener noreferrer' };
+                      
                       return (
-                        <a
+                        <CardWrapper
                           key={product.id}
-                          href={product.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          {...(cardProps as any)}
                           className="glass rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group flex gap-6"
                           style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                         >
@@ -162,6 +191,11 @@ const Products = () => {
                                 <Star size={10} className="mr-1" />
                                 Featured
                               </Badge>
+                              {isInternal && (
+                                <Badge variant="secondary" className="text-xs">
+                                  Built-in Tool
+                                </Badge>
+                              )}
                               <span className="text-xs text-muted-foreground">{product.category}</span>
                             </div>
                             <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
@@ -171,10 +205,14 @@ const Products = () => {
                               {product.description || 'No description'}
                             </p>
                             <span className="inline-flex items-center text-primary text-sm font-medium">
-                              Visit <ExternalLink size={14} className="ml-1" />
+                              {isInternal ? (
+                                <>Try Now <ArrowRight size={14} className="ml-1" /></>
+                              ) : (
+                                <>Visit <ExternalLink size={14} className="ml-1" /></>
+                              )}
                             </span>
                           </div>
-                        </a>
+                        </CardWrapper>
                       );
                     })}
                   </div>

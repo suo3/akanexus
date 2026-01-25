@@ -15,6 +15,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
@@ -34,7 +35,7 @@ const Contact = () => {
         title: "Message sent!",
         description: "We'll get back to you as soon as possible.",
       });
-      (e.currentTarget as HTMLFormElement).reset();
+      form.reset();
     } catch (error: any) {
       console.error("Contact form error:", error);
       toast({

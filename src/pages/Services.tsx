@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const services = [
   {
@@ -37,6 +38,11 @@ const services = [
 const Services = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Services"
+        description="Explore Akanexus services: free React component library, pre-built templates, and custom frontend development. Built on shadcn/ui and Tailwind CSS."
+        keywords="React components, frontend templates, custom development, shadcn, Tailwind CSS, web development services"
+      />
       <Navbar />
       
       <main className="pt-24 pb-16">

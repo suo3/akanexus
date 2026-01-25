@@ -1,6 +1,7 @@
 import { Users, Target, Sparkles, Heart } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const values = [
   {
@@ -28,6 +29,11 @@ const values = [
 const About = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="About Us"
+        description="Learn about Akanexus - a frontend software company offering premium React components, templates, and custom development services built on shadcn and Tailwind CSS."
+        keywords="about Akanexus, frontend development company, React developers, web development team"
+      />
       <Navbar />
       
       <main className="pt-24 pb-16">

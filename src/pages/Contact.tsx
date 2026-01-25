@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +30,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Akanexus for custom frontend development, component requests, or partnership inquiries. We'd love to hear from you."
+        keywords="contact Akanexus, frontend development inquiry, custom development, get in touch"
+      />
       <Navbar />
       
       <main className="pt-24 pb-16">

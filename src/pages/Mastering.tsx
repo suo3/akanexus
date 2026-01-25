@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
@@ -252,6 +253,11 @@ export default function Mastering() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Audio Mastering Studio"
+        description="Free online audio mastering tool with AI-powered enhancement. Upload your track, apply professional EQ and compression, then export studio-quality audio."
+        keywords="audio mastering, online mastering, music production, EQ, compression, AI mastering, free audio tool"
+      />
       <Navbar />
       <main className="container mx-auto px-4 py-8 pt-24">
         <motion.div

@@ -144,6 +144,7 @@ export default function Mastering() {
   const [isExporting, setIsExporting] = useState(false);
   const [isAIMastering, setIsAIMastering] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [activePreset, setActivePreset] = useState<string | null>(null);
 
   const {
     audioFile,
@@ -446,7 +447,7 @@ export default function Mastering() {
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-lg">6-Band Equalizer</CardTitle>
-                          <Button variant="ghost" size="sm" onClick={resetSettings}>
+                          <Button variant="ghost" size="sm" onClick={() => { resetSettings(); setActivePreset(null); }}>
                             <RotateCcw className="h-4 w-4 mr-1" />
                             Reset
                           </Button>
@@ -457,31 +458,39 @@ export default function Mastering() {
                         <div>
                           <Label className="text-sm font-medium mb-3 block">Quick Presets</Label>
                           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                            {MASTERING_PRESETS.map((preset) => (
-                              <Button
-                                key={preset.name}
-                                variant="outline"
-                                size="sm"
-                                className="flex flex-col h-auto py-3 hover:border-primary hover:bg-primary/5 transition-colors"
-                                onClick={() => {
-                                  applyAISettings({
-                                    eqBands: settings.eqBands.map((band, i) => ({
-                                      ...band,
-                                      gain: preset.eqBands[i]?.gain ?? 0,
-                                    })),
-                                    compression: {
-                                      ...settings.compression,
-                                      ...preset.compression,
-                                    },
-                                    outputGain: preset.outputGain,
-                                  });
-                                  toast.success(`Applied "${preset.name}" preset`);
-                                }}
-                              >
-                                <span className="text-lg mb-1">{preset.icon}</span>
-                                <span className="text-xs font-medium">{preset.name}</span>
-                              </Button>
-                            ))}
+                            {MASTERING_PRESETS.map((preset) => {
+                              const isActive = activePreset === preset.name;
+                              return (
+                                <Button
+                                  key={preset.name}
+                                  variant={isActive ? "default" : "outline"}
+                                  size="sm"
+                                  className={`flex flex-col h-auto py-3 transition-all ${
+                                    isActive 
+                                      ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' 
+                                      : 'hover:border-primary hover:bg-primary/5'
+                                  }`}
+                                  onClick={() => {
+                                    setActivePreset(preset.name);
+                                    applyAISettings({
+                                      eqBands: settings.eqBands.map((band, i) => ({
+                                        ...band,
+                                        gain: preset.eqBands[i]?.gain ?? 0,
+                                      })),
+                                      compression: {
+                                        ...settings.compression,
+                                        ...preset.compression,
+                                      },
+                                      outputGain: preset.outputGain,
+                                    });
+                                    toast.success(`Applied "${preset.name}" preset`);
+                                  }}
+                                >
+                                  <span className="text-lg mb-1">{preset.icon}</span>
+                                  <span className="text-xs font-medium">{preset.name}</span>
+                                </Button>
+                              );
+                            })}
                           </div>
                         </div>
 
@@ -498,7 +507,7 @@ export default function Mastering() {
                                     max={12}
                                     step={0.5}
                                     value={[band.gain]}
-                                    onValueChange={([value]) => updateEQBand(index, value)}
+                                    onValueChange={([value]) => { updateEQBand(index, value); setActivePreset(null); }}
                                     className="h-full"
                                   />
                                 </div>

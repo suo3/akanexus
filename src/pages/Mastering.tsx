@@ -668,6 +668,20 @@ export default function Mastering() {
       </main>
       <Footer />
       
+      {/* Floating Support Button */}
+      <motion.button
+        onClick={() => setShowSupportDialog(true)}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.3 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Heart className="h-5 w-5" />
+        <span className="font-medium">Support</span>
+      </motion.button>
+      
       {/* Support Dialog */}
       <SupportDialog
         open={showSupportDialog}

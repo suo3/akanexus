@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, ExternalLink, Package, Star, Music2, ArrowRight } from 'lucide-react';
+import { Search, ExternalLink, Package, Star, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import * as LucideIcons from 'lucide-react';
@@ -20,36 +20,25 @@ interface Product {
   preview_image_url?: string | null;
   is_featured: boolean;
   order_index?: number;
-  is_internal?: boolean;
 }
 
 // Category color mapping using semantic design tokens
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  'Tools': { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/30' },
-  'Components': { bg: 'bg-accent/10', text: 'text-accent', border: 'border-accent/30' },
-  'Templates': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  'Utilities': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
-  'Integrations': { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' },
-  'Design': { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/30' },
+  'Tool': { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30' },
+  'Library': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
+  'API': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  'Service': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
+  'Plugin': { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' },
+  'Extension': { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/30' },
+  'Other': { bg: 'bg-slate-500/10', text: 'text-slate-400', border: 'border-slate-500/30' },
 };
 
 const getCategoryColors = (category: string) => {
   return CATEGORY_COLORS[category] || { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border' };
 };
 
-// Internal tools that are part of the Akanexus platform
-const INTERNAL_TOOLS: Product[] = [
-  {
-    id: 'mastering-studio',
-    name: 'Audio Mastering Studio',
-    description: 'Professional audio mastering with AI-powered enhancement. Upload your track, fine-tune the mix with EQ and compression, and export studio-quality audio.',
-    category: 'Tools',
-    url: '/mastering',
-    icon: 'Music2',
-    is_featured: true,
-    is_internal: true,
-  },
-];
+// Helper to check if URL is internal (starts with /)
+const isInternalUrl = (url: string) => url.startsWith('/');
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -72,16 +61,13 @@ const Products = () => {
     
     if (!error && data) {
       setProducts(data);
-      const allCategories = [...data.map((p: Product) => p.category), ...INTERNAL_TOOLS.map(t => t.category)];
-      const uniqueCategories = ['All', ...new Set(allCategories)];
+      const uniqueCategories = ['All', ...new Set(data.map((p: Product) => p.category))];
       setCategories(uniqueCategories as string[]);
     }
     setLoading(false);
   };
 
-  const allProducts = [...INTERNAL_TOOLS, ...products];
-
-  const filteredProducts = allProducts.filter(product => {
+  const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
@@ -173,7 +159,7 @@ const Products = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     {featuredProducts.map((product, index) => {
                       const IconComponent = getIcon(product.icon);
-                      const isInternal = product.is_internal;
+                      const isInternal = isInternalUrl(product.url);
                       const CardWrapper = isInternal ? Link : 'a';
                       const cardProps = isInternal 
                         ? { to: product.url }
@@ -205,11 +191,6 @@ const Products = () => {
                                 <Star size={10} className="mr-1" />
                                 Featured
                               </Badge>
-                              {isInternal && (
-                                <Badge variant="secondary" className="text-xs">
-                                  Built-in Tool
-                                </Badge>
-                              )}
                               <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
                                 {product.category}
                               </span>
@@ -240,12 +221,16 @@ const Products = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {regularProducts.map((product, index) => {
                     const IconComponent = getIcon(product.icon);
+                    const isInternal = isInternalUrl(product.url);
+                    const CardWrapper = isInternal ? Link : 'a';
+                    const cardProps = isInternal 
+                      ? { to: product.url }
+                      : { href: product.url, target: '_blank', rel: 'noopener noreferrer' };
+                    
                     return (
-                      <a
+                      <CardWrapper
                         key={product.id}
-                        href={product.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        {...(cardProps as any)}
                         className="glass rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group"
                         style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                       >
@@ -276,9 +261,13 @@ const Products = () => {
                           {product.description || 'No description'}
                         </p>
                         <span className="inline-flex items-center text-primary text-sm font-medium">
-                          Visit <ExternalLink size={14} className="ml-1" />
+                          {isInternal ? (
+                            <>Try Now <ArrowRight size={14} className="ml-1" /></>
+                          ) : (
+                            <>Visit <ExternalLink size={14} className="ml-1" /></>
+                          )}
                         </span>
-                      </a>
+                      </CardWrapper>
                     );
                   })}
                 </div>

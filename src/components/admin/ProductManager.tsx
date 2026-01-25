@@ -384,6 +384,7 @@ const ProductManager = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Preview</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Status</TableHead>
@@ -395,78 +396,96 @@ const ProductManager = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-8">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : filteredProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No products found
                 </TableCell>
               </TableRow>
             ) : (
-              filteredProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      product.is_published
-                        ? 'bg-green-500/20 text-green-500'
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {product.is_published ? 'Published' : 'Draft'}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleFeatured(product)}
-                    >
-                      <Star
-                        size={16}
-                        className={product.is_featured ? 'fill-amber-500 text-amber-500' : 'text-muted-foreground'}
-                      />
-                    </Button>
-                  </TableCell>
-                  <TableCell>{product.order_index}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+              filteredProducts.map((product) => {
+                const IconComp = (LucideIcons as any)[product.icon || 'Package'];
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      {product.preview_image_url ? (
+                        <div className="w-10 h-10 rounded-lg overflow-hidden">
+                          <img 
+                            src={product.preview_image_url} 
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          {IconComp && <IconComp className="text-primary" size={20} />}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        product.is_published
+                          ? 'bg-green-500/20 text-green-500'
+                          : 'bg-muted text-muted-foreground'
+                      }`}>
+                        {product.is_published ? 'Published' : 'Draft'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => openEditDialog(product)}
+                        onClick={() => toggleFeatured(product)}
                       >
-                        <Pencil size={16} />
+                        <Star
+                          size={16}
+                          className={product.is_featured ? 'fill-amber-500 text-amber-500' : 'text-muted-foreground'}
+                        />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => window.open(product.url, '_blank')}
-                      >
-                        <ExternalLink size={16} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => togglePublish(product)}
-                      >
-                        {product.is_published ? 'Unpublish' : 'Publish'}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(product.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                    </TableCell>
+                    <TableCell>{product.order_index}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditDialog(product)}
+                        >
+                          <Pencil size={16} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open(product.url, '_blank')}
+                        >
+                          <ExternalLink size={16} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => togglePublish(product)}
+                        >
+                          {product.is_published ? 'Unpublish' : 'Publish'}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(product.id)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>

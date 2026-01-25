@@ -26,13 +26,118 @@ import {
   FileAudio,
   Sparkles,
 } from 'lucide-react';
-import { useAudioProcessor, MasteringSettings } from '@/hooks/useAudioProcessor';
+import { useAudioProcessor, MasteringSettings, EQBand } from '@/hooks/useAudioProcessor';
 
 const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
+
+interface MasteringPreset {
+  name: string;
+  description: string;
+  icon: string;
+  eqBands: { gain: number }[];
+  compression: {
+    threshold: number;
+    ratio: number;
+  };
+  outputGain: number;
+}
+
+const MASTERING_PRESETS: MasteringPreset[] = [
+  {
+    name: 'Warm',
+    description: 'Rich, analog-style warmth',
+    icon: '🔥',
+    eqBands: [
+      { gain: 2.5 },
+      { gain: 1.5 },
+      { gain: 0 },
+      { gain: -1 },
+      { gain: -1.5 },
+      { gain: -2 },
+    ],
+    compression: { threshold: -18, ratio: 3 },
+    outputGain: 1.5,
+  },
+  {
+    name: 'Bright',
+    description: 'Crisp, airy high-end',
+    icon: '✨',
+    eqBands: [
+      { gain: -1 },
+      { gain: 0 },
+      { gain: 0.5 },
+      { gain: 1.5 },
+      { gain: 3 },
+      { gain: 4 },
+    ],
+    compression: { threshold: -20, ratio: 2.5 },
+    outputGain: 1,
+  },
+  {
+    name: 'Punchy',
+    description: 'Tight, impactful dynamics',
+    icon: '👊',
+    eqBands: [
+      { gain: 3 },
+      { gain: 1 },
+      { gain: -2 },
+      { gain: 2 },
+      { gain: 1.5 },
+      { gain: 0.5 },
+    ],
+    compression: { threshold: -12, ratio: 6 },
+    outputGain: 2,
+  },
+  {
+    name: 'Balanced',
+    description: 'Clean, transparent master',
+    icon: '⚖️',
+    eqBands: [
+      { gain: 0.5 },
+      { gain: 0 },
+      { gain: -0.5 },
+      { gain: 0.5 },
+      { gain: 1 },
+      { gain: 0.5 },
+    ],
+    compression: { threshold: -24, ratio: 2 },
+    outputGain: 0.5,
+  },
+  {
+    name: 'Bass Heavy',
+    description: 'Deep, powerful low-end',
+    icon: '🎸',
+    eqBands: [
+      { gain: 5 },
+      { gain: 3 },
+      { gain: 1 },
+      { gain: -1 },
+      { gain: 0 },
+      { gain: 0.5 },
+    ],
+    compression: { threshold: -16, ratio: 4 },
+    outputGain: 1,
+  },
+  {
+    name: 'Vocal Focus',
+    description: 'Upfront, clear vocals',
+    icon: '🎤',
+    eqBands: [
+      { gain: -2 },
+      { gain: -1 },
+      { gain: 2 },
+      { gain: 3 },
+      { gain: 2 },
+      { gain: 1 },
+    ],
+    compression: { threshold: -20, ratio: 3.5 },
+    outputGain: 1.5,
+  },
+];
 
 export default function Mastering() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -347,27 +452,63 @@ export default function Mastering() {
                           </Button>
                         </div>
                       </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-6 gap-4">
-                          {settings.eqBands.map((band, index) => (
-                            <div key={band.label} className="flex flex-col items-center">
-                              <div className="h-32 flex items-center mb-2">
-                                <Slider
-                                  orientation="vertical"
-                                  min={-12}
-                                  max={12}
-                                  step={0.5}
-                                  value={[band.gain]}
-                                  onValueChange={([value]) => updateEQBand(index, value)}
-                                  className="h-full"
-                                />
+                      <CardContent className="space-y-6">
+                        {/* Presets */}
+                        <div>
+                          <Label className="text-sm font-medium mb-3 block">Quick Presets</Label>
+                          <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                            {MASTERING_PRESETS.map((preset) => (
+                              <Button
+                                key={preset.name}
+                                variant="outline"
+                                size="sm"
+                                className="flex flex-col h-auto py-3 hover:border-primary hover:bg-primary/5 transition-colors"
+                                onClick={() => {
+                                  applyAISettings({
+                                    eqBands: settings.eqBands.map((band, i) => ({
+                                      ...band,
+                                      gain: preset.eqBands[i]?.gain ?? 0,
+                                    })),
+                                    compression: {
+                                      ...settings.compression,
+                                      ...preset.compression,
+                                    },
+                                    outputGain: preset.outputGain,
+                                  });
+                                  toast.success(`Applied "${preset.name}" preset`);
+                                }}
+                              >
+                                <span className="text-lg mb-1">{preset.icon}</span>
+                                <span className="text-xs font-medium">{preset.name}</span>
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* EQ Sliders */}
+                        <div>
+                          <Label className="text-sm font-medium mb-3 block">Manual EQ</Label>
+                          <div className="grid grid-cols-6 gap-4">
+                            {settings.eqBands.map((band, index) => (
+                              <div key={band.label} className="flex flex-col items-center">
+                                <div className="h-32 flex items-center mb-2">
+                                  <Slider
+                                    orientation="vertical"
+                                    min={-12}
+                                    max={12}
+                                    step={0.5}
+                                    value={[band.gain]}
+                                    onValueChange={([value]) => updateEQBand(index, value)}
+                                    className="h-full"
+                                  />
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                  {band.gain > 0 ? '+' : ''}{band.gain.toFixed(1)} dB
+                                </span>
+                                <span className="text-xs font-medium mt-1">{band.label}</span>
                               </div>
-                              <span className="text-xs text-muted-foreground">
-                                {band.gain > 0 ? '+' : ''}{band.gain.toFixed(1)} dB
-                              </span>
-                              <span className="text-xs font-medium mt-1">{band.label}</span>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>

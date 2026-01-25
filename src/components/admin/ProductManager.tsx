@@ -29,7 +29,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, ExternalLink, Star, Search } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { icons, LucideIcon } from 'lucide-react';
+import IconPicker from './IconPicker';
 
 interface Product {
   id: string;
@@ -45,12 +46,6 @@ interface Product {
 }
 
 const CATEGORIES = ['Tool', 'Library', 'API', 'Service', 'Plugin', 'Extension', 'Other'];
-
-const ICONS = [
-  'Package', 'Code', 'Terminal', 'Zap', 'Rocket', 'Shield', 'Database', 
-  'Cloud', 'Globe', 'Lock', 'Key', 'Cpu', 'Server', 'HardDrive', 'Layers',
-  'Box', 'Boxes', 'Puzzle', 'Settings', 'Tool', 'Wrench', 'Hammer'
-];
 
 const ProductManager = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -283,63 +278,38 @@ const ProductManager = () => {
                 </div>
 
                 <div>
-                  <Label>Icon</Label>
-                  <Select
-                    value={formData.icon}
-                    onValueChange={(value) => setFormData({ ...formData, icon: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ICONS.map((iconName) => {
-                        const IconComp = (LucideIcons as any)[iconName];
-                        return (
-                          <SelectItem key={iconName} value={iconName}>
-                            <span className="flex items-center gap-2">
-                              {IconComp && <IconComp size={16} />}
-                              {iconName}
-                            </span>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Icon Preview */}
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50 border border-border">
-                <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                  {(() => {
-                    const PreviewIcon = (LucideIcons as any)[formData.icon];
-                    return PreviewIcon ? <PreviewIcon className="text-primary" size={32} /> : null;
-                  })()}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">Icon Preview</p>
-                  <p>This icon displays when no preview image is set</p>
+                  <Label htmlFor="order_index">Order Index</Label>
+                  <Input
+                    id="order_index"
+                    type="number"
+                    value={formData.order_index}
+                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
+                  />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="preview_image_url">Preview Image URL</Label>
+                <Label>Product Icon</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Choose an icon to represent this product (used when no preview image is set)
+                </p>
+                <IconPicker
+                  value={formData.icon}
+                  onChange={(iconName) => setFormData({ ...formData, icon: iconName })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="preview_image_url">Preview Image URL (Optional)</Label>
                 <Input
                   id="preview_image_url"
                   value={formData.preview_image_url}
                   onChange={(e) => setFormData({ ...formData, preview_image_url: e.target.value })}
                   placeholder="https://example.com/image.png"
                 />
-              </div>
-
-              <div>
-                <Label htmlFor="order_index">Order Index</Label>
-                <Input
-                  id="order_index"
-                  type="number"
-                  value={formData.order_index}
-                  onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
-                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  If provided, this image will be used instead of the icon
+                </p>
               </div>
 
               <div className="flex items-center justify-between">
@@ -408,7 +378,7 @@ const ProductManager = () => {
               </TableRow>
             ) : (
               filteredProducts.map((product) => {
-                const IconComp = (LucideIcons as any)[product.icon || 'Package'];
+                const IconComp = icons[product.icon as keyof typeof icons] as LucideIcon;
                 return (
                   <TableRow key={product.id}>
                     <TableCell>
@@ -422,7 +392,7 @@ const ProductManager = () => {
                         </div>
                       ) : (
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          {IconComp && <IconComp className="text-primary" size={20} />}
+                          {IconComp ? <IconComp className="text-primary" size={20} /> : null}
                         </div>
                       )}
                     </TableCell>

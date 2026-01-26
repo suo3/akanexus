@@ -307,56 +307,109 @@ export type Database = {
         }
         Relationships: []
       }
+      tutorial_votes: {
+        Row: {
+          created_at: string
+          id: string
+          tutorial_id: string
+          vote_type: string
+          voter_hash: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tutorial_id: string
+          vote_type?: string
+          voter_hash: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tutorial_id?: string
+          vote_type?: string
+          voter_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutorial_votes_tutorial_id_fkey"
+            columns: ["tutorial_id"]
+            isOneToOne: false
+            referencedRelation: "tutorials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tutorials: {
         Row: {
           author: string | null
+          category: string
           content: string | null
           created_at: string
           created_by: string | null
           description: string | null
           duration: string | null
+          flags: number
           id: string
+          is_flagged: boolean
           is_published: boolean | null
+          is_removed: boolean
           level: string
           order_index: number
           slug: string
+          submitted_by: string | null
           thumbnail_url: string | null
           title: string
           updated_at: string
+          upvotes: number
+          url: string | null
           video_url: string | null
         }
         Insert: {
           author?: string | null
+          category?: string
           content?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           duration?: string | null
+          flags?: number
           id?: string
+          is_flagged?: boolean
           is_published?: boolean | null
+          is_removed?: boolean
           level?: string
           order_index?: number
           slug: string
+          submitted_by?: string | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string
+          upvotes?: number
+          url?: string | null
           video_url?: string | null
         }
         Update: {
           author?: string | null
+          category?: string
           content?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           duration?: string | null
+          flags?: number
           id?: string
+          is_flagged?: boolean
           is_published?: boolean | null
+          is_removed?: boolean
           level?: string
           order_index?: number
           slug?: string
+          submitted_by?: string | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string
+          upvotes?: number
+          url?: string | null
           video_url?: string | null
         }
         Relationships: []
@@ -402,6 +455,14 @@ export type Database = {
       }
       increment_template_downloads: {
         Args: { _template_id: string }
+        Returns: undefined
+      }
+      increment_tutorial_flags: {
+        Args: { _tutorial_id: string }
+        Returns: undefined
+      }
+      increment_tutorial_upvotes: {
+        Args: { _tutorial_id: string }
         Returns: undefined
       }
     }

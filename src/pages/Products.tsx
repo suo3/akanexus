@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, ExternalLink, Package, Star, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
+import { CATEGORY_COLORS as SHARED_CATEGORY_COLORS } from '@/lib/categoryColors';
 import * as LucideIcons from 'lucide-react';
 
 interface Product {
@@ -22,8 +22,9 @@ interface Product {
   order_index?: number;
 }
 
-// Category color mapping using semantic design tokens
+// Extended category colors for products (merging with shared colors)
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  ...SHARED_CATEGORY_COLORS,
   'Tool': { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30' },
   'Library': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
   'API': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
@@ -122,19 +123,26 @@ const Products = () => {
 
           {/* Categories */}
           <div className="flex flex-wrap gap-2 mb-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === category
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+            {categories.map((category) => {
+              const colors = getCategoryColors(category);
+              const isActive = activeCategory === category;
+              
+              return (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+                    isActive
+                      ? category === 'All'
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : `${colors.bg} ${colors.text} ${colors.border}`
+                      : 'bg-secondary text-muted-foreground hover:text-foreground border-transparent hover:border-border'
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
 
           {/* Loading */}

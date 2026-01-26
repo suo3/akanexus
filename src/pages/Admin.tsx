@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, Package, Layout, BarChart3, LogOut, 
-  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box, UserPlus, Eye, EyeOff, Link
+  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box, UserPlus, Eye, EyeOff, Link, GraduationCap
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -41,6 +41,7 @@ import { TemplateManager } from '@/components/admin/TemplateManager';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { DocumentationManager } from '@/components/admin/DocumentationManager';
 import { TutorialManager } from '@/components/admin/TutorialManager';
+import CommunityTutorialManager from '@/components/admin/CommunityTutorialManager';
 import ProductManager from '@/components/admin/ProductManager';
 import BlogManager from '@/components/admin/BlogManager';
 
@@ -257,8 +258,9 @@ const Admin = () => {
     { id: 'templates', label: 'Templates', icon: Layout },
     { id: 'products', label: 'Products', icon: Box },
     { id: 'blog', label: 'Community Links', icon: Link },
+    { id: 'community-tutorials', label: 'Community Tutorials', icon: GraduationCap },
     { id: 'documentation', label: 'Documentation', icon: FileText },
-    { id: 'tutorials', label: 'Tutorials', icon: Play },
+    { id: 'tutorials', label: 'Admin Tutorials', icon: Play },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
@@ -460,6 +462,8 @@ const Admin = () => {
         {activeTab === 'products' && <ProductManager />}
 
         {activeTab === 'blog' && <BlogManager />}
+
+        {activeTab === 'community-tutorials' && <CommunityTutorialManager />}
 
         {activeTab === 'documentation' && <DocumentationManager />}
 

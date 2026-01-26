@@ -1,67 +1,240 @@
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Calendar, User, ArrowUp, Flag, Plus, ExternalLink, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "Building Scalable Design Systems with React",
-    excerpt: "Learn how to create a design system that grows with your product and team. From tokens to components.",
-    author: "Sarah Chen",
-    date: "Dec 8, 2024",
-    category: "Development",
-    readTime: "8 min read",
-  },
-  {
-    id: 2,
-    title: "The Future of Frontend: AI-Powered Components",
-    excerpt: "Exploring how AI is transforming the way we build and customize UI components for modern applications.",
-    author: "Marcus Johnson",
-    date: "Dec 5, 2024",
-    category: "AI & Design",
-    readTime: "6 min read",
-  },
-  {
-    id: 3,
-    title: "Mastering Tailwind CSS: Advanced Techniques",
-    excerpt: "Take your Tailwind skills to the next level with these advanced patterns and best practices.",
-    author: "Emily Rodriguez",
-    date: "Dec 2, 2024",
-    category: "Tutorial",
-    readTime: "10 min read",
-  },
-  {
-    id: 4,
-    title: "Performance Optimization for React Applications",
-    excerpt: "Practical tips and strategies to make your React apps blazing fast. From lazy loading to memoization.",
-    author: "David Park",
-    date: "Nov 28, 2024",
-    category: "Performance",
-    readTime: "12 min read",
-  },
-  {
-    id: 5,
-    title: "Accessibility First: Building Inclusive UIs",
-    excerpt: "Why accessibility should be at the core of your design process, not an afterthought.",
-    author: "Sarah Chen",
-    date: "Nov 25, 2024",
-    category: "Accessibility",
-    readTime: "7 min read",
-  },
-  {
-    id: 6,
-    title: "Component Architecture Patterns That Scale",
-    excerpt: "Architectural patterns for building maintainable, reusable component libraries for large applications.",
-    author: "Marcus Johnson",
-    date: "Nov 20, 2024",
-    category: "Architecture",
-    readTime: "9 min read",
-  },
+const CATEGORIES = [
+  "All",
+  "React",
+  "JavaScript",
+  "TypeScript",
+  "Python",
+  "Frontend",
+  "Backend",
+  "DevOps",
+  "AI/ML",
+  "Design",
+  "Mobile",
+  "General"
 ];
 
+const CATEGORY_COLORS: Record<string, string> = {
+  "React": "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+  "JavaScript": "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+  "TypeScript": "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  "Python": "bg-green-500/10 text-green-400 border-green-500/30",
+  "Frontend": "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  "Backend": "bg-orange-500/10 text-orange-400 border-orange-500/30",
+  "DevOps": "bg-red-500/10 text-red-400 border-red-500/30",
+  "AI/ML": "bg-pink-500/10 text-pink-400 border-pink-500/30",
+  "Design": "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
+  "Mobile": "bg-teal-500/10 text-teal-400 border-teal-500/30",
+  "General": "bg-slate-500/10 text-slate-400 border-slate-500/30",
+};
+
+interface BlogLink {
+  id: string;
+  title: string;
+  url: string;
+  description: string | null;
+  category: string;
+  upvotes: number;
+  flags: number;
+  submitted_by: string | null;
+  created_at: string;
+}
+
+// Generate a simple hash for vote tracking
+const getVoterHash = () => {
+  let hash = localStorage.getItem("voter_hash");
+  if (!hash) {
+    hash = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem("voter_hash", hash);
+  }
+  return hash;
+};
+
 const Blog = () => {
+  const [blogs, setBlogs] = useState<BlogLink[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [votedPosts, setVotedPosts] = useState<Set<string>>(new Set());
+  const [flaggedPosts, setFlaggedPosts] = useState<Set<string>>(new Set());
+  
+  // Form state
+  const [newTitle, setNewTitle] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newCategory, setNewCategory] = useState("General");
+  const [newSubmittedBy, setNewSubmittedBy] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchBlogs();
+    loadUserVotes();
+  }, []);
+
+  const fetchBlogs = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("blog_links" as any)
+      .select("*")
+      .order("upvotes", { ascending: false });
+    
+    if (error) {
+      toast.error("Failed to load blog links");
+      console.error(error);
+    } else {
+      setBlogs((data as BlogLink[]) || []);
+    }
+    setLoading(false);
+  };
+
+  const loadUserVotes = async () => {
+    const voterHash = getVoterHash();
+    const { data } = await supabase
+      .from("blog_votes" as any)
+      .select("blog_id, vote_type")
+      .eq("voter_hash", voterHash);
+    
+    if (data) {
+      const voted = new Set<string>();
+      const flagged = new Set<string>();
+      (data as any[]).forEach((vote) => {
+        if (vote.vote_type === "upvote") voted.add(vote.blog_id);
+        if (vote.vote_type === "flag") flagged.add(vote.blog_id);
+      });
+      setVotedPosts(voted);
+      setFlaggedPosts(flagged);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newTitle.trim() || !newUrl.trim()) {
+      toast.error("Title and URL are required");
+      return;
+    }
+
+    // Basic URL validation
+    try {
+      new URL(newUrl);
+    } catch {
+      toast.error("Please enter a valid URL");
+      return;
+    }
+
+    setSubmitting(true);
+    
+    const { error } = await supabase.from("blog_links" as any).insert({
+      title: newTitle.trim(),
+      url: newUrl.trim(),
+      description: newDescription.trim() || null,
+      category: newCategory,
+      submitted_by: newSubmittedBy.trim() || null,
+    } as any);
+
+    if (error) {
+      toast.error("Failed to submit link");
+      console.error(error);
+    } else {
+      toast.success("Link submitted successfully!");
+      setNewTitle("");
+      setNewUrl("");
+      setNewDescription("");
+      setNewCategory("General");
+      setNewSubmittedBy("");
+      setIsDialogOpen(false);
+      fetchBlogs();
+    }
+    setSubmitting(false);
+  };
+
+  const handleUpvote = async (blogId: string) => {
+    if (votedPosts.has(blogId)) {
+      toast.info("You've already upvoted this link");
+      return;
+    }
+
+    const voterHash = getVoterHash();
+    
+    // Insert vote record
+    const { error: voteError } = await supabase.from("blog_votes" as any).insert({
+      blog_id: blogId,
+      voter_hash: voterHash,
+      vote_type: "upvote",
+    } as any);
+
+    if (voteError) {
+      if (voteError.code === "23505") {
+        toast.info("You've already upvoted this link");
+      } else {
+        toast.error("Failed to upvote");
+      }
+      return;
+    }
+
+    // Increment upvotes using RPC
+    await (supabase.rpc as any)("increment_blog_upvotes", { _blog_id: blogId });
+    
+    setVotedPosts((prev) => new Set([...prev, blogId]));
+    setBlogs((prev) =>
+      prev.map((b) => (b.id === blogId ? { ...b, upvotes: b.upvotes + 1 } : b))
+    );
+    toast.success("Upvoted!");
+  };
+
+  const handleFlag = async (blogId: string) => {
+    if (flaggedPosts.has(blogId)) {
+      toast.info("You've already flagged this link");
+      return;
+    }
+
+    const voterHash = getVoterHash();
+    
+    const { error: voteError } = await supabase.from("blog_votes" as any).insert({
+      blog_id: blogId,
+      voter_hash: voterHash,
+      vote_type: "flag",
+    } as any);
+
+    if (voteError) {
+      if (voteError.code === "23505") {
+        toast.info("You've already flagged this link");
+      } else {
+        toast.error("Failed to flag");
+      }
+      return;
+    }
+
+    await (supabase.rpc as any)("increment_blog_flags", { _blog_id: blogId });
+    
+    setFlaggedPosts((prev) => new Set([...prev, blogId]));
+    toast.success("Flagged for review");
+  };
+
+  const filteredBlogs = selectedCategory === "All" 
+    ? blogs 
+    : blogs.filter((b) => b.category === selectedCategory);
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -73,54 +246,188 @@ const Blog = () => {
           </div>
 
           <div className="container relative z-10 px-6">
-            <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-12">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-                Our <span className="text-gradient">Blog</span>
+                Community <span className="text-gradient">Links</span>
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Insights, tutorials, and updates from the Akanexus team. Learn about frontend development, design systems, and more.
+              <p className="text-lg text-muted-foreground mb-8">
+                Share and discover interesting articles, tutorials, and resources. Upvote the best content!
               </p>
+              
+              {/* Submit Button */}
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="gap-2">
+                    <Plus className="w-5 h-5" />
+                    Share a Link
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Share a Link</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                    <div>
+                      <Input
+                        placeholder="Title *"
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        placeholder="URL *"
+                        type="url"
+                        value={newUrl}
+                        onChange={(e) => setNewUrl(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Textarea
+                        placeholder="Description (optional)"
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                        maxLength={300}
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Select value={newCategory} onValueChange={setNewCategory}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CATEGORIES.filter((c) => c !== "All").map((cat) => (
+                            <SelectItem key={cat} value={cat}>
+                              {cat}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Input
+                        placeholder="Your name (optional)"
+                        value={newSubmittedBy}
+                        onChange={(e) => setNewSubmittedBy(e.target.value)}
+                        maxLength={50}
+                      />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={submitting}>
+                      {submitting ? "Submitting..." : "Submit Link"}
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {CATEGORIES.map((cat) => (
+                <Button
+                  key={cat}
+                  variant={selectedCategory === cat ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(cat)}
+                  className="gap-1"
+                >
+                  {cat === "All" && <Filter className="w-3 h-3" />}
+                  {cat}
+                </Button>
+              ))}
             </div>
 
             {/* Blog Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {blogPosts.map((post) => (
-                <article
-                  key={post.id}
-                  className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
-                >
-                  <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                    <span className="text-4xl font-bold text-primary/30">A</span>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">
-                        {post.category}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{post.readTime}</span>
-                    </div>
-                    <h2 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h2>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <User className="w-3 h-3" />
-                          {post.author}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {post.date}
-                        </span>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto" />
+              </div>
+            ) : filteredBlogs.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No links found. Be the first to share!</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {filteredBlogs.map((post) => (
+                  <article
+                    key={post.id}
+                    className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+                  >
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge 
+                          variant="outline" 
+                          className={CATEGORY_COLORS[post.category] || CATEGORY_COLORS["General"]}
+                        >
+                          {post.category}
+                        </Badge>
+                      </div>
+                      
+                      <a 
+                        href={post.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <h2 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors flex items-start gap-2">
+                          {post.title}
+                          <ExternalLink className="w-4 h-4 flex-shrink-0 mt-1 opacity-50" />
+                        </h2>
+                      </a>
+                      
+                      {post.description && (
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          {post.description}
+                        </p>
+                      )}
+                      
+                      <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          {post.submitted_by && (
+                            <span className="flex items-center gap-1">
+                              <User className="w-3 h-3" />
+                              {post.submitted_by}
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {formatDate(post.created_at)}
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleUpvote(post.id)}
+                            className={`h-8 px-2 gap-1 ${
+                              votedPosts.has(post.id) ? "text-primary" : ""
+                            }`}
+                          >
+                            <ArrowUp className="w-4 h-4" />
+                            <span className="text-xs">{post.upvotes}</span>
+                          </Button>
+                          
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleFlag(post.id)}
+                            className={`h-8 px-2 ${
+                              flaggedPosts.has(post.id) ? "text-destructive" : "text-muted-foreground"
+                            }`}
+                          >
+                            <Flag className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

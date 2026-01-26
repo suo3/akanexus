@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Play, Clock, User, Loader2, ThumbsUp, Flag, Plus, ExternalLink, X } from "lucide-react";
+import { Play, Clock, User, Loader2, ThumbsUp, Flag, Plus, ExternalLink } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { CATEGORIES, getCategoryColorClasses } from "@/lib/categoryColors";
 
 interface Tutorial {
   id: string;
@@ -39,33 +40,6 @@ interface Tutorial {
   category: string;
   submitted_by: string | null;
 }
-
-const CATEGORIES = [
-  "All",
-  "React",
-  "JavaScript",
-  "TypeScript",
-  "Python",
-  "Frontend",
-  "Backend",
-  "DevOps",
-  "Mobile",
-  "AI/ML",
-  "General",
-];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  React: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
-  JavaScript: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  TypeScript: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  Python: "bg-green-500/10 text-green-400 border-green-500/30",
-  Frontend: "bg-purple-500/10 text-purple-400 border-purple-500/30",
-  Backend: "bg-orange-500/10 text-orange-400 border-orange-500/30",
-  DevOps: "bg-red-500/10 text-red-400 border-red-500/30",
-  Mobile: "bg-pink-500/10 text-pink-400 border-pink-500/30",
-  "AI/ML": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-  General: "bg-muted text-muted-foreground border-border",
-};
 
 const getLevelColor = (level: string) => {
   switch (level) {
@@ -397,7 +371,7 @@ const Tutorials = () => {
                       <div className="flex items-center gap-2 mb-3 flex-wrap">
                         <Badge
                           variant="outline"
-                          className={CATEGORY_COLORS[tutorial.category] || CATEGORY_COLORS["General"]}
+                          className={getCategoryColorClasses(tutorial.category)}
                         >
                           {tutorial.category}
                         </Badge>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, Package, Layout, BarChart3, LogOut, 
-  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box, UserPlus, Eye, EyeOff
+  ArrowLeft, Search, MoreVertical, Shield, ShieldOff, Loader2, FileText, Play, Box, UserPlus, Eye, EyeOff, Link
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -42,6 +42,7 @@ import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { DocumentationManager } from '@/components/admin/DocumentationManager';
 import { TutorialManager } from '@/components/admin/TutorialManager';
 import ProductManager from '@/components/admin/ProductManager';
+import BlogManager from '@/components/admin/BlogManager';
 
 interface Profile {
   id: string;
@@ -255,6 +256,7 @@ const Admin = () => {
     { id: 'components', label: 'Components', icon: Package },
     { id: 'templates', label: 'Templates', icon: Layout },
     { id: 'products', label: 'Products', icon: Box },
+    { id: 'blog', label: 'Community Links', icon: Link },
     { id: 'documentation', label: 'Documentation', icon: FileText },
     { id: 'tutorials', label: 'Tutorials', icon: Play },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -456,6 +458,8 @@ const Admin = () => {
         {activeTab === 'templates' && <TemplateManager />}
 
         {activeTab === 'products' && <ProductManager />}
+
+        {activeTab === 'blog' && <BlogManager />}
 
         {activeTab === 'documentation' && <DocumentationManager />}
 

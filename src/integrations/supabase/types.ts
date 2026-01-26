@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_links: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          flags: number
+          id: string
+          is_flagged: boolean
+          is_removed: boolean
+          submitted_by: string | null
+          title: string
+          updated_at: string
+          upvotes: number
+          url: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          flags?: number
+          id?: string
+          is_flagged?: boolean
+          is_removed?: boolean
+          submitted_by?: string | null
+          title: string
+          updated_at?: string
+          upvotes?: number
+          url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          flags?: number
+          id?: string
+          is_flagged?: boolean
+          is_removed?: boolean
+          submitted_by?: string | null
+          title?: string
+          updated_at?: string
+          upvotes?: number
+          url?: string
+        }
+        Relationships: []
+      }
+      blog_votes: {
+        Row: {
+          blog_id: string
+          created_at: string
+          id: string
+          vote_type: string
+          voter_hash: string
+        }
+        Insert: {
+          blog_id: string
+          created_at?: string
+          id?: string
+          vote_type?: string
+          voter_hash: string
+        }
+        Update: {
+          blog_id?: string
+          created_at?: string
+          id?: string
+          vote_type?: string
+          voter_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_votes_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blog_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documentation_sections: {
         Row: {
           content: string | null
@@ -317,6 +394,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_blog_flags: { Args: { _blog_id: string }; Returns: undefined }
+      increment_blog_upvotes: { Args: { _blog_id: string }; Returns: undefined }
       increment_component_downloads: {
         Args: { _component_id: string }
         Returns: undefined

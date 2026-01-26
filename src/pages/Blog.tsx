@@ -10,35 +10,7 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-
-const CATEGORIES = [
-  "All",
-  "React",
-  "JavaScript",
-  "TypeScript",
-  "Python",
-  "Frontend",
-  "Backend",
-  "DevOps",
-  "AI/ML",
-  "Design",
-  "Mobile",
-  "General"
-];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  "React": "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
-  "JavaScript": "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  "TypeScript": "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  "Python": "bg-green-500/10 text-green-400 border-green-500/30",
-  "Frontend": "bg-purple-500/10 text-purple-400 border-purple-500/30",
-  "Backend": "bg-orange-500/10 text-orange-400 border-orange-500/30",
-  "DevOps": "bg-red-500/10 text-red-400 border-red-500/30",
-  "AI/ML": "bg-pink-500/10 text-pink-400 border-pink-500/30",
-  "Design": "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
-  "Mobile": "bg-teal-500/10 text-teal-400 border-teal-500/30",
-  "General": "bg-slate-500/10 text-slate-400 border-slate-500/30",
-};
+import { CATEGORIES, getCategoryColorClasses } from "@/lib/categoryColors";
 
 interface BlogLink {
   id: string;
@@ -360,7 +332,7 @@ const Blog = () => {
                       <div className="flex items-center gap-2 mb-3">
                         <Badge 
                           variant="outline" 
-                          className={CATEGORY_COLORS[post.category] || CATEGORY_COLORS["General"]}
+                          className={getCategoryColorClasses(post.category)}
                         >
                           {post.category}
                         </Badge>

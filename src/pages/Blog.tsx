@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Calendar, User, ArrowUp, Flag, Plus, ExternalLink, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +41,7 @@ const Blog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [votedPosts, setVotedPosts] = useState<Set<string>>(new Set());
   const [flaggedPosts, setFlaggedPosts] = useState<Set<string>>(new Set());
-  
+
   // Form state
   const [newTitle, setNewTitle] = useState("");
   const [newUrl, setNewUrl] = useState("");
@@ -61,7 +61,7 @@ const Blog = () => {
       .from("blog_links" as any)
       .select("*")
       .order("upvotes", { ascending: false });
-    
+
     if (error) {
       toast.error("Failed to load blog links");
       console.error(error);
@@ -77,7 +77,7 @@ const Blog = () => {
       .from("blog_votes" as any)
       .select("blog_id, vote_type")
       .eq("voter_hash", voterHash);
-    
+
     if (data) {
       const voted = new Set<string>();
       const flagged = new Set<string>();
@@ -92,7 +92,7 @@ const Blog = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newTitle.trim() || !newUrl.trim()) {
       toast.error("Title and URL are required");
       return;
@@ -107,7 +107,7 @@ const Blog = () => {
     }
 
     setSubmitting(true);
-    
+
     const { error } = await supabase.from("blog_links" as any).insert({
       title: newTitle.trim(),
       url: newUrl.trim(),
@@ -139,7 +139,7 @@ const Blog = () => {
     }
 
     const voterHash = getVoterHash();
-    
+
     // Insert vote record
     const { error: voteError } = await supabase.from("blog_votes" as any).insert({
       blog_id: blogId,
@@ -158,7 +158,7 @@ const Blog = () => {
 
     // Increment upvotes using RPC
     await (supabase.rpc as any)("increment_blog_upvotes", { _blog_id: blogId });
-    
+
     setVotedPosts((prev) => new Set([...prev, blogId]));
     setBlogs((prev) =>
       prev.map((b) => (b.id === blogId ? { ...b, upvotes: b.upvotes + 1 } : b))
@@ -173,7 +173,7 @@ const Blog = () => {
     }
 
     const voterHash = getVoterHash();
-    
+
     const { error: voteError } = await supabase.from("blog_votes" as any).insert({
       blog_id: blogId,
       voter_hash: voterHash,
@@ -190,13 +190,13 @@ const Blog = () => {
     }
 
     await (supabase.rpc as any)("increment_blog_flags", { _blog_id: blogId });
-    
+
     setFlaggedPosts((prev) => new Set([...prev, blogId]));
     toast.success("Flagged for review");
   };
 
-  const filteredBlogs = selectedCategory === "All" 
-    ? blogs 
+  const filteredBlogs = selectedCategory === "All"
+    ? blogs
     : blogs.filter((b) => b.category === selectedCategory);
 
   const formatDate = (dateStr: string) => {
@@ -210,7 +210,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
@@ -225,7 +225,7 @@ const Blog = () => {
               <p className="text-lg text-muted-foreground mb-8">
                 Share and discover interesting articles, tutorials, and resources. Upvote the best content!
               </p>
-              
+
               {/* Submit Button */}
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
@@ -298,18 +298,26 @@ const Blog = () => {
 
             {/* Category Filter */}
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {CATEGORIES.map((cat) => (
-                <Button
-                  key={cat}
-                  variant={selectedCategory === cat ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(cat)}
-                  className="gap-1"
-                >
-                  {cat === "All" && <Filter className="w-3 h-3" />}
-                  {cat}
-                </Button>
-              ))}
+              {(() => {
+                // Dynamically compute available categories from posts
+                const availableCategories = ["All", ...Array.from(new Set([
+                  ...CATEGORIES.filter(c => c !== "All"),
+                  ...blogs.map(b => b.category)
+                ]))];
+
+                return availableCategories.map((cat) => (
+                  <Button
+                    key={cat}
+                    variant={selectedCategory === cat ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(cat)}
+                    className="gap-1"
+                  >
+                    {cat === "All" && <Filter className="w-3 h-3" />}
+                    {cat}
+                  </Button>
+                ));
+              })()}
             </div>
 
             {/* Blog Grid */}
@@ -330,17 +338,16 @@ const Blog = () => {
                   >
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <Badge 
-                          variant="outline" 
+                        <Badge
+                          variant="outline"
                           className={getCategoryColorClasses(post.category)}
                         >
                           {post.category}
                         </Badge>
                       </div>
-                      
-                      <a 
-                        href={post.url} 
-                        target="_blank" 
+                      <a
+                        href={post.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="block"
                       >
@@ -349,13 +356,13 @@ const Blog = () => {
                           <ExternalLink className="w-4 h-4 flex-shrink-0 mt-1 opacity-50" />
                         </h2>
                       </a>
-                      
+
                       {post.description && (
                         <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                           {post.description}
                         </p>
                       )}
-                      
+
                       <div className="flex items-center justify-between pt-4 border-t border-border/50">
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           {post.submitted_by && (
@@ -369,27 +376,25 @@ const Blog = () => {
                             {formatDate(post.created_at)}
                           </span>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleUpvote(post.id)}
-                            className={`h-8 px-2 gap-1 ${
-                              votedPosts.has(post.id) ? "text-primary" : ""
-                            }`}
+                            className={`h-8 px-2 gap-1 ${votedPosts.has(post.id) ? "text-primary" : ""
+                              }`}
                           >
                             <ArrowUp className="w-4 h-4" />
                             <span className="text-xs">{post.upvotes}</span>
                           </Button>
-                          
+
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleFlag(post.id)}
-                            className={`h-8 px-2 ${
-                              flaggedPosts.has(post.id) ? "text-destructive" : "text-muted-foreground"
-                            }`}
+                            className={`h-8 px-2 ${flaggedPosts.has(post.id) ? "text-destructive" : "text-muted-foreground"
+                              }`}
                           >
                             <Flag className="w-4 h-4" />
                           </Button>
@@ -405,7 +410,7 @@ const Blog = () => {
       </main>
 
       <Footer />
-    </div>
+    </div >
   );
 };
 

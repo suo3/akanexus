@@ -67,6 +67,7 @@ const navigationSections: NavSection[] = [
         items: [
             { label: 'Manager', path: '/design-system-generator/tokens/manager' },
             { label: 'Export', path: '/design-system-generator/tokens/export' },
+            { label: 'Frameworks', path: '/design-system-generator/tokens/frameworks', badge: 'New' },
         ],
     },
     {
@@ -95,6 +96,8 @@ const navigationSections: NavSection[] = [
         items: [
             { label: 'Team', path: '/design-system-generator/governance/team' },
             { label: 'Multi-Brand', path: '/design-system-generator/governance/brands' },
+            { label: 'Requests', path: '/design-system-generator/governance/requests' },
+            { label: 'Guidelines', path: '/design-system-generator/governance/contribution' },
             { label: 'Changelog', path: '/design-system-generator/governance/changelog' },
         ],
     },
@@ -104,6 +107,7 @@ const navigationSections: NavSection[] = [
         items: [
             { label: 'System Health', path: '/design-system-generator/quality/health' },
             { label: 'Accessibility', path: '/design-system-generator/quality/accessibility' },
+            { label: 'Localization (RTL)', path: '/design-system-generator/quality/localization' },
             { label: 'Asset Library', path: '/design-system-generator/quality/assets' },
         ],
     },

@@ -23,6 +23,7 @@ const FormComponent = () => <div className="p-8"><h1 className="text-2xl font-bo
 // Token modules
 import TokenManager from './modules/tokens/TokenManager';
 import TokenExport from './modules/tokens/Export';
+import FrameworkExports from './modules/tokens/FrameworkExports';
 
 // Documentation modules
 import DocumentationPreview from './modules/documentation/Preview';
@@ -40,11 +41,14 @@ import FigmaIntegration from './modules/developer/FigmaIntegration';
 import TeamManagement from './modules/governance/TeamManagement';
 import MultiBrandManager from './modules/governance/MultiBrandManager';
 import Changelog from './modules/governance/Changelog';
+import ComponentRequests from './modules/governance/ComponentRequests';
+import ContributionWorkspace from './modules/governance/ContributionWorkspace';
 
 // Quality modules
 import HealthDashboard from './modules/quality/HealthDashboard';
 import AccessibilityChecker from './modules/quality/AccessibilityChecker';
 import IconLibrary from './modules/quality/IconLibrary';
+import LocalizationManager from './modules/quality/LocalizationManager';
 
 const DesignSystemGenerator = () => {
     return (
@@ -71,6 +75,7 @@ const DesignSystemGenerator = () => {
                 {/* Token routes */}
                 <Route path="tokens/manager" element={<TokenManager />} />
                 <Route path="tokens/export" element={<TokenExport />} />
+                <Route path="tokens/frameworks" element={<FrameworkExports />} />
 
                 {/* Documentation routes */}
                 <Route path="documentation/preview" element={<DocumentationPreview />} />
@@ -88,11 +93,14 @@ const DesignSystemGenerator = () => {
                 <Route path="governance/team" element={<TeamManagement />} />
                 <Route path="governance/brands" element={<MultiBrandManager />} />
                 <Route path="governance/changelog" element={<Changelog />} />
+                <Route path="governance/requests" element={<ComponentRequests />} />
+                <Route path="governance/contribution" element={<ContributionWorkspace />} />
 
                 {/* Quality routes */}
                 <Route path="quality/health" element={<HealthDashboard />} />
                 <Route path="quality/accessibility" element={<AccessibilityChecker />} />
                 <Route path="quality/assets" element={<IconLibrary />} />
+                <Route path="quality/localization" element={<LocalizationManager />} />
             </Route>
         </Routes>
     );

@@ -26,6 +26,9 @@ import {
     Terminal,
     LayoutTemplate,
     Figma,
+    MessageSquarePlus,
+    FileText,
+    Globe,
 } from 'lucide-react';
 
 interface CommandItem {
@@ -70,11 +73,14 @@ const commandItems: CommandItem[] = [
 
     // Governance
     { label: 'Team Management', path: '/design-system-generator/governance/team', icon: Shield, category: 'Governance', keywords: ['users', 'permissions'] },
+    { label: 'Component Requests', path: '/design-system-generator/governance/requests', icon: MessageSquarePlus, category: 'Governance', keywords: ['vote', 'new', 'idea'] },
+    { label: 'Contribution Guidelines', path: '/design-system-generator/governance/contribution', icon: FileText, category: 'Governance', keywords: ['contributing', 'rules', 'process'] },
     { label: 'Changelog', path: '/design-system-generator/governance/changelog', icon: Shield, category: 'Governance', keywords: ['history', 'versions'] },
 
     // Quality
     { label: 'Health Dashboard', path: '/design-system-generator/quality/health', icon: Activity, category: 'Quality', keywords: ['metrics', 'analytics'] },
     { label: 'Accessibility Checker', path: '/design-system-generator/quality/accessibility', icon: Activity, category: 'Quality', keywords: ['a11y', 'wcag', 'contrast'] },
+    { label: 'Localization & RTL', path: '/design-system-generator/quality/localization', icon: Globe, category: 'Quality', keywords: ['translation', 'language', 'international', 'i18n'] },
     { label: 'Icon & Asset Library', path: '/design-system-generator/quality/assets', icon: Box, category: 'Quality', keywords: ['icons', 'images', 'assets', 'svg'] },
     { label: 'Multi-Brand Manager', path: '/design-system-generator/governance/brands', icon: Palette, category: 'Governance', keywords: ['brands', 'themes', 'dark mode'] },
 ];

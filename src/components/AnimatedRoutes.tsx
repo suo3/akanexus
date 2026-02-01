@@ -22,15 +22,16 @@ import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import DonationSuccess from "@/pages/DonationSuccess";
 import Mastering from "@/pages/Mastering";
+import DesignSystemGenerator from "@/pages/DesignSystemGenerator";
 import NotFound from "@/pages/NotFound";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-  
+
   // Hide support button on admin and auth pages
-  const hideFloatingButton = location.pathname.startsWith('/admin') || 
-                              location.pathname === '/auth' ||
-                              location.pathname === '/reset-password';
+  const hideFloatingButton = location.pathname.startsWith('/admin') ||
+    location.pathname === '/auth' ||
+    location.pathname === '/reset-password';
 
   return (
     <>
@@ -56,10 +57,14 @@ const AnimatedRoutes = () => {
           <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
           <Route path="/donation-success" element={<PageTransition><DonationSuccess /></PageTransition>} />
           <Route path="/mastering" element={<PageTransition><Mastering /></PageTransition>} />
+
+          {/* Design System Generator - Nested Routes */}
+          <Route path="/design-system-generator/*" element={<DesignSystemGenerator />} />
+
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </AnimatePresence>
-      
+
       {/* Global floating support button */}
       {!hideFloatingButton && <FloatingSupportButton />}
     </>

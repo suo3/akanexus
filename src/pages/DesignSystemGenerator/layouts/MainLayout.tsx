@@ -7,6 +7,8 @@ import { Moon, Sun, Download, Undo2, Redo2 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useDesignSystemStore } from '../store/useDesignSystemStore';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { GuidedTour } from '../components/GuidedTour';
+import { SettingsModal } from '../components/Settings/SettingsModal';
 
 export const MainLayout = () => {
     const { theme, setTheme } = useTheme();
@@ -15,6 +17,8 @@ export const MainLayout = () => {
     return (
         <div className="flex h-screen w-full bg-background overflow-hidden">
             <CommandPalette />
+            <GuidedTour />
+            <SettingsModal />
 
             {/* Sidebar */}
             <Sidebar />
@@ -22,8 +26,8 @@ export const MainLayout = () => {
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col">
                 {/* Top Toolbar */}
-                <header className="h-16 border-b bg-card/50 backdrop-blur-md flex items-center justify-between px-6 z-10 shadow-sm">
-                    <div className="flex items-center gap-4">
+                <header className="h-16 border-b bg-card/50 backdrop-blur-md flex items-center justify-between px-6 z-10 shadow-sm" data-tour="toolbar-actions">
+                    <div className="flex items-center gap-4" data-tour="command-palette">
                         <CommandPaletteTrigger />
                     </div>
 

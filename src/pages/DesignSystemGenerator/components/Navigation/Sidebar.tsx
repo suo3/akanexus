@@ -57,6 +57,7 @@ const navigationSections: NavSection[] = [
             { label: 'Input', path: '/design-system-generator/components/input' },
             { label: 'Card', path: '/design-system-generator/components/card' },
             { label: 'Modal', path: '/design-system-generator/components/modal' },
+            { label: 'State Machine', path: '/design-system-generator/components/state-machine', badge: 'New' },
         ],
     },
     {
@@ -80,6 +81,7 @@ const navigationSections: NavSection[] = [
         icon: Settings,
         items: [
             { label: 'Export Project', path: '/design-system-generator/developer/export' },
+            { label: 'GitHub Sync', path: '/design-system-generator/developer/github', badge: 'Beta' },
             { label: 'CLI Config', path: '/design-system-generator/developer/cli' },
             { label: 'Regression Testing', path: '/design-system-generator/developer/testing' },
         ],
@@ -146,7 +148,7 @@ export const Sidebar = () => {
     }
 
     return (
-        <aside className="w-72 border-r bg-card/50 backdrop-blur-xl flex flex-col">
+        <aside className="w-72 border-r bg-card/50 backdrop-blur-xl flex flex-col" data-tour="sidebar">
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -235,7 +237,11 @@ export const Sidebar = () => {
 
             {/* Footer */}
             <div className="p-3 border-t">
-                <Button variant="outline" className="w-full justify-start gap-2 font-bold text-xs">
+                <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2 font-bold text-xs"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
+                >
                     <Settings className="h-4 w-4" />
                     Settings
                 </Button>

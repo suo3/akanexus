@@ -21,7 +21,10 @@ import {
     Settings,
     Shield,
     Activity,
+    Activity,
     Search,
+    GitBranch,
+    Terminal,
 } from 'lucide-react';
 
 interface CommandItem {
@@ -45,6 +48,7 @@ const commandItems: CommandItem[] = [
     { label: 'Input Component', path: '/design-system-generator/components/input', icon: ComponentIcon, category: 'Components', keywords: ['form', 'field'] },
     { label: 'Card Component', path: '/design-system-generator/components/card', icon: ComponentIcon, category: 'Components', keywords: ['container'] },
     { label: 'Modal Component', path: '/design-system-generator/components/modal', icon: ComponentIcon, category: 'Components', keywords: ['dialog', 'popup'] },
+    { label: 'State Machine', path: '/design-system-generator/components/state-machine', icon: Sparkles, category: 'Components', keywords: ['logic', 'xstate', 'flow', 'diagram'] },
 
     // Tokens
     { label: 'Token Manager', path: '/design-system-generator/tokens/manager', icon: FileCode, category: 'Tokens', keywords: ['variables', 'design tokens'] },
@@ -56,7 +60,8 @@ const commandItems: CommandItem[] = [
 
     // Developer
     { label: 'Export Project', path: '/design-system-generator/developer/export', icon: Settings, category: 'Developer', keywords: ['export', 'download', 'scaffold', 'template'] },
-    { label: 'CLI Configuration', path: '/design-system-generator/developer/cli', icon: Settings, category: 'Developer', keywords: ['command line', 'terminal'] },
+    { label: 'GitHub Integration', path: '/design-system-generator/developer/github', icon: GitBranch, category: 'Developer', keywords: ['git', 'pr', 'sync', 'repo'] },
+    { label: 'CLI Configuration', path: '/design-system-generator/developer/cli', icon: Terminal, category: 'Developer', keywords: ['command line', 'terminal', 'config'] },
     { label: 'Regression Testing', path: '/design-system-generator/developer/testing', icon: Settings, category: 'Developer', keywords: ['visual', 'snapshot'] },
 
     // Governance
@@ -66,6 +71,8 @@ const commandItems: CommandItem[] = [
     // Quality
     { label: 'Health Dashboard', path: '/design-system-generator/quality/health', icon: Activity, category: 'Quality', keywords: ['metrics', 'analytics'] },
     { label: 'Accessibility Checker', path: '/design-system-generator/quality/accessibility', icon: Activity, category: 'Quality', keywords: ['a11y', 'wcag', 'contrast'] },
+    { label: 'Icon & Asset Library', path: '/design-system-generator/quality/assets', icon: Box, category: 'Quality', keywords: ['icons', 'images', 'assets', 'svg'] },
+    { label: 'Multi-Brand Manager', path: '/design-system-generator/governance/brands', icon: Palette, category: 'Governance', keywords: ['brands', 'themes', 'dark mode'] },
 ];
 
 export const CommandPalette = () => {
@@ -80,8 +87,13 @@ export const CommandPalette = () => {
             }
         };
 
+        const openHandler = () => setOpen(true);
+        window.addEventListener('open-command-palette', openHandler);
         document.addEventListener('keydown', down);
-        return () => document.removeEventListener('keydown', down);
+        return () => {
+            document.removeEventListener('keydown', down);
+            window.removeEventListener('open-command-palette', openHandler);
+        };
     }, []);
 
     const handleSelect = (path: string) => {
@@ -131,11 +143,9 @@ export const CommandPalette = () => {
 
 // Trigger button component
 export const CommandPaletteTrigger = () => {
-    const [open, setOpen] = React.useState(false);
-
     return (
         <button
-            onClick={() => setOpen(true)}
+            onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
             className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors text-sm text-muted-foreground"
         >
             <Search className="h-4 w-4" />

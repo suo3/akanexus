@@ -21,10 +21,11 @@ import {
     Settings,
     Shield,
     Activity,
-    Activity,
     Search,
     GitBranch,
     Terminal,
+    LayoutTemplate,
+    Figma,
 } from 'lucide-react';
 
 interface CommandItem {
@@ -49,6 +50,7 @@ const commandItems: CommandItem[] = [
     { label: 'Card Component', path: '/design-system-generator/components/card', icon: ComponentIcon, category: 'Components', keywords: ['container'] },
     { label: 'Modal Component', path: '/design-system-generator/components/modal', icon: ComponentIcon, category: 'Components', keywords: ['dialog', 'popup'] },
     { label: 'State Machine', path: '/design-system-generator/components/state-machine', icon: Sparkles, category: 'Components', keywords: ['logic', 'xstate', 'flow', 'diagram'] },
+    { label: 'Pattern Library', path: '/design-system-generator/components/patterns', icon: LayoutTemplate, category: 'Components', keywords: ['templates', 'layouts', 'forms'] },
 
     // Tokens
     { label: 'Token Manager', path: '/design-system-generator/tokens/manager', icon: FileCode, category: 'Tokens', keywords: ['variables', 'design tokens'] },
@@ -56,11 +58,13 @@ const commandItems: CommandItem[] = [
 
     // Documentation
     { label: 'Documentation Preview', path: '/design-system-generator/documentation/preview', icon: BookOpen, category: 'Documentation', keywords: ['docs', 'guide'] },
-    { label: 'Guidelines', path: '/design-system-generator/documentation/guidelines', icon: BookOpen, category: 'Documentation', keywords: ['principles', 'rules'] },
+    { label: 'API Reference', path: '/design-system-generator/documentation/api', icon: FileCode, category: 'Documentation', keywords: ['props', 'typescript', 'types'] },
+    { label: 'Guidelines Editor', path: '/design-system-generator/documentation/guidelines', icon: BookOpen, category: 'Documentation', keywords: ['principles', 'rules', 'markdown', 'write'] },
 
     // Developer
     { label: 'Export Project', path: '/design-system-generator/developer/export', icon: Settings, category: 'Developer', keywords: ['export', 'download', 'scaffold', 'template'] },
     { label: 'GitHub Integration', path: '/design-system-generator/developer/github', icon: GitBranch, category: 'Developer', keywords: ['git', 'pr', 'sync', 'repo'] },
+    { label: 'Figma Sync', path: '/design-system-generator/developer/figma', icon: Figma, category: 'Developer', keywords: ['figma', 'design', 'tokens', 'import'] },
     { label: 'CLI Configuration', path: '/design-system-generator/developer/cli', icon: Terminal, category: 'Developer', keywords: ['command line', 'terminal', 'config'] },
     { label: 'Regression Testing', path: '/design-system-generator/developer/testing', icon: Settings, category: 'Developer', keywords: ['visual', 'snapshot'] },
 

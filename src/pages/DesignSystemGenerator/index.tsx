@@ -17,6 +17,7 @@ import InputComponent from './modules/components/Input';
 import CardBuilder from './modules/components/Card';
 import ModalBuilder from './modules/components/Modal';
 import StateMachineDesigner from './modules/components/StateMachineDesigner';
+import PatternLibrary from './modules/components/PatternLibrary';
 const FormComponent = () => <div className="p-8"><h1 className="text-2xl font-bold">Form Component</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
 
 // Token modules
@@ -25,13 +26,15 @@ import TokenExport from './modules/tokens/Export';
 
 // Documentation modules
 import DocumentationPreview from './modules/documentation/Preview';
-const DocGuidelines = () => <div className="p-8"><h1 className="text-2xl font-bold">Guidelines</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
+import AutoDocs from './modules/documentation/AutoDocs';
+import GuidelinesEditor from './modules/documentation/GuidelinesEditor';
 
 // Developer modules
 import ProjectExport from './modules/developer/ProjectExport';
 import GitHubIntegration from './modules/developer/GitHubIntegration';
 import CLIConfig from './modules/developer/CLIConfig';
-const DevTesting = () => <div className="p-8"><h1 className="text-2xl font-bold">Regression Testing</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
+import RegressionTesting from './modules/developer/RegressionTesting';
+import FigmaIntegration from './modules/developer/FigmaIntegration';
 
 // Governance modules
 import TeamManagement from './modules/governance/TeamManagement';
@@ -63,6 +66,7 @@ const DesignSystemGenerator = () => {
                 <Route path="components/card" element={<CardBuilder />} />
                 <Route path="components/modal" element={<ModalBuilder />} />
                 <Route path="components/state-machine" element={<StateMachineDesigner />} />
+                <Route path="components/patterns" element={<PatternLibrary />} />
 
                 {/* Token routes */}
                 <Route path="tokens/manager" element={<TokenManager />} />
@@ -70,13 +74,15 @@ const DesignSystemGenerator = () => {
 
                 {/* Documentation routes */}
                 <Route path="documentation/preview" element={<DocumentationPreview />} />
-                <Route path="documentation/guidelines" element={<DocGuidelines />} />
+                <Route path="documentation/api" element={<AutoDocs />} />
+                <Route path="documentation/guidelines" element={<GuidelinesEditor />} />
 
                 {/* Developer routes */}
                 <Route path="developer/export" element={<ProjectExport />} />
                 <Route path="developer/github" element={<GitHubIntegration />} />
                 <Route path="developer/cli" element={<CLIConfig />} />
-                <Route path="developer/testing" element={<DevTesting />} />
+                <Route path="developer/testing" element={<RegressionTesting />} />
+                <Route path="developer/figma" element={<FigmaIntegration />} />
 
                 {/* Governance routes */}
                 <Route path="governance/team" element={<TeamManagement />} />

@@ -58,6 +58,7 @@ const navigationSections: NavSection[] = [
             { label: 'Card', path: '/design-system-generator/components/card' },
             { label: 'Modal', path: '/design-system-generator/components/modal' },
             { label: 'State Machine', path: '/design-system-generator/components/state-machine', badge: 'New' },
+            { label: 'Patterns', path: '/design-system-generator/components/patterns' },
         ],
     },
     {
@@ -73,6 +74,7 @@ const navigationSections: NavSection[] = [
         icon: BookOpen,
         items: [
             { label: 'Preview', path: '/design-system-generator/documentation/preview' },
+            { label: 'API Reference', path: '/design-system-generator/documentation/api', badge: 'Auto' },
             { label: 'Guidelines', path: '/design-system-generator/documentation/guidelines' },
         ],
     },
@@ -82,6 +84,7 @@ const navigationSections: NavSection[] = [
         items: [
             { label: 'Export Project', path: '/design-system-generator/developer/export' },
             { label: 'GitHub Sync', path: '/design-system-generator/developer/github', badge: 'Beta' },
+            { label: 'Figma Connect', path: '/design-system-generator/developer/figma' },
             { label: 'CLI Config', path: '/design-system-generator/developer/cli' },
             { label: 'Regression Testing', path: '/design-system-generator/developer/testing' },
         ],

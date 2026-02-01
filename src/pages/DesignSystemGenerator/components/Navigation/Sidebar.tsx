@@ -89,6 +89,7 @@ const navigationSections: NavSection[] = [
         icon: Shield,
         items: [
             { label: 'Team', path: '/design-system-generator/governance/team' },
+            { label: 'Multi-Brand', path: '/design-system-generator/governance/brands' },
             { label: 'Changelog', path: '/design-system-generator/governance/changelog' },
         ],
     },
@@ -96,8 +97,9 @@ const navigationSections: NavSection[] = [
         title: 'Quality',
         icon: Activity,
         items: [
-            { label: 'Health Dashboard', path: '/design-system-generator/quality/health' },
+            { label: 'System Health', path: '/design-system-generator/quality/health' },
             { label: 'Accessibility', path: '/design-system-generator/quality/accessibility' },
+            { label: 'Asset Library', path: '/design-system-generator/quality/assets' },
         ],
     },
 ];

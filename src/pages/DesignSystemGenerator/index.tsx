@@ -32,12 +32,14 @@ const GitHubIntegration = () => <div className="p-8"><h1 className="text-2xl fon
 const DevTesting = () => <div className="p-8"><h1 className="text-2xl font-bold">Regression Testing</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
 
 // Governance modules
-const GovTeam = () => <div className="p-8"><h1 className="text-2xl font-bold">Team Management</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
-const GovChangelog = () => <div className="p-8"><h1 className="text-2xl font-bold">Changelog</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
+import TeamManagement from './modules/governance/TeamManagement';
+import MultiBrandManager from './modules/governance/MultiBrandManager';
+import Changelog from './modules/governance/Changelog';
 
 // Quality modules
-const QualityHealth = () => <div className="p-8"><h1 className="text-2xl font-bold">Health Dashboard</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
-const QualityAccessibility = () => <div className="p-8"><h1 className="text-2xl font-bold">Accessibility Checker</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
+import HealthDashboard from './modules/quality/HealthDashboard';
+import AccessibilityChecker from './modules/quality/AccessibilityChecker';
+import IconLibrary from './modules/quality/IconLibrary';
 
 const DesignSystemGenerator = () => {
     return (
@@ -73,12 +75,14 @@ const DesignSystemGenerator = () => {
                 <Route path="developer/testing" element={<DevTesting />} />
 
                 {/* Governance routes */}
-                <Route path="governance/team" element={<GovTeam />} />
-                <Route path="governance/changelog" element={<GovChangelog />} />
+                <Route path="governance/team" element={<TeamManagement />} />
+                <Route path="governance/brands" element={<MultiBrandManager />} />
+                <Route path="governance/changelog" element={<Changelog />} />
 
                 {/* Quality routes */}
-                <Route path="quality/health" element={<QualityHealth />} />
-                <Route path="quality/accessibility" element={<QualityAccessibility />} />
+                <Route path="quality/health" element={<HealthDashboard />} />
+                <Route path="quality/accessibility" element={<AccessibilityChecker />} />
+                <Route path="quality/assets" element={<IconLibrary />} />
             </Route>
         </Routes>
     );

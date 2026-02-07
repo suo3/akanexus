@@ -118,6 +118,20 @@ export const Sidebar = () => {
     const { sidebarCollapsed, toggleSidebar } = useDesignSystemStore();
     const [expandedSections, setExpandedSections] = React.useState<string[]>(['Foundation']);
 
+    // Auto-expand section based on current path
+    React.useEffect(() => {
+        const activeSection = navigationSections.find(section =>
+            section.items.some(item => item.path === location.pathname)
+        );
+
+        if (activeSection) {
+            setExpandedSections(prev => {
+                if (prev.includes(activeSection.title)) return prev;
+                return [...prev, activeSection.title];
+            });
+        }
+    }, [location.pathname]);
+
     const toggleSection = (title: string) => {
         setExpandedSections((prev) =>
             prev.includes(title) ? prev.filter((s) => s !== title) : [...prev, title]

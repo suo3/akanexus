@@ -167,6 +167,10 @@ Button.displayName = 'Button';
             borderRadius: config.rounded ? `${tokens.radius}rem` : '0',
             fontWeight: 700,
             transition: 'all 200ms ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
         };
 
         if (state === 'hover') {
@@ -240,8 +244,8 @@ Button.displayName = 'Button';
                                                 key={variant.id}
                                                 onClick={() => setSelectedVariant(variant.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedVariant === variant.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between">
@@ -368,8 +372,8 @@ Button.displayName = 'Button';
                                                 key={size.id}
                                                 onClick={() => setSelectedSize(size.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedSize === size.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between">

@@ -54,12 +54,43 @@ const TypographyFoundation = () => {
     const { typography, updateTypography } = useDesignSystemStore();
     const [activeTab, setActiveTab] = useState('families');
 
+    // Function to load Google Fonts dynamically
+    const loadGoogleFont = (fontName: string) => {
+        // Check if font is already loaded
+        const existingLink = document.querySelector(`link[href*="${fontName.replace(/\s/g, '+')}"]`);
+        if (existingLink) return;
+
+        // Create and append link element for Google Fonts
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s/g, '+')}:wght@100;300;400;500;600;700;800;900&display=swap`;
+        document.head.appendChild(link);
+    };
+
+    // Load fonts when typography changes
+    React.useEffect(() => {
+        const sansFont = typography.fontFamilies.sans.split(',')[0].trim();
+        const serifFont = typography.fontFamilies.serif.split(',')[0].trim();
+        const monoFont = typography.fontFamilies.mono.split(',')[0].trim();
+
+        loadGoogleFont(sansFont);
+        loadGoogleFont(serifFont);
+        loadGoogleFont(monoFont);
+    }, [typography.fontFamilies]);
+
     const updateFontFamily = (category: 'sans' | 'serif' | 'mono', value: string) => {
+        console.log('updateFontFamily called:', { category, value });
+        console.log('Current fontFamilies:', typography.fontFamilies);
+
+        const newFontFamilies = {
+            ...typography.fontFamilies,
+            [category]: value,
+        };
+
+        console.log('New fontFamilies:', newFontFamilies);
+
         updateTypography({
-            fontFamilies: {
-                ...typography.fontFamilies,
-                [category]: value,
-            },
+            fontFamilies: newFontFamilies,
         });
     };
 
@@ -110,6 +141,7 @@ const TypographyFoundation = () => {
         updateTypography({ fontSizes: newSizes });
     };
 
+    // Auto-regenerate when base size or ratio changes
     React.useEffect(() => {
         generateTypeScale();
     }, [typography.baseSize, typography.scaleRatio]);
@@ -148,7 +180,7 @@ const TypographyFoundation = () => {
                                         Sans Serif
                                     </Label>
                                     <Select
-                                        value={typography.fontFamilies.sans.split(',')[0]}
+                                        value={typography.fontFamilies.sans.split(',')[0].trim()}
                                         onValueChange={(value) => updateFontFamily('sans', `${value}, system-ui, sans-serif`)}
                                     >
                                         <SelectTrigger>
@@ -170,7 +202,7 @@ const TypographyFoundation = () => {
                                         Serif
                                     </Label>
                                     <Select
-                                        value={typography.fontFamilies.serif.split(',')[0]}
+                                        value={typography.fontFamilies.serif.split(',')[0].trim()}
                                         onValueChange={(value) => updateFontFamily('serif', `${value}, serif`)}
                                     >
                                         <SelectTrigger>
@@ -192,7 +224,7 @@ const TypographyFoundation = () => {
                                         Monospace
                                     </Label>
                                     <Select
-                                        value={typography.fontFamilies.mono.split(',')[0]}
+                                        value={typography.fontFamilies.mono.split(',')[0].trim()}
                                         onValueChange={(value) => updateFontFamily('mono', `${value}, monospace`)}
                                     >
                                         <SelectTrigger>
@@ -426,6 +458,33 @@ const TypographyFoundation = () => {
                                             className="text-lg"
                                         >
                                             The quick brown fox
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Line Heights Preview */}
+                        <div className="space-y-6">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                Line Heights
+                            </h4>
+                            <div className="grid grid-cols-2 gap-4">
+                                {Object.entries(typography.lineHeights).map(([key, value]) => (
+                                    <div key={key} className="p-4 border rounded-lg bg-card">
+                                        <p className="text-xs text-muted-foreground mb-2 capitalize">
+                                            {key} ({value})
+                                        </p>
+                                        <p
+                                            style={{
+                                                fontFamily: typography.fontFamilies.sans,
+                                                lineHeight: value,
+                                            }}
+                                            className="text-base"
+                                        >
+                                            The quick brown fox jumps over the lazy dog. Typography is the art and technique of arranging type.
                                         </p>
                                     </div>
                                 ))}

@@ -2,6 +2,20 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { DesignTokens } from '../hooks/useDesignTokens';
 
+// UUID generator fallback for browsers that don't support crypto.randomUUID
+const generateUUID = (): string => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    // Fallback UUID v4 generator
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+};
+
+
 // Extended typography types
 export interface TypographyTokens {
     fontFamilies: {
@@ -285,15 +299,39 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                 // Foundation
                 tokens: defaultTokens,
                 typography: defaultTypography,
-                updateTokens: (tokens) =>
+                updateTokens: (tokens) => {
+                    const state = get();
+                    // Add history entry before updating
+                    state.addHistoryEntry({
+                        action: 'Update Tokens',
+                        user: state.currentUser?.name || 'User',
+                        data: null, // Will be captured by addHistoryEntry
+                    });
                     set((state) => ({
                         tokens: { ...state.tokens, ...tokens },
-                    })),
-                updateTypography: (typography) =>
+                    }));
+                },
+                updateTypography: (typography) => {
+                    const state = get();
+                    // Add history entry before updating
+                    state.addHistoryEntry({
+                        action: 'Update Typography',
+                        user: state.currentUser?.name || 'User',
+                        data: null, // Will be captured by addHistoryEntry
+                    });
                     set((state) => ({
                         typography: { ...state.typography, ...typography },
-                    })),
-                resetTokens: () => set({ tokens: defaultTokens, typography: defaultTypography }),
+                    }));
+                },
+                resetTokens: () => {
+                    const state = get();
+                    state.addHistoryEntry({
+                        action: 'Reset Tokens',
+                        user: state.currentUser?.name || 'User',
+                        data: null,
+                    });
+                    set({ tokens: defaultTokens, typography: defaultTypography });
+                },
 
                 // Components
                 components: [],
@@ -354,29 +392,91 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                 historyIndex: -1,
                 addHistoryEntry: (entry) =>
                     set((state) => {
+                        // Capture current state snapshot
+                        const snapshot = {
+                            tokens: state.tokens,
+                            typography: state.typography,
+                            components: state.components,
+                            documentation: state.documentation,
+                        };
+
                         const newEntry: HistoryEntry = {
                             ...entry,
-                            id: crypto.randomUUID(),
+                            id: generateUUID(),
                             timestamp: new Date(),
+                            data: snapshot, // Store the full state snapshot
                         };
                         const newHistory = state.history.slice(0, state.historyIndex + 1);
                         newHistory.push(newEntry);
+                        const newIndex = newHistory.length - 1;
                         return {
                             history: newHistory,
-                            historyIndex: newHistory.length - 1,
+                            historyIndex: newIndex,
+                            canUndo: newIndex > 0,
+                            canRedo: false,
                         };
                     }),
                 undo: () =>
                     set((state) => {
                         if (state.historyIndex > 0) {
-                            return { historyIndex: state.historyIndex - 1 };
+                            const newIndex = state.historyIndex - 1;
+                            const historyEntry = state.history[newIndex];
+
+                            // Restore the state from the history entry
+                            if (historyEntry && historyEntry.data) {
+                                return {
+                                    ...historyEntry.data,
+                                    history: state.history,
+                                    historyIndex: newIndex,
+                                    canUndo: newIndex > 0,
+                                    canRedo: newIndex < state.history.length - 1,
+                                    // Preserve UI state
+                                    activeModule: state.activeModule,
+                                    sidebarCollapsed: state.sidebarCollapsed,
+                                    team: state.team,
+                                    currentUser: state.currentUser,
+                                    permissions: state.permissions,
+                                    exportSettings: state.exportSettings,
+                                };
+                            }
+
+                            return {
+                                historyIndex: newIndex,
+                                canUndo: newIndex > 0,
+                                canRedo: newIndex < state.history.length - 1
+                            };
                         }
                         return state;
                     }),
                 redo: () =>
                     set((state) => {
                         if (state.historyIndex < state.history.length - 1) {
-                            return { historyIndex: state.historyIndex + 1 };
+                            const newIndex = state.historyIndex + 1;
+                            const historyEntry = state.history[newIndex];
+
+                            // Restore the state from the history entry
+                            if (historyEntry && historyEntry.data) {
+                                return {
+                                    ...historyEntry.data,
+                                    history: state.history,
+                                    historyIndex: newIndex,
+                                    canUndo: newIndex > 0,
+                                    canRedo: newIndex < state.history.length - 1,
+                                    // Preserve UI state
+                                    activeModule: state.activeModule,
+                                    sidebarCollapsed: state.sidebarCollapsed,
+                                    team: state.team,
+                                    currentUser: state.currentUser,
+                                    permissions: state.permissions,
+                                    exportSettings: state.exportSettings,
+                                };
+                            }
+
+                            return {
+                                historyIndex: newIndex,
+                                canUndo: newIndex > 0,
+                                canRedo: newIndex < state.history.length - 1
+                            };
                         }
                         return state;
                     }),

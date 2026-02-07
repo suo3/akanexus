@@ -213,7 +213,10 @@ const SpacingFoundation = () => {
                                     </Label>
                                     <Input
                                         value={gridConfig.margin}
-                                        onChange={(e) => setGridConfig({ ...gridConfig, margin: e.target.value })}
+                                        onChange={(e) => {
+                                            const newConfig = { ...gridConfig, margin: e.target.value };
+                                            setGridConfig(newConfig);
+                                        }}
                                         className="h-9 font-mono"
                                     />
                                 </div>
@@ -225,7 +228,10 @@ const SpacingFoundation = () => {
                                     </Label>
                                     <Input
                                         value={gridConfig.maxWidth}
-                                        onChange={(e) => setGridConfig({ ...gridConfig, maxWidth: e.target.value })}
+                                        onChange={(e) => {
+                                            const newConfig = { ...gridConfig, maxWidth: e.target.value };
+                                            setGridConfig(newConfig);
+                                        }}
                                         className="h-9 font-mono"
                                     />
                                 </div>
@@ -295,25 +301,40 @@ const SpacingFoundation = () => {
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
                                 Grid System ({gridConfig.columns} Columns)
                             </h4>
-                            <div
-                                className="border rounded-xl p-4 bg-card"
-                                style={{ maxWidth: gridConfig.maxWidth, margin: '0 auto' }}
-                            >
+                            <div className="space-y-2">
+                                <div className="flex gap-4 text-xs text-muted-foreground font-mono">
+                                    <span>Max Width: {gridConfig.maxWidth}</span>
+                                    <span>Margin: {gridConfig.margin}</span>
+                                    <span>Gutter: {gridConfig.gutter}</span>
+                                </div>
                                 <div
-                                    className="grid"
+                                    className="border-2 border-dashed border-muted-foreground/30 rounded-xl bg-muted/20"
                                     style={{
-                                        gridTemplateColumns: `repeat(${gridConfig.columns}, 1fr)`,
-                                        gap: gridConfig.gutter,
+                                        maxWidth: gridConfig.maxWidth,
+                                        margin: `${gridConfig.margin} auto`,
+                                        padding: gridConfig.margin
                                     }}
                                 >
-                                    {Array.from({ length: gridConfig.columns }).map((_, i) => (
+                                    <div
+                                        className="border rounded-xl p-4 bg-card"
+                                    >
                                         <div
-                                            key={i}
-                                            className="h-20 bg-primary/10 border border-primary/30 rounded flex items-center justify-center text-xs font-mono text-primary"
+                                            className="grid"
+                                            style={{
+                                                gridTemplateColumns: `repeat(${gridConfig.columns}, 1fr)`,
+                                                gap: gridConfig.gutter,
+                                            }}
                                         >
-                                            {i + 1}
+                                            {Array.from({ length: gridConfig.columns }).map((_, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="h-20 bg-primary/10 border border-primary/30 rounded flex items-center justify-center text-xs font-mono text-primary"
+                                                >
+                                                    {i + 1}
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>

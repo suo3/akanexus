@@ -64,6 +64,43 @@ export interface TypographyTokens {
     scaleRatio: number;
 }
 
+// Spacing tokens
+export interface SpacingTokens {
+    scale: Record<string, string>;
+    grid: {
+        columns: number;
+        gutter: string;
+        margin: string;
+        maxWidth: string;
+    };
+    breakpoints: {
+        sm: string;
+        md: string;
+        lg: string;
+        xl: string;
+        '2xl': string;
+    };
+}
+
+// Shadow/Elevation tokens
+export interface ElevationLevel {
+    level: number;
+    name: string;
+    shadow: string;
+    description: string;
+}
+
+export interface ShadowTokens {
+    levels: ElevationLevel[];
+}
+
+// Motion/Animation tokens
+export interface MotionTokens {
+    easings: Record<string, string>;
+    durations: Record<string, number>;
+}
+
+
 // Component types
 export interface Component {
     id: string;
@@ -159,9 +196,16 @@ interface DesignSystemStore {
     // Foundation
     tokens: DesignTokens;
     typography: TypographyTokens;
+    spacing: SpacingTokens;
+    shadows: ShadowTokens;
+    motion: MotionTokens;
     updateTokens: (tokens: Partial<DesignTokens>) => void;
     updateTypography: (typography: Partial<TypographyTokens>) => void;
+    updateSpacing: (spacing: Partial<SpacingTokens>) => void;
+    updateShadows: (shadows: Partial<ShadowTokens>) => void;
+    updateMotion: (motion: Partial<MotionTokens>) => void;
     resetTokens: () => void;
+
 
     // Components
     components: Component[];
@@ -273,6 +317,64 @@ const defaultTypography: TypographyTokens = {
     scaleRatio: 1.25,
 };
 
+const defaultSpacing: SpacingTokens = {
+    scale: {
+        '0': '0px',
+        '1': '0.25rem',
+        '2': '0.5rem',
+        '3': '0.75rem',
+        '4': '1rem',
+        '5': '1.25rem',
+        '6': '1.5rem',
+        '8': '2rem',
+        '10': '2.5rem',
+        '12': '3rem',
+        '16': '4rem',
+        '20': '5rem',
+        '24': '6rem',
+    },
+    grid: {
+        columns: 12,
+        gutter: '1.5rem',
+        margin: '1rem',
+        maxWidth: '1280px',
+    },
+    breakpoints: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+    },
+};
+
+const defaultShadows: ShadowTokens = {
+    levels: [
+        { level: 1, name: 'sm', shadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)', description: 'Small shadow' },
+        { level: 2, name: 'base', shadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)', description: 'Base shadow' },
+        { level: 3, name: 'md', shadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', description: 'Medium shadow' },
+        { level: 4, name: 'lg', shadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', description: 'Large shadow' },
+        { level: 5, name: 'xl', shadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)', description: 'Extra large shadow' },
+        { level: 6, name: '2xl', shadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)', description: '2X large shadow' },
+    ],
+};
+
+const defaultMotion: MotionTokens = {
+    easings: {
+        linear: 'linear',
+        easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+        easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
+        easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        spring: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    },
+    durations: {
+        fast: 150,
+        base: 300,
+        slow: 500,
+        slower: 700,
+    },
+};
+
 const defaultDocumentation: Documentation = {
     introduction: 'Welcome to your design system',
     guidelines: {
@@ -299,6 +401,9 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                 // Foundation
                 tokens: defaultTokens,
                 typography: defaultTypography,
+                spacing: defaultSpacing,
+                shadows: defaultShadows,
+                motion: defaultMotion,
                 updateTokens: (tokens) => {
                     const state = get();
                     // Add history entry before updating
@@ -321,6 +426,39 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                     });
                     set((state) => ({
                         typography: { ...state.typography, ...typography },
+                    }));
+                },
+                updateSpacing: (spacing) => {
+                    const state = get();
+                    state.addHistoryEntry({
+                        action: 'Update Spacing',
+                        user: state.currentUser?.name || 'User',
+                        data: null,
+                    });
+                    set((state) => ({
+                        spacing: { ...state.spacing, ...spacing },
+                    }));
+                },
+                updateShadows: (shadows) => {
+                    const state = get();
+                    state.addHistoryEntry({
+                        action: 'Update Shadows',
+                        user: state.currentUser?.name || 'User',
+                        data: null,
+                    });
+                    set((state) => ({
+                        shadows: { ...state.shadows, ...shadows },
+                    }));
+                },
+                updateMotion: (motion) => {
+                    const state = get();
+                    state.addHistoryEntry({
+                        action: 'Update Motion',
+                        user: state.currentUser?.name || 'User',
+                        data: null,
+                    });
+                    set((state) => ({
+                        motion: { ...state.motion, ...motion },
                     }));
                 },
                 resetTokens: () => {
@@ -396,6 +534,9 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                         const snapshot = {
                             tokens: state.tokens,
                             typography: state.typography,
+                            spacing: state.spacing,
+                            shadows: state.shadows,
+                            motion: state.motion,
                             components: state.components,
                             documentation: state.documentation,
                         };

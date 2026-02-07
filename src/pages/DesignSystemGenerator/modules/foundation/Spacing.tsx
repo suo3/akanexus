@@ -29,40 +29,8 @@ interface BreakpointTokens {
 }
 
 const SpacingFoundation = () => {
-    const { tokens, updateTokens } = useDesignSystemStore();
+    const { spacing, updateSpacing } = useDesignSystemStore();
     const [activeTab, setActiveTab] = useState('spacing');
-
-    // Default spacing scale (based on 4px or 8px base)
-    const [spacingScale, setSpacingScale] = useState<Record<string, string>>({
-        '0': '0px',
-        '1': '0.25rem',
-        '2': '0.5rem',
-        '3': '0.75rem',
-        '4': '1rem',
-        '5': '1.25rem',
-        '6': '1.5rem',
-        '8': '2rem',
-        '10': '2.5rem',
-        '12': '3rem',
-        '16': '4rem',
-        '20': '5rem',
-        '24': '6rem',
-    });
-
-    const [gridConfig, setGridConfig] = useState<GridTokens>({
-        columns: 12,
-        gutter: '1.5rem',
-        margin: '1rem',
-        maxWidth: '1280px',
-    });
-
-    const [breakpoints, setBreakpoints] = useState<BreakpointTokens>({
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
-        '2xl': '1536px',
-    });
 
     const generateSpacingScale = (baseUnit: number) => {
         const scale: Record<string, string> = {
@@ -74,7 +42,27 @@ const SpacingFoundation = () => {
             scale[multiplier.toString()] = `${(baseUnit * multiplier) / 16}rem`;
         });
 
-        setSpacingScale(scale);
+        updateSpacing({ scale });
+    };
+
+    const addSpacingEntry = () => {
+        // Find the next available key
+        const existingKeys = Object.keys(spacing.scale).map(k => parseInt(k)).filter(k => !isNaN(k));
+        const maxKey = Math.max(...existingKeys, 0);
+        const newKey = (maxKey + 4).toString();
+
+        updateSpacing({
+            scale: {
+                ...spacing.scale,
+                [newKey]: '1rem',
+            },
+        });
+    };
+
+    const removeSpacingEntry = (key: string) => {
+        const newScale = { ...spacing.scale };
+        delete newScale[key];
+        updateSpacing({ scale: newScale });
     };
 
     return (
@@ -143,13 +131,18 @@ const SpacingFoundation = () => {
                                         <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
                                             Spacing Scale
                                         </Label>
-                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5">
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="h-7 gap-1.5"
+                                            onClick={addSpacingEntry}
+                                        >
                                             <Plus className="w-3 h-3" />
                                             Add
                                         </Button>
                                     </div>
                                     <div className="space-y-2 max-h-96 overflow-y-auto">
-                                        {Object.entries(spacingScale).map(([key, value]) => (
+                                        {Object.entries(spacing.scale).map(([key, value]) => (
                                             <div key={key} className="flex items-center gap-2 group">
                                                 <Input
                                                     value={key}
@@ -159,7 +152,7 @@ const SpacingFoundation = () => {
                                                 <Input
                                                     value={value}
                                                     onChange={(e) =>
-                                                        setSpacingScale({ ...spacingScale, [key]: e.target.value })
+                                                        updateSpacing({ scale: { ...spacing.scale, [key]: e.target.value } })
                                                     }
                                                     className="flex-1 h-8 text-xs font-mono"
                                                 />
@@ -167,6 +160,7 @@ const SpacingFoundation = () => {
                                                     size="icon"
                                                     variant="ghost"
                                                     className="h-8 w-8 opacity-0 group-hover:opacity-100"
+                                                    onClick={() => removeSpacingEntry(key)}
                                                 >
                                                     <Trash2 className="w-3 h-3" />
                                                 </Button>
@@ -186,9 +180,9 @@ const SpacingFoundation = () => {
                                         type="number"
                                         min="1"
                                         max="24"
-                                        value={gridConfig.columns}
+                                        value={spacing.grid.columns}
                                         onChange={(e) =>
-                                            setGridConfig({ ...gridConfig, columns: parseInt(e.target.value) })
+                                            updateSpacing({ grid: { ...spacing.grid, columns: parseInt(e.target.value) } })
                                         }
                                         className="h-9"
                                     />
@@ -200,8 +194,8 @@ const SpacingFoundation = () => {
                                         Gutter
                                     </Label>
                                     <Input
-                                        value={gridConfig.gutter}
-                                        onChange={(e) => setGridConfig({ ...gridConfig, gutter: e.target.value })}
+                                        value={spacing.grid.gutter}
+                                        onChange={(e) => updateSpacing({ grid: { ...spacing.grid, gutter: e.target.value } })}
                                         className="h-9 font-mono"
                                     />
                                 </div>
@@ -212,10 +206,9 @@ const SpacingFoundation = () => {
                                         Container Margin
                                     </Label>
                                     <Input
-                                        value={gridConfig.margin}
+                                        value={spacing.grid.margin}
                                         onChange={(e) => {
-                                            const newConfig = { ...gridConfig, margin: e.target.value };
-                                            setGridConfig(newConfig);
+                                            updateSpacing({ grid: { ...spacing.grid, margin: e.target.value } });
                                         }}
                                         className="h-9 font-mono"
                                     />
@@ -227,10 +220,9 @@ const SpacingFoundation = () => {
                                         Max Width
                                     </Label>
                                     <Input
-                                        value={gridConfig.maxWidth}
+                                        value={spacing.grid.maxWidth}
                                         onChange={(e) => {
-                                            const newConfig = { ...gridConfig, maxWidth: e.target.value };
-                                            setGridConfig(newConfig);
+                                            updateSpacing({ grid: { ...spacing.grid, maxWidth: e.target.value } });
                                         }}
                                         className="h-9 font-mono"
                                     />
@@ -242,13 +234,13 @@ const SpacingFoundation = () => {
                                     <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
                                         Responsive Breakpoints
                                     </Label>
-                                    {Object.entries(breakpoints).map(([key, value]) => (
+                                    {Object.entries(spacing.breakpoints).map(([key, value]) => (
                                         <div key={key} className="space-y-2">
                                             <Label className="text-xs capitalize">{key}</Label>
                                             <Input
                                                 value={value}
                                                 onChange={(e) =>
-                                                    setBreakpoints({ ...breakpoints, [key]: e.target.value })
+                                                    updateSpacing({ breakpoints: { ...spacing.breakpoints, [key]: e.target.value } })
                                                 }
                                                 className="h-9 font-mono"
                                             />
@@ -277,7 +269,7 @@ const SpacingFoundation = () => {
                                 Spacing Scale
                             </h4>
                             <div className="space-y-3">
-                                {Object.entries(spacingScale).map(([key, value]) => (
+                                {Object.entries(spacing.scale).map(([key, value]) => (
                                     <div key={key} className="flex items-center gap-6">
                                         <span className="text-xs font-mono text-muted-foreground w-12">
                                             {key}
@@ -299,20 +291,20 @@ const SpacingFoundation = () => {
                         {/* Grid Preview */}
                         <div className="space-y-6">
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Grid System ({gridConfig.columns} Columns)
+                                Grid System ({spacing.grid.columns} Columns)
                             </h4>
                             <div className="space-y-2">
                                 <div className="flex gap-4 text-xs text-muted-foreground font-mono">
-                                    <span>Max Width: {gridConfig.maxWidth}</span>
-                                    <span>Margin: {gridConfig.margin}</span>
-                                    <span>Gutter: {gridConfig.gutter}</span>
+                                    <span>Max Width: {spacing.grid.maxWidth}</span>
+                                    <span>Margin: {spacing.grid.margin}</span>
+                                    <span>Gutter: {spacing.grid.gutter}</span>
                                 </div>
                                 <div
                                     className="border-2 border-dashed border-muted-foreground/30 rounded-xl bg-muted/20"
                                     style={{
-                                        maxWidth: gridConfig.maxWidth,
-                                        margin: `${gridConfig.margin} auto`,
-                                        padding: gridConfig.margin
+                                        maxWidth: spacing.grid.maxWidth,
+                                        margin: `${spacing.grid.margin} auto`,
+                                        padding: spacing.grid.margin
                                     }}
                                 >
                                     <div
@@ -321,11 +313,11 @@ const SpacingFoundation = () => {
                                         <div
                                             className="grid"
                                             style={{
-                                                gridTemplateColumns: `repeat(${gridConfig.columns}, 1fr)`,
-                                                gap: gridConfig.gutter,
+                                                gridTemplateColumns: `repeat(${spacing.grid.columns}, 1fr)`,
+                                                gap: spacing.grid.gutter,
                                             }}
                                         >
-                                            {Array.from({ length: gridConfig.columns }).map((_, i) => (
+                                            {Array.from({ length: spacing.grid.columns }).map((_, i) => (
                                                 <div
                                                     key={i}
                                                     className="h-20 bg-primary/10 border border-primary/30 rounded flex items-center justify-center text-xs font-mono text-primary"
@@ -347,7 +339,7 @@ const SpacingFoundation = () => {
                                 Breakpoints
                             </h4>
                             <div className="space-y-3">
-                                {Object.entries(breakpoints).map(([key, value]) => (
+                                {Object.entries(spacing.breakpoints).map(([key, value]) => (
                                     <div key={key} className="flex items-center gap-6 p-4 border rounded-lg bg-card">
                                         <span className="text-sm font-bold uppercase w-12">{key}</span>
                                         <span className="text-sm font-mono text-muted-foreground">{value}</span>

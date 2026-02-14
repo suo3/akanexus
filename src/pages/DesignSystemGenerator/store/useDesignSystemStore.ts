@@ -643,6 +643,9 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                 partialize: (state) => ({
                     tokens: state.tokens,
                     typography: state.typography,
+                    spacing: state.spacing,
+                    shadows: state.shadows,
+                    motion: state.motion,
                     components: state.components,
                     documentation: state.documentation,
                     exportSettings: state.exportSettings,

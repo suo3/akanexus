@@ -9,7 +9,7 @@ import { FileCode, Copy, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 const TokenExport = () => {
-    const { tokens, typography } = useDesignSystemStore();
+    const { tokens, typography, spacing, shadows, motion } = useDesignSystemStore();
     const [activeTab, setActiveTab] = useState('css');
 
     const generateCSSVariables = () => {
@@ -20,37 +20,116 @@ const TokenExport = () => {
         css += `  --color-primary: ${tokens.colors.primary};\n`;
         css += `  --color-secondary: ${tokens.colors.secondary};\n`;
         css += `  --color-accent: ${tokens.colors.accent};\n`;
+        css += `  --color-muted: ${tokens.colors.muted};\n`;
         css += `  --color-background: ${tokens.colors.background};\n`;
         css += `  --color-foreground: ${tokens.colors.foreground};\n`;
         css += `  --color-border: ${tokens.colors.border};\n\n`;
 
-        // Typography
-        css += '  /* Typography */\n';
+        // Typography - Font Families
+        css += '  /* Typography - Font Families */\n';
         css += `  --font-sans: ${typography.fontFamilies.sans};\n`;
         css += `  --font-serif: ${typography.fontFamilies.serif};\n`;
         css += `  --font-mono: ${typography.fontFamilies.mono};\n\n`;
 
+        // Typography - Font Sizes
+        css += '  /* Typography - Font Sizes */\n';
         Object.entries(typography.fontSizes).forEach(([key, value]) => {
             css += `  --font-size-${key}: ${value};\n`;
         });
 
-        css += '\n  /* Spacing */\n';
-        css += `  --spacing-base: ${tokens.spacing}rem;\n`;
+        // Typography - Font Weights
+        css += '\n  /* Typography - Font Weights */\n';
+        Object.entries(typography.fontWeights).forEach(([key, value]) => {
+            css += `  --font-weight-${key}: ${value};\n`;
+        });
+
+        // Typography - Line Heights
+        css += '\n  /* Typography - Line Heights */\n';
+        Object.entries(typography.lineHeights).forEach(([key, value]) => {
+            css += `  --line-height-${key}: ${value};\n`;
+        });
+
+        // Typography - Letter Spacing
+        css += '\n  /* Typography - Letter Spacing */\n';
+        Object.entries(typography.letterSpacing).forEach(([key, value]) => {
+            css += `  --letter-spacing-${key}: ${value};\n`;
+        });
+
+        // Spacing - Scale
+        css += '\n  /* Spacing - Scale */\n';
+        if (spacing?.scale) {
+            Object.entries(spacing.scale).forEach(([key, value]) => {
+                css += `  --spacing-${key}: ${value};\n`;
+            });
+        }
+
+        // Spacing - Breakpoints
+        css += '\n  /* Spacing - Breakpoints */\n';
+        if (spacing?.breakpoints) {
+            Object.entries(spacing.breakpoints).forEach(([key, value]) => {
+                css += `  --breakpoint-${key}: ${value};\n`;
+            });
+        }
+
+        // Spacing - Grid
+        css += '\n  /* Spacing - Grid */\n';
+        if (spacing?.grid) {
+            Object.entries(spacing.grid).forEach(([key, value]) => {
+                css += `  --grid-${key}: ${value};\n`;
+            });
+        }
+
+        // Border Radius
+        css += '\n  /* Border Radius */\n';
         css += `  --radius: ${tokens.radius}rem;\n`;
+
+        // Shadows
+        css += '\n  /* Shadows */\n';
+        if (shadows?.levels) {
+            shadows.levels.forEach((level) => {
+                css += `  --shadow-${level.name}: ${level.shadow};\n`;
+            });
+        }
+
+        // Motion - Easings
+        css += '\n  /* Motion - Easings */\n';
+        if (motion?.easings) {
+            Object.entries(motion.easings).forEach(([key, value]) => {
+                css += `  --easing-${key}: ${value};\n`;
+            });
+        }
+
+        // Motion - Durations
+        css += '\n  /* Motion - Durations */\n';
+        if (motion?.durations) {
+            Object.entries(motion.durations).forEach(([key, value]) => {
+                css += `  --duration-${key}: ${value}ms;\n`;
+            });
+        }
 
         css += '}\n';
         return css;
     };
 
     const generateTailwindConfig = () => {
+        const spacingEntries = spacing?.scale ? Object.entries(spacing.scale).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ') : '';
+        const shadowEntries = shadows?.levels ? shadows.levels.map(level => `'${level.name}': '${level.shadow}'`).join(',\n        ') : '';
+        const easingEntries = motion?.easings ? Object.entries(motion.easings).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ') : '';
+        const durationEntries = motion?.durations ? Object.entries(motion.durations).map(([key, value]) => `'${key}': '${value}ms'`).join(',\n        ') : '';
+        const breakpointEntries = spacing?.breakpoints ? Object.entries(spacing.breakpoints).map(([key, value]) => `'${key}': '${value}'`).join(',\n      ') : '';
+
         return `/** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
+    screens: {
+      ${breakpointEntries}
+    },
     extend: {
       colors: {
         primary: '${tokens.colors.primary}',
         secondary: '${tokens.colors.secondary}',
         accent: '${tokens.colors.accent}',
+        muted: '${tokens.colors.muted}',
         background: '${tokens.colors.background}',
         foreground: '${tokens.colors.foreground}',
         border: '${tokens.colors.border}',
@@ -63,11 +142,29 @@ module.exports = {
       fontSize: {
         ${Object.entries(typography.fontSizes).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
       },
+      fontWeight: {
+        ${Object.entries(typography.fontWeights).map(([key, value]) => `'${key}': ${value}`).join(',\n        ')}
+      },
+      lineHeight: {
+        ${Object.entries(typography.lineHeights).map(([key, value]) => `'${key}': ${value}`).join(',\n        ')}
+      },
+      letterSpacing: {
+        ${Object.entries(typography.letterSpacing).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      spacing: {
+        ${spacingEntries}
+      },
       borderRadius: {
         DEFAULT: '${tokens.radius}rem',
       },
-      spacing: {
-        base: '${tokens.spacing}rem',
+      boxShadow: {
+        ${shadowEntries}
+      },
+      transitionTimingFunction: {
+        ${easingEntries}
+      },
+      transitionDuration: {
+        ${durationEntries}
       },
     },
   },
@@ -80,7 +177,9 @@ module.exports = {
             {
                 colors: tokens.colors,
                 typography: typography,
-                spacing: tokens.spacing,
+                spacing: spacing,
+                shadows: shadows,
+                motion: motion,
                 radius: tokens.radius,
             },
             null,
@@ -93,30 +192,122 @@ module.exports = {
         scss += `$color-primary: ${tokens.colors.primary};\n`;
         scss += `$color-secondary: ${tokens.colors.secondary};\n`;
         scss += `$color-accent: ${tokens.colors.accent};\n`;
+        scss += `$color-muted: ${tokens.colors.muted};\n`;
         scss += `$color-background: ${tokens.colors.background};\n`;
         scss += `$color-foreground: ${tokens.colors.foreground};\n`;
         scss += `$color-border: ${tokens.colors.border};\n\n`;
 
-        scss += '// Typography\n';
+        // Typography - Font Families
+        scss += '// Typography - Font Families\n';
         scss += `$font-sans: ${typography.fontFamilies.sans};\n`;
         scss += `$font-serif: ${typography.fontFamilies.serif};\n`;
         scss += `$font-mono: ${typography.fontFamilies.mono};\n\n`;
 
-        scss += '// Font Sizes\n';
+        // Typography - Font Sizes
+        scss += '// Typography - Font Sizes\n';
         Object.entries(typography.fontSizes).forEach(([key, value]) => {
             scss += `$font-size-${key}: ${value};\n`;
         });
 
-        scss += '\n// Spacing\n';
-        scss += `$spacing-base: ${tokens.spacing}rem;\n`;
+        // Typography - Font Weights
+        scss += '\n// Typography - Font Weights\n';
+        Object.entries(typography.fontWeights).forEach(([key, value]) => {
+            scss += `$font-weight-${key}: ${value};\n`;
+        });
+
+        // Typography - Line Heights
+        scss += '\n// Typography - Line Heights\n';
+        Object.entries(typography.lineHeights).forEach(([key, value]) => {
+            scss += `$line-height-${key}: ${value};\n`;
+        });
+
+        // Typography - Letter Spacing
+        scss += '\n// Typography - Letter Spacing\n';
+        Object.entries(typography.letterSpacing).forEach(([key, value]) => {
+            scss += `$letter-spacing-${key}: ${value};\n`;
+        });
+
+        // Spacing - Scale
+        scss += '\n// Spacing - Scale\n';
+        if (spacing?.scale) {
+            Object.entries(spacing.scale).forEach(([key, value]) => {
+                scss += `$spacing-${key}: ${value};\n`;
+            });
+        }
+
+        // Spacing - Breakpoints
+        scss += '\n// Spacing - Breakpoints\n';
+        if (spacing?.breakpoints) {
+            Object.entries(spacing.breakpoints).forEach(([key, value]) => {
+                scss += `$breakpoint-${key}: ${value};\n`;
+            });
+        }
+
+        // Spacing - Grid
+        scss += '\n// Spacing - Grid\n';
+        if (spacing?.grid) {
+            Object.entries(spacing.grid).forEach(([key, value]) => {
+                scss += `$grid-${key}: ${value};\n`;
+            });
+        }
+
+        // Border Radius
+        scss += '\n// Border Radius\n';
         scss += `$radius: ${tokens.radius}rem;\n`;
+
+        // Shadows
+        scss += '\n// Shadows\n';
+        if (shadows?.levels) {
+            shadows.levels.forEach((level) => {
+                scss += `$shadow-${level.name}: ${level.shadow};\n`;
+            });
+        }
+
+        // Motion - Easings
+        scss += '\n// Motion - Easings\n';
+        if (motion?.easings) {
+            Object.entries(motion.easings).forEach(([key, value]) => {
+                scss += `$easing-${key}: ${value};\n`;
+            });
+        }
+
+        // Motion - Durations
+        scss += '\n// Motion - Durations\n';
+        if (motion?.durations) {
+            Object.entries(motion.durations).forEach(([key, value]) => {
+                scss += `$duration-${key}: ${value}ms;\n`;
+            });
+        }
 
         return scss;
     };
 
     const copyToClipboard = (content: string, format: string) => {
-        navigator.clipboard.writeText(content);
-        toast.success(`${format} copied to clipboard!`);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(content).then(() => {
+                toast.success(`${format} copied to clipboard!`);
+            }).catch(() => {
+                fallbackCopy(content, format);
+            });
+        } else {
+            fallbackCopy(content, format);
+        }
+    };
+
+    const fallbackCopy = (text: string, format: string) => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            toast.success(`${format} copied to clipboard!`);
+        } catch (err) {
+            toast.error('Copy failed. Please copy manually.');
+        }
+        document.body.removeChild(textarea);
     };
 
     const downloadFile = (content: string, filename: string) => {

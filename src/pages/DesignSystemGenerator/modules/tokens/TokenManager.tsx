@@ -20,9 +20,27 @@ import {
     Zap,
     Link2,
     Eye,
-    Code
+    Code,
+    Download
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Token {
     id: string;
@@ -36,17 +54,48 @@ interface Token {
 }
 
 const TokenManager = () => {
-    const { tokens, typography } = useDesignSystemStore();
+    const {
+        tokens,
+        typography,
+        spacing,
+        shadows,
+        motion,
+        updateTokens,
+        updateTypography,
+        updateSpacing,
+        updateShadows,
+        updateMotion
+    } = useDesignSystemStore();
+    const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    // Dialog states
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
+    const [aliasDialogOpen, setAliasDialogOpen] = useState(false);
+    const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+    const [exportDialogOpen, setExportDialogOpen] = useState(false);
+    const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+
+    // Form states
+    const [editForm, setEditForm] = useState({ name: '', value: '', description: '' });
+    const [createForm, setCreateForm] = useState({ name: '', value: '', category: 'Colors', type: 'color', description: '' });
+    const [aliasForm, setAliasForm] = useState({ name: '', reference: '', description: '' });
+    const [exportFormat, setExportFormat] = useState<'json' | 'css' | 'scss'>('json');
 
     // Compile all tokens from the store
     const allTokens: Token[] = useMemo(() => {
         const tokenList: Token[] = [];
 
-        // Color tokens
+        // Color tokens (exclude scale objects)
         Object.entries(tokens.colors).forEach(([key, value]) => {
+            // Skip scale objects (primaryScale, secondaryScale, etc.)
+            if (key.endsWith('Scale') || typeof value !== 'string') {
+                return;
+            }
             tokenList.push({
                 id: `color-${key}`,
                 name: key,
@@ -83,9 +132,48 @@ const TokenManager = () => {
             });
         });
 
+        // Font weights
+        Object.entries(typography.fontWeights).forEach(([key, value]) => {
+            tokenList.push({
+                id: `font-weight-${key}`,
+                name: `font-weight-${key}`,
+                value: String(value),
+                category: 'Typography',
+                type: 'font-weight',
+                description: `${key} font weight`,
+                usage: Math.floor(Math.random() * 20),
+            });
+        });
+
+        // Line heights
+        Object.entries(typography.lineHeights).forEach(([key, value]) => {
+            tokenList.push({
+                id: `line-height-${key}`,
+                name: `line-height-${key}`,
+                value: String(value),
+                category: 'Typography',
+                type: 'line-height',
+                description: `${key} line height`,
+                usage: Math.floor(Math.random() * 18),
+            });
+        });
+
+        // Letter spacing
+        Object.entries(typography.letterSpacing).forEach(([key, value]) => {
+            tokenList.push({
+                id: `letter-spacing-${key}`,
+                name: `letter-spacing-${key}`,
+                value: value as string,
+                category: 'Typography',
+                type: 'letter-spacing',
+                description: `${key} letter spacing`,
+                usage: Math.floor(Math.random() * 12),
+            });
+        });
+
         // Spacing tokens
-        if (tokens.spacing) {
-            Object.entries(tokens.spacing).forEach(([key, value]) => {
+        if (spacing?.scale) {
+            Object.entries(spacing.scale).forEach(([key, value]) => {
                 tokenList.push({
                     id: `spacing-${key}`,
                     name: `spacing-${key}`,
@@ -99,33 +187,95 @@ const TokenManager = () => {
         }
 
         // Shadow tokens
-        Object.entries(tokens.shadows || {}).forEach(([key, value]) => {
-            tokenList.push({
-                id: `shadow-${key}`,
-                name: `shadow-${key}`,
-                value: value as string,
-                category: 'Shadows',
-                type: 'shadow',
-                description: `${key} shadow`,
-                usage: Math.floor(Math.random() * 10),
+        if (shadows?.levels) {
+            shadows.levels.forEach((level) => {
+                tokenList.push({
+                    id: `shadow-${level.name}`,
+                    name: `shadow-${level.name}`,
+                    value: level.shadow,
+                    category: 'Shadows',
+                    type: 'shadow',
+                    description: level.description,
+                    usage: Math.floor(Math.random() * 10),
+                });
             });
-        });
+        }
 
-        // Motion tokens
-        Object.entries(tokens.motion || {}).forEach(([key, value]) => {
-            tokenList.push({
-                id: `motion-${key}`,
-                name: `motion-${key}`,
-                value: value as string,
-                category: 'Motion',
-                type: 'easing',
-                description: `${key} easing curve`,
-                usage: Math.floor(Math.random() * 8),
+        // Motion tokens - Easings
+        if (motion?.easings) {
+            Object.entries(motion.easings).forEach(([key, value]) => {
+                tokenList.push({
+                    id: `easing-${key}`,
+                    name: `easing-${key}`,
+                    value: value as string,
+                    category: 'Motion',
+                    type: 'easing',
+                    description: `${key} easing curve`,
+                    usage: Math.floor(Math.random() * 8),
+                });
             });
-        });
+        }
+
+        // Motion tokens - Durations
+        if (motion?.durations) {
+            Object.entries(motion.durations).forEach(([key, value]) => {
+                tokenList.push({
+                    id: `duration-${key}`,
+                    name: `duration-${key}`,
+                    value: `${value}ms`,
+                    category: 'Motion',
+                    type: 'duration',
+                    description: `${key} animation duration`,
+                    usage: Math.floor(Math.random() * 8),
+                });
+            });
+        }
+
+        // Breakpoints
+        if (spacing?.breakpoints) {
+            Object.entries(spacing.breakpoints).forEach(([key, value]) => {
+                tokenList.push({
+                    id: `breakpoint-${key}`,
+                    name: `breakpoint-${key}`,
+                    value: value as string,
+                    category: 'Spacing',
+                    type: 'breakpoint',
+                    description: `${key} breakpoint`,
+                    usage: Math.floor(Math.random() * 15),
+                });
+            });
+        }
+
+        // Grid system
+        if (spacing?.grid) {
+            Object.entries(spacing.grid).forEach(([key, value]) => {
+                tokenList.push({
+                    id: `grid-${key}`,
+                    name: `grid-${key}`,
+                    value: String(value),
+                    category: 'Spacing',
+                    type: 'grid',
+                    description: `Grid ${key}`,
+                    usage: Math.floor(Math.random() * 10),
+                });
+            });
+        }
+
+        // Border radius
+        if (tokens.radius !== undefined) {
+            tokenList.push({
+                id: 'border-radius',
+                name: 'border-radius',
+                value: `${tokens.radius}rem`,
+                category: 'Spacing',
+                type: 'radius',
+                description: 'Default border radius',
+                usage: Math.floor(Math.random() * 25),
+            });
+        }
 
         return tokenList;
-    }, [tokens, typography]);
+    }, [tokens, typography, spacing, shadows, motion]);
 
     // Filter tokens based on search and category
     const filteredTokens = useMemo(() => {
@@ -161,7 +311,292 @@ const TokenManager = () => {
 
     const copyToken = (token: Token) => {
         const cssVar = `var(--${token.name})`;
-        navigator.clipboard.writeText(cssVar);
+
+        // Try modern clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(cssVar).then(() => {
+                toast({
+                    title: 'Copied to clipboard',
+                    description: `${cssVar} copied successfully`,
+                });
+            }).catch(() => {
+                // Fallback if clipboard API fails
+                fallbackCopy(cssVar);
+            });
+        } else {
+            // Fallback for browsers without clipboard API
+            fallbackCopy(cssVar);
+        }
+    };
+
+    const fallbackCopy = (text: string) => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            toast({
+                title: 'Copied to clipboard',
+                description: `${text} copied successfully`,
+            });
+        } catch (err) {
+            toast({
+                title: 'Copy failed',
+                description: 'Please copy manually: ' + text,
+                variant: 'destructive',
+            });
+        }
+        document.body.removeChild(textarea);
+    };
+
+    const handleEdit = (token: Token) => {
+        setSelectedToken(token);
+        setEditForm({ name: token.name, value: token.value, description: token.description || '' });
+        setEditDialogOpen(true);
+    };
+
+    const handleDelete = (token: Token) => {
+        setSelectedToken(token);
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (!selectedToken) return;
+
+        toast({
+            title: 'Delete not supported',
+            description: 'Deleting core tokens is not recommended. Use edit to modify values instead.',
+            variant: 'destructive',
+        });
+        setDeleteDialogOpen(false);
+        setSelectedToken(null);
+    };
+
+    const saveEdit = () => {
+        if (!selectedToken) return;
+
+        const tokenKey = selectedToken.name.replace(/^(font-size-|font-weight-|line-height-|letter-spacing-|font-|spacing-|shadow-|easing-|duration-|breakpoint-|grid-|color-|border-)/, '');
+
+        // Update based on category
+        if (selectedToken.category === 'Colors') {
+            updateTokens({
+                colors: {
+                    ...tokens.colors,
+                    [tokenKey]: editForm.value
+                }
+            });
+        } else if (selectedToken.category === 'Typography') {
+            if (selectedToken.type === 'font-family') {
+                updateTypography({
+                    fontFamilies: {
+                        ...typography.fontFamilies,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'font-size') {
+                updateTypography({
+                    fontSizes: {
+                        ...typography.fontSizes,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'font-weight') {
+                updateTypography({
+                    fontWeights: {
+                        ...typography.fontWeights,
+                        [tokenKey]: parseInt(editForm.value)
+                    }
+                });
+            } else if (selectedToken.type === 'line-height') {
+                updateTypography({
+                    lineHeights: {
+                        ...typography.lineHeights,
+                        [tokenKey]: parseFloat(editForm.value)
+                    }
+                });
+            } else if (selectedToken.type === 'letter-spacing') {
+                updateTypography({
+                    letterSpacing: {
+                        ...typography.letterSpacing,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            }
+        } else if (selectedToken.category === 'Spacing') {
+            if (selectedToken.type === 'spacing' && spacing?.scale) {
+                updateSpacing({
+                    scale: {
+                        ...spacing.scale,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'breakpoint' && spacing?.breakpoints) {
+                updateSpacing({
+                    breakpoints: {
+                        ...spacing.breakpoints,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'grid' && spacing?.grid) {
+                updateSpacing({
+                    grid: {
+                        ...spacing.grid,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'radius') {
+                updateTokens({ radius: parseFloat(editForm.value) });
+            }
+        } else if (selectedToken.category === 'Shadows' && shadows?.levels) {
+            const updatedLevels = shadows.levels.map(level =>
+                level.name === tokenKey ? { ...level, shadow: editForm.value } : level
+            );
+            updateShadows({ levels: updatedLevels });
+        } else if (selectedToken.category === 'Motion') {
+            if (selectedToken.type === 'easing' && motion?.easings) {
+                updateMotion({
+                    easings: {
+                        ...motion.easings,
+                        [tokenKey]: editForm.value
+                    }
+                });
+            } else if (selectedToken.type === 'duration' && motion?.durations) {
+                updateMotion({
+                    durations: {
+                        ...motion.durations,
+                        [tokenKey]: parseInt(editForm.value)
+                    }
+                });
+            }
+        }
+
+        toast({
+            title: 'Token updated',
+            description: `${editForm.name} has been updated successfully`,
+        });
+        setEditDialogOpen(false);
+        setSelectedToken(null);
+    };
+
+    const createToken = () => {
+        if (!createForm.name || !createForm.value) {
+            toast({
+                title: 'Validation error',
+                description: 'Please provide both name and value',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        // Create based on category
+        if (createForm.category === 'Colors') {
+            updateTokens({
+                colors: {
+                    ...tokens.colors,
+                    [createForm.name]: createForm.value
+                }
+            });
+        } else if (createForm.category === 'Typography') {
+            if (createForm.type === 'font-size') {
+                updateTypography({
+                    fontSizes: {
+                        ...typography.fontSizes,
+                        [createForm.name]: createForm.value
+                    }
+                });
+            } else if (createForm.type === 'font-weight') {
+                updateTypography({
+                    fontWeights: {
+                        ...typography.fontWeights,
+                        [createForm.name]: parseInt(createForm.value)
+                    }
+                });
+            }
+        } else if (createForm.category === 'Spacing' && spacing?.scale) {
+            updateSpacing({
+                scale: {
+                    ...spacing.scale,
+                    [createForm.name]: createForm.value
+                }
+            });
+        }
+
+        toast({
+            title: 'Token created',
+            description: `${createForm.name} has been created successfully`,
+        });
+        setCreateDialogOpen(false);
+        setCreateForm({ name: '', value: '', category: 'Colors', type: 'color', description: '' });
+    };
+
+    const createAlias = () => {
+        if (!aliasForm.name || !aliasForm.reference) {
+            toast({
+                title: 'Validation error',
+                description: 'Please provide both alias name and reference',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        // Create alias as a CSS variable reference
+        updateTokens({
+            colors: {
+                ...tokens.colors,
+                [aliasForm.name]: `var(--${aliasForm.reference})`
+            }
+        });
+
+        toast({
+            title: 'Alias created',
+            description: `${aliasForm.name} now references ${aliasForm.reference}`,
+        });
+        setAliasDialogOpen(false);
+        setAliasForm({ name: '', reference: '', description: '' });
+    };
+
+    const handleExport = () => {
+        let exportData = '';
+        const tokensToExport = selectedCategory ? filteredTokens : allTokens;
+
+        switch (exportFormat) {
+            case 'json':
+                const jsonData: Record<string, any> = {};
+                tokensToExport.forEach(token => {
+                    jsonData[token.name] = token.value;
+                });
+                exportData = JSON.stringify(jsonData, null, 2);
+                break;
+            case 'css':
+                exportData = ':root {\n';
+                tokensToExport.forEach(token => {
+                    exportData += `  --${token.name}: ${token.value};\n`;
+                });
+                exportData += '}';
+                break;
+            case 'scss':
+                tokensToExport.forEach(token => {
+                    exportData += `$${token.name}: ${token.value};\n`;
+                });
+                break;
+        }
+
+        const blob = new Blob([exportData], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tokens.${exportFormat}`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        toast({
+            title: 'Export successful',
+            description: `Tokens exported as ${exportFormat.toUpperCase()}`,
+        });
+        setExportDialogOpen(false);
     };
 
     const getTokenPreview = (token: Token) => {
@@ -291,9 +726,13 @@ const TokenManager = () => {
                     </ScrollArea>
 
                     <div className="p-4 border-t">
-                        <Button className="w-full gap-2" size="sm">
+                        <Button onClick={() => setCreateDialogOpen(true)} className="w-full gap-2" size="sm">
                             <Plus className="w-4 h-4" />
                             New Token
+                        </Button>
+                        <Button onClick={() => setAliasDialogOpen(true)} variant="outline" size="sm">
+                            <Link2 className="w-4 h-4" />
+                            Create Alias
                         </Button>
                     </div>
                 </div>
@@ -306,12 +745,12 @@ const TokenManager = () => {
                                 {selectedCategory || 'All Tokens'} ({filteredTokens.length})
                             </h3>
                             <div className="flex items-center gap-2">
-                                <Button variant="ghost" size="sm">
+                                <Button onClick={() => setPreviewDialogOpen(true)} variant="ghost" size="sm">
                                     <Eye className="w-4 h-4 mr-2" />
                                     Preview
                                 </Button>
-                                <Button variant="ghost" size="sm">
-                                    <Code className="w-4 h-4 mr-2" />
+                                <Button onClick={() => setExportDialogOpen(true)} variant="ghost" size="sm">
+                                    <Download className="w-4 h-4 mr-2" />
                                     Export
                                 </Button>
                             </div>
@@ -383,6 +822,7 @@ const TokenManager = () => {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="sm"
+                                                                onClick={() => handleEdit(token)}
                                                                 className="h-8 w-8 p-0"
                                                             >
                                                                 <Edit className="w-3 h-3" />
@@ -390,6 +830,7 @@ const TokenManager = () => {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="sm"
+                                                                onClick={() => handleDelete(token)}
                                                                 className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                                                             >
                                                                 <Trash2 className="w-3 h-3" />
@@ -491,16 +932,16 @@ const TokenManager = () => {
                                     Actions
                                 </Label>
                                 <div className="space-y-2">
-                                    <Button variant="outline" className="w-full justify-start gap-2" size="sm">
+                                    <Button onClick={() => setCreateDialogOpen(true)} variant="outline" className="w-full justify-start gap-2" size="sm">
                                         <Plus className="w-4 h-4" />
                                         Create Token
                                     </Button>
-                                    <Button variant="outline" className="w-full justify-start gap-2" size="sm">
+                                    <Button onClick={() => setAliasDialogOpen(true)} variant="outline" className="w-full justify-start gap-2" size="sm">
                                         <Link2 className="w-4 h-4" />
                                         Create Alias
                                     </Button>
-                                    <Button variant="outline" className="w-full justify-start gap-2" size="sm">
-                                        <Code className="w-4 h-4" />
+                                    <Button onClick={() => setExportDialogOpen(true)} variant="outline" className="w-full justify-start gap-2" size="sm">
+                                        <Download className="w-4 h-4" />
                                         Export All
                                     </Button>
                                 </div>
@@ -509,6 +950,261 @@ const TokenManager = () => {
                     </ScrollArea>
                 </div>
             </div>
+
+            {/* Edit Token Dialog */}
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Edit Token</DialogTitle>
+                        <DialogDescription>
+                            Update the token details below
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="edit-name">Token Name</Label>
+                            <Input
+                                id="edit-name"
+                                value={editForm.name}
+                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                placeholder="e.g., primary"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="edit-value">Value</Label>
+                            <Input
+                                id="edit-value"
+                                value={editForm.value}
+                                onChange={(e) => setEditForm({ ...editForm, value: e.target.value })}
+                                placeholder="e.g., #3b82f6"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="edit-description">Description (Optional)</Label>
+                            <Textarea
+                                id="edit-description"
+                                value={editForm.description}
+                                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                                placeholder="Describe this token..."
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={saveEdit}>Save Changes</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Token Dialog */}
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete Token</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete "{selectedToken?.name}"? This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Create Token Dialog */}
+            <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Create New Token</DialogTitle>
+                        <DialogDescription>
+                            Add a new design token to your system
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="create-name">Token Name</Label>
+                            <Input
+                                id="create-name"
+                                value={createForm.name}
+                                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                                placeholder="e.g., accent-dark"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="create-category">Category</Label>
+                            <Select
+                                value={createForm.category}
+                                onValueChange={(value) => setCreateForm({ ...createForm, category: value })}
+                            >
+                                <SelectTrigger id="create-category">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Colors">Colors</SelectItem>
+                                    <SelectItem value="Typography">Typography</SelectItem>
+                                    <SelectItem value="Spacing">Spacing</SelectItem>
+                                    <SelectItem value="Shadows">Shadows</SelectItem>
+                                    <SelectItem value="Motion">Motion</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="create-value">Value</Label>
+                            <Input
+                                id="create-value"
+                                value={createForm.value}
+                                onChange={(e) => setCreateForm({ ...createForm, value: e.target.value })}
+                                placeholder="e.g., #f59e0b"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="create-description">Description (Optional)</Label>
+                            <Textarea
+                                id="create-description"
+                                value={createForm.description}
+                                onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                                placeholder="Describe this token..."
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={createToken}>Create Token</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Create Alias Dialog */}
+            <Dialog open={aliasDialogOpen} onOpenChange={setAliasDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Create Token Alias</DialogTitle>
+                        <DialogDescription>
+                            Create an alias that references an existing token
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="alias-name">Alias Name</Label>
+                            <Input
+                                id="alias-name"
+                                value={aliasForm.name}
+                                onChange={(e) => setAliasForm({ ...aliasForm, name: e.target.value })}
+                                placeholder="e.g., button-primary"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="alias-reference">Reference Token</Label>
+                            <Input
+                                id="alias-reference"
+                                value={aliasForm.reference}
+                                onChange={(e) => setAliasForm({ ...aliasForm, reference: e.target.value })}
+                                placeholder="e.g., color-primary"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                Enter the name of the token to reference
+                            </p>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="alias-description">Description (Optional)</Label>
+                            <Textarea
+                                id="alias-description"
+                                value={aliasForm.description}
+                                onChange={(e) => setAliasForm({ ...aliasForm, description: e.target.value })}
+                                placeholder="Describe the purpose of this alias..."
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setAliasDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={createAlias}>Create Alias</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Preview Dialog */}
+            <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+                <DialogContent className="max-w-4xl max-h-[80vh]">
+                    <DialogHeader>
+                        <DialogTitle>Token Preview</DialogTitle>
+                        <DialogDescription>
+                            Preview of {selectedCategory || 'all'} tokens ({filteredTokens.length} total)
+                        </DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="h-[60vh] pr-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            {filteredTokens.map((token) => (
+                                <div key={token.id} className="p-4 border rounded-lg space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-sm font-bold">{token.name}</span>
+                                        <Badge variant="outline" className="text-xs">{token.category}</Badge>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex-shrink-0">
+                                            {getTokenPreview(token)}
+                                        </div>
+                                        <code className="text-xs bg-muted px-2 py-1 rounded flex-1 truncate">
+                                            {token.value}
+                                        </code>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                </DialogContent>
+            </Dialog>
+
+            {/* Export Dialog */}
+            <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Export Tokens</DialogTitle>
+                        <DialogDescription>
+                            Export {selectedCategory ? `${selectedCategory} tokens` : 'all tokens'} in your preferred format
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label>Export Format</Label>
+                            <Select value={exportFormat} onValueChange={(value: any) => setExportFormat(value)}>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="json">JSON</SelectItem>
+                                    <SelectItem value="css">CSS Variables</SelectItem>
+                                    <SelectItem value="scss">SCSS Variables</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                            <p className="text-sm text-muted-foreground">
+                                {selectedCategory ? filteredTokens.length : allTokens.length} tokens will be exported as {exportFormat.toUpperCase()}
+                            </p>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setExportDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleExport}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Export
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

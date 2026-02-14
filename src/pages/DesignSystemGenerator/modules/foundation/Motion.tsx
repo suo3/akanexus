@@ -33,10 +33,42 @@ const DURATION_PRESETS = [
 ];
 
 const MotionFoundation = () => {
+    const { motion, updateMotion } = useDesignSystemStore();
+
+    // Use local state for UI controls
     const [selectedEasing, setSelectedEasing] = useState(EASING_PRESETS[1]);
-    const [duration, setDuration] = useState(300);
+    const [duration, setDuration] = useState(motion.durations.normal || 300);
     const [isAnimating, setIsAnimating] = useState(false);
     const [animationType, setAnimationType] = useState<'fade' | 'slide' | 'scale' | 'rotate'>('fade');
+
+    // Sync duration with store when it changes (for undo/redo)
+    React.useEffect(() => {
+        if (motion.durations.normal && motion.durations.normal !== duration) {
+            setDuration(motion.durations.normal);
+        }
+    }, [motion.durations.normal]);
+
+    const updateEasing = (curve: EasingCurve) => {
+        setSelectedEasing(curve);
+        // Update the easing in the store
+        const easingKey = curve.name.toLowerCase().replace(/ /g, '-');
+        updateMotion({
+            easings: {
+                ...motion.easings,
+                [easingKey]: curve.value
+            }
+        });
+    };
+
+    const updateDuration = (value: number) => {
+        setDuration(value);
+        updateMotion({
+            durations: {
+                ...motion.durations,
+                normal: value
+            }
+        });
+    };
 
     const playAnimation = () => {
         setIsAnimating(true);
@@ -93,7 +125,7 @@ const MotionFoundation = () => {
                                 value={selectedEasing.name}
                                 onValueChange={(value) => {
                                     const curve = EASING_PRESETS.find((e) => e.name === value);
-                                    if (curve) setSelectedEasing(curve);
+                                    if (curve) updateEasing(curve);
                                 }}
                             >
                                 <SelectTrigger>
@@ -132,7 +164,7 @@ const MotionFoundation = () => {
                                 max="2000"
                                 step="50"
                                 value={duration}
-                                onChange={(e) => setDuration(parseInt(e.target.value))}
+                                onChange={(e) => updateDuration(parseInt(e.target.value))}
                                 className="w-full accent-primary"
                             />
                             <div className="grid grid-cols-3 gap-2">
@@ -141,7 +173,7 @@ const MotionFoundation = () => {
                                         key={preset.name}
                                         size="sm"
                                         variant="outline"
-                                        onClick={() => setDuration(parseInt(preset.value))}
+                                        onClick={() => updateDuration(parseInt(preset.value))}
                                         className="h-7 text-xs"
                                     >
                                         {preset.name}
@@ -194,11 +226,12 @@ const MotionFoundation = () => {
                                             onChange={(e) => {
                                                 const newCubic = [...selectedEasing.cubic] as [number, number, number, number];
                                                 newCubic[index] = parseFloat(e.target.value);
-                                                setSelectedEasing({
+                                                const newCurve = {
                                                     ...selectedEasing,
                                                     cubic: newCubic,
                                                     value: `cubic-bezier(${newCubic.join(', ')})`,
-                                                });
+                                                };
+                                                updateEasing(newCurve);
                                             }}
                                             className="h-8 text-xs font-mono"
                                         />

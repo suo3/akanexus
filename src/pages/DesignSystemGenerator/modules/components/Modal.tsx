@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Square, Copy, Download, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 
 interface ModalSize {
     id: string;
@@ -39,6 +40,13 @@ const ModalComponentBuilder = () => {
         { id: 'zoom', name: 'Zoom' },
     ];
 
+    const animationClasses = {
+        fade: 'animate-in fade-in duration-200',
+        'slide-up': 'animate-in slide-in-from-bottom duration-300',
+        'slide-down': 'animate-in slide-in-from-top duration-300',
+        zoom: 'animate-in zoom-in-95 duration-200',
+    };
+
     const [config, setConfig] = useState({
         header: true,
         footer: true,
@@ -55,6 +63,29 @@ const ModalComponentBuilder = () => {
         opacity: 0.5,
         blur: 8,
     });
+
+    const modalRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            // Use latest state in event handler
+            if (config.closeOnEscape && e.key === 'Escape') {
+                setShowPreview(false);
+            }
+        };
+
+        if (showPreview) {
+            document.addEventListener('keydown', handleEscape);
+            // Focus the modal when it opens to capture keyboard events
+            setTimeout(() => {
+                modalRef.current?.focus();
+            }, 0);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [showPreview, config.closeOnEscape]);
 
     const generateReactCode = () => {
         return `import React from 'react';
@@ -112,7 +143,10 @@ export const Modal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className={cn(
+        "fixed inset-0 z-50 flex justify-center p-4",
+        ${config.centered ? '"items-center"' : '"items-start pt-[10vh]"'}
+    )}>
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50 ${config.overlayBlur ? 'backdrop-blur-sm' : ''}"
@@ -174,8 +208,39 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 `;
     };
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(generateReactCode());
+    const copyCode = async () => {
+        try {
+            await navigator.clipboard.writeText(generateReactCode());
+            console.log('Code copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy code:', err);
+            const textArea = document.createElement('textarea');
+            textArea.value = generateReactCode();
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                console.log('Code copied using fallback method!');
+            } catch (fallbackErr) {
+                console.error('Fallback copy also failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
+
+    const exportComponent = () => {
+        const code = generateReactCode();
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Modal.tsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const currentSize = sizes.find((s) => s.id === selectedSize);
@@ -218,8 +283,8 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                                                 key={size.id}
                                                 onClick={() => setSelectedSize(size.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedSize === size.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between">
@@ -420,7 +485,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                         <Copy className="w-4 h-4" />
                         Copy React Code
                     </Button>
-                    <Button className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2">
                         <Download className="w-4 h-4" />
                         Export Component
                     </Button>
@@ -502,7 +567,16 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 
             {/* Modal Preview Overlay */}
             {showPreview && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div
+                    className={`fixed inset-0 z-50 flex justify-center p-4 ${config.centered ? 'items-center' : 'items-start pt-[10vh]'}`}
+                    ref={modalRef}
+                    tabIndex={-1}
+                    onKeyDown={(e) => {
+                        if (config.closeOnEscape && e.key === 'Escape') {
+                            setShowPreview(false);
+                        }
+                    }}
+                >
                     <div
                         className="absolute inset-0"
                         style={{
@@ -513,7 +587,10 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                         onClick={config.closeOnOverlay ? () => setShowPreview(false) : undefined}
                     />
                     <div
-                        className="relative bg-background rounded-xl shadow-2xl"
+                        className={cn(
+                            "relative bg-background rounded-xl shadow-2xl",
+                            animationClasses[selectedAnimation as keyof typeof animationClasses]
+                        )}
                         style={{
                             width: currentSize?.width,
                             maxHeight: currentSize?.maxHeight,

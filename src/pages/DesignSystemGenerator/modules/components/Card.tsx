@@ -137,8 +137,39 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
 `;
     };
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(generateReactCode());
+    const copyCode = async () => {
+        try {
+            await navigator.clipboard.writeText(generateReactCode());
+            console.log('Code copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy code:', err);
+            const textArea = document.createElement('textarea');
+            textArea.value = generateReactCode();
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                console.log('Code copied using fallback method!');
+            } catch (fallbackErr) {
+                console.error('Fallback copy also failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
+
+    const exportComponent = () => {
+        const code = generateReactCode();
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Card.tsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const currentVariant = variants.find((v) => v.id === selectedVariant);
@@ -153,6 +184,10 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
             borderRadius: config.rounded ? `${tokens.radius}rem` : '0',
             padding: config.padding ? '1.5rem' : '0',
         };
+    };
+
+    const getCardClassName = () => {
+        return `${config.hoverable ? 'transition-transform hover:scale-105' : ''} ${config.clickable ? 'cursor-pointer' : ''}`;
     };
 
     return (
@@ -192,8 +227,8 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                                 key={variant.id}
                                                 onClick={() => setSelectedVariant(variant.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedVariant === variant.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <span className="text-sm font-bold">{variant.name}</span>
@@ -368,7 +403,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                         <Copy className="w-4 h-4" />
                         Copy React Code
                     </Button>
-                    <Button className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2">
                         <Download className="w-4 h-4" />
                         Export Component
                     </Button>
@@ -391,7 +426,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                 Interactive Preview
                             </h4>
                             <div className="max-w-md">
-                                <div style={getCardStyle()}>
+                                <div style={getCardStyle()} className={getCardClassName()}>
                                     {config.header && (
                                         <>
                                             <div style={{ paddingBottom: config.padding ? '1rem' : '0' }}>
@@ -445,6 +480,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                             {variant.name}
                                         </p>
                                         <div
+                                            className={getCardClassName()}
                                             style={{
                                                 background: variant.background,
                                                 border: `2px solid ${variant.border}`,
@@ -471,7 +507,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                 Common Use Cases
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
-                                <div style={getCardStyle()}>
+                                <div style={getCardStyle()} className={getCardClassName()}>
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-primary/20" />
                                         <div>
@@ -482,7 +518,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                     <p className="text-sm">Bio information goes here...</p>
                                 </div>
 
-                                <div style={getCardStyle()}>
+                                <div style={getCardStyle()} className={getCardClassName()}>
                                     <div className="aspect-video bg-muted rounded mb-3" />
                                     <h4 className="font-bold mb-1">Product Card</h4>
                                     <p className="text-sm text-muted-foreground mb-3">$99.99</p>
@@ -491,13 +527,13 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                     </button>
                                 </div>
 
-                                <div style={getCardStyle()}>
+                                <div style={getCardStyle()} className={getCardClassName()}>
                                     <h4 className="font-bold mb-2">Notification</h4>
                                     <p className="text-sm mb-3">You have a new message from John Doe</p>
                                     <p className="text-xs text-muted-foreground">2 minutes ago</p>
                                 </div>
 
-                                <div style={getCardStyle()}>
+                                <div style={getCardStyle()} className={getCardClassName()}>
                                     <h4 className="font-bold mb-2">Stats Card</h4>
                                     <p className="text-3xl font-black mb-1">1,234</p>
                                     <p className="text-sm text-muted-foreground">Total Users</p>

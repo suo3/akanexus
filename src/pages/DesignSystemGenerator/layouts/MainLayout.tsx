@@ -14,6 +14,39 @@ export const MainLayout = () => {
     const { theme, setTheme } = useTheme();
     const { canUndo, canRedo, undo, redo } = useDesignSystemStore();
 
+    // Set up keyboard shortcuts for undo/redo
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Ignore if user is typing in an input or textarea
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            // Ctrl+Z or Cmd+Z for undo
+            if (e.key === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
+                e.preventDefault();
+                if (canUndo) {
+                    undo();
+                }
+            }
+
+            // Ctrl+Y or Cmd+Shift+Z for redo
+            if (
+                (e.key === 'y' && (e.ctrlKey || e.metaKey)) ||
+                (e.key === 'z' && (e.ctrlKey || e.metaKey) && e.shiftKey)
+            ) {
+                e.preventDefault();
+                if (canRedo) {
+                    redo();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [canUndo, canRedo, undo, redo]);
+
     return (
         <div className="flex h-screen w-full bg-background overflow-hidden">
             <CommandPalette />
@@ -47,7 +80,7 @@ export const MainLayout = () => {
                                             <Undo2 className="w-4 h-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Undo</TooltipContent>
+                                    <TooltipContent>Undo (Ctrl+Z)</TooltipContent>
                                 </Tooltip>
 
                                 <Tooltip>
@@ -62,7 +95,7 @@ export const MainLayout = () => {
                                             <Redo2 className="w-4 h-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Redo</TooltipContent>
+                                    <TooltipContent>Redo (Ctrl+Y)</TooltipContent>
                                 </Tooltip>
                             </div>
                         </TooltipProvider>

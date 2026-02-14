@@ -44,6 +44,7 @@ const PRESET_SHADOWS = {
 };
 
 const ShadowsFoundation = () => {
+    const { shadows, updateShadows } = useDesignSystemStore();
     const [selectedLevel, setSelectedLevel] = useState(1);
     const [shadowConfig, setShadowConfig] = useState({
         x: 0,
@@ -54,24 +55,47 @@ const ShadowsFoundation = () => {
         opacity: 0.1,
     });
 
-    const [elevationLevels, setElevationLevels] = useState<ElevationLevel[]>([
-        { level: 0, shadows: [] },
-        { level: 1, shadows: [{ id: '1', name: 'sm', x: 0, y: 1, blur: 3, spread: 0, color: '#000000', opacity: 0.1 }] },
-        { level: 2, shadows: [{ id: '2', name: 'md', x: 0, y: 4, blur: 6, spread: -1, color: '#000000', opacity: 0.1 }] },
-        { level: 3, shadows: [{ id: '3', name: 'lg', x: 0, y: 10, blur: 15, spread: -3, color: '#000000', opacity: 0.1 }] },
-        { level: 4, shadows: [{ id: '4', name: 'xl', x: 0, y: 20, blur: 25, spread: -5, color: '#000000', opacity: 0.1 }] },
-        { level: 5, shadows: [{ id: '5', name: '2xl', x: 0, y: 25, blur: 50, spread: -12, color: '#000000', opacity: 0.25 }] },
-    ]);
+    // Sync shadowConfig with selected level from store
+    React.useEffect(() => {
+        const currentLevel = shadows.levels.find(l => l.level === selectedLevel);
+        if (currentLevel && currentLevel.shadow) {
+            // Parse the shadow string to extract values
+            // For now, just use the shadow string directly
+            // In a full implementation, you'd parse the CSS shadow string
+        }
+    }, [selectedLevel, shadows.levels]);
 
     const generateShadowCSS = (shadow: ShadowToken): string => {
         const rgba = `rgba(${parseInt(shadow.color.slice(1, 3), 16)}, ${parseInt(shadow.color.slice(3, 5), 16)}, ${parseInt(shadow.color.slice(5, 7), 16)}, ${shadow.opacity})`;
         return `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${rgba}`;
     };
 
+    const updateCurrentShadow = (updates: Partial<typeof shadowConfig>) => {
+        const newConfig = { ...shadowConfig, ...updates };
+        setShadowConfig(newConfig);
+
+        // Generate CSS and update the store
+        const shadowCSS = `${newConfig.x}px ${newConfig.y}px ${newConfig.blur}px ${newConfig.spread}px rgba(${parseInt(newConfig.color.slice(1, 3), 16)}, ${parseInt(newConfig.color.slice(3, 5), 16)}, ${parseInt(newConfig.color.slice(5, 7), 16)}, ${newConfig.opacity})`;
+
+        updateShadowLevel(selectedLevel, { shadow: shadowCSS });
+    };
+
     const applyPreset = (preset: 'material' | 'ios') => {
         const presetData = PRESET_SHADOWS[preset];
-        // This would update the elevation levels based on preset
-        console.log('Applying preset:', preset);
+        const newLevels = presetData.map((p, index) => ({
+            level: p.level,
+            name: index === 0 ? 'none' : index === 1 ? 'sm' : index === 2 ? 'base' : index === 3 ? 'md' : index === 4 ? 'lg' : index === 5 ? 'xl' : '2xl',
+            shadow: p.shadow,
+            description: `Level ${p.level} shadow`,
+        }));
+        updateShadows({ levels: newLevels });
+    };
+
+    const updateShadowLevel = (level: number, updates: Partial<typeof shadows.levels[0]>) => {
+        const newLevels = shadows.levels.map(l =>
+            l.level === level ? { ...l, ...updates } : l
+        );
+        updateShadows({ levels: newLevels });
     };
 
     return (
@@ -132,7 +156,7 @@ const ShadowsFoundation = () => {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {elevationLevels.map((level) => (
+                                    {shadows.levels.map((level) => (
                                         <SelectItem key={level.level} value={level.level.toString()}>
                                             Level {level.level}
                                         </SelectItem>
@@ -163,7 +187,7 @@ const ShadowsFoundation = () => {
                                     max="50"
                                     value={shadowConfig.x}
                                     onChange={(e) =>
-                                        setShadowConfig({ ...shadowConfig, x: parseInt(e.target.value) })
+                                        updateCurrentShadow({ x: parseInt(e.target.value) })
                                     }
                                     className="w-full accent-primary"
                                 />
@@ -183,7 +207,7 @@ const ShadowsFoundation = () => {
                                     max="50"
                                     value={shadowConfig.y}
                                     onChange={(e) =>
-                                        setShadowConfig({ ...shadowConfig, y: parseInt(e.target.value) })
+                                        updateCurrentShadow({ y: parseInt(e.target.value) })
                                     }
                                     className="w-full accent-primary"
                                 />
@@ -203,7 +227,7 @@ const ShadowsFoundation = () => {
                                     max="100"
                                     value={shadowConfig.blur}
                                     onChange={(e) =>
-                                        setShadowConfig({ ...shadowConfig, blur: parseInt(e.target.value) })
+                                        updateCurrentShadow({ blur: parseInt(e.target.value) })
                                     }
                                     className="w-full accent-primary"
                                 />
@@ -223,7 +247,7 @@ const ShadowsFoundation = () => {
                                     max="50"
                                     value={shadowConfig.spread}
                                     onChange={(e) =>
-                                        setShadowConfig({ ...shadowConfig, spread: parseInt(e.target.value) })
+                                        updateCurrentShadow({ spread: parseInt(e.target.value) })
                                     }
                                     className="w-full accent-primary"
                                 />
@@ -244,7 +268,7 @@ const ShadowsFoundation = () => {
                                     step="0.01"
                                     value={shadowConfig.opacity}
                                     onChange={(e) =>
-                                        setShadowConfig({ ...shadowConfig, opacity: parseFloat(e.target.value) })
+                                        updateCurrentShadow({ opacity: parseFloat(e.target.value) })
                                     }
                                     className="w-full accent-primary"
                                 />
@@ -257,12 +281,12 @@ const ShadowsFoundation = () => {
                                     <Input
                                         type="color"
                                         value={shadowConfig.color}
-                                        onChange={(e) => setShadowConfig({ ...shadowConfig, color: e.target.value })}
+                                        onChange={(e) => updateCurrentShadow({ color: e.target.value })}
                                         className="w-16 h-9 p-1"
                                     />
                                     <Input
                                         value={shadowConfig.color}
-                                        onChange={(e) => setShadowConfig({ ...shadowConfig, color: e.target.value })}
+                                        onChange={(e) => updateCurrentShadow({ color: e.target.value })}
                                         className="flex-1 h-9 font-mono text-xs"
                                     />
                                 </div>
@@ -278,20 +302,15 @@ const ShadowsFoundation = () => {
                             </Label>
                             <div className="relative">
                                 <pre className="text-xs font-mono bg-muted p-3 rounded-lg overflow-x-auto">
-                                    {generateShadowCSS({
-                                        id: '1',
-                                        name: 'custom',
-                                        ...shadowConfig,
-                                    })}
+                                    {shadows.levels.find(l => l.level === selectedLevel)?.shadow || 'none'}
                                 </pre>
                                 <Button
                                     size="icon"
                                     variant="ghost"
                                     className="absolute top-2 right-2 h-6 w-6"
                                     onClick={() => {
-                                        navigator.clipboard.writeText(
-                                            generateShadowCSS({ id: '1', name: 'custom', ...shadowConfig })
-                                        );
+                                        const shadowCSS = shadows.levels.find(l => l.level === selectedLevel)?.shadow || 'none';
+                                        navigator.clipboard.writeText(shadowCSS);
                                     }}
                                 >
                                     <Copy className="w-3 h-3" />
@@ -315,20 +334,16 @@ const ShadowsFoundation = () => {
                         {/* Current Shadow Preview */}
                         <div className="space-y-6">
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Current Shadow
+                                Current Shadow - Level {selectedLevel}
                             </h4>
                             <div className="flex items-center justify-center p-16 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
                                 <div
                                     className="w-64 h-64 bg-card rounded-2xl flex items-center justify-center"
                                     style={{
-                                        boxShadow: generateShadowCSS({
-                                            id: '1',
-                                            name: 'custom',
-                                            ...shadowConfig,
-                                        }),
+                                        boxShadow: shadows.levels.find(l => l.level === selectedLevel)?.shadow || 'none',
                                     }}
                                 >
-                                    <p className="text-sm text-muted-foreground">Shadow Preview</p>
+                                    <p className="text-sm text-muted-foreground">Level {selectedLevel}</p>
                                 </div>
                             </div>
                         </div>
@@ -341,18 +356,16 @@ const ShadowsFoundation = () => {
                                 Elevation System
                             </h4>
                             <div className="grid grid-cols-3 gap-6">
-                                {elevationLevels.map((level) => (
+                                {shadows.levels.map((level) => (
                                     <div key={level.level} className="space-y-3">
                                         <p className="text-xs font-bold text-muted-foreground">
-                                            Level {level.level}
+                                            Level {level.level} - {level.name}
                                         </p>
                                         <div className="aspect-square bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl p-8 flex items-center justify-center">
                                             <div
                                                 className="w-full h-full bg-card rounded-xl flex items-center justify-center"
                                                 style={{
-                                                    boxShadow: level.shadows
-                                                        .map((s) => generateShadowCSS(s))
-                                                        .join(', '),
+                                                    boxShadow: level.shadow,
                                                 }}
                                             >
                                                 <span className="text-2xl font-black text-muted-foreground/30">
@@ -380,9 +393,7 @@ const ShadowsFoundation = () => {
                                     <button
                                         className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold"
                                         style={{
-                                            boxShadow: elevationLevels[1].shadows
-                                                .map((s) => generateShadowCSS(s))
-                                                .join(', '),
+                                            boxShadow: shadows.levels[1]?.shadow || 'none',
                                         }}
                                     >
                                         Click Me
@@ -396,9 +407,7 @@ const ShadowsFoundation = () => {
                                     <div
                                         className="p-4 bg-background rounded-lg"
                                         style={{
-                                            boxShadow: elevationLevels[2].shadows
-                                                .map((s) => generateShadowCSS(s))
-                                                .join(', '),
+                                            boxShadow: shadows.levels[2]?.shadow || 'none',
                                         }}
                                     >
                                         <p className="text-sm">Card content</p>
@@ -412,9 +421,7 @@ const ShadowsFoundation = () => {
                                     <div
                                         className="p-4 bg-background rounded-lg"
                                         style={{
-                                            boxShadow: elevationLevels[4].shadows
-                                                .map((s) => generateShadowCSS(s))
-                                                .join(', '),
+                                            boxShadow: shadows.levels[4]?.shadow || 'none',
                                         }}
                                     >
                                         <p className="text-sm">Modal dialog</p>
@@ -428,9 +435,7 @@ const ShadowsFoundation = () => {
                                     <div
                                         className="p-4 bg-background rounded-lg"
                                         style={{
-                                            boxShadow: elevationLevels[3].shadows
-                                                .map((s) => generateShadowCSS(s))
-                                                .join(', '),
+                                            boxShadow: shadows.levels[3]?.shadow || 'none',
                                         }}
                                     >
                                         <p className="text-sm">Dropdown menu</p>

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Type, Copy, Download, Search, Mail, Lock, Hash } from 'lucide-react';
+import { Type, Copy, Download, Search, Mail, Lock, Hash, AlertCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
@@ -87,31 +87,40 @@ const InputComponentBuilder = () => {
     ];
 
     const generateReactCode = () => {
+        const props = [
+            `variant?: '${variants.map((v) => v.id).join("' | '")}'`,
+            `size?: '${sizes.map((s) => s.id).join("' | '")}'`,
+        ];
+
+        if (config.label) props.push('label?: string');
+        if (config.helperText) props.push('helperText?: string');
+        if (config.errorState) props.push('error?: string');
+        if (config.leftIcon) props.push('leftIcon?: React.ReactNode');
+        if (config.rightIcon) props.push('rightIcon?: React.ReactNode');
+
+        const destructuring = [
+            "className",
+            "variant = 'default'",
+            "size = 'md'",
+            config.label ? "label" : "",
+            config.helperText ? "helperText" : "",
+            config.errorState ? "error" : "",
+            config.leftIcon ? "leftIcon" : "",
+            config.rightIcon ? "rightIcon" : "",
+            "disabled",
+            "...props"
+        ].filter(Boolean).join(",\n    ");
+
         return `import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: '${variants.map((v) => v.id).join("' | '")}';
-  size?: '${sizes.map((s) => s.id).join("' | '")}';
-  label?: string;
-  helperText?: string;
-  error?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  ${props.join(';\n  ')};
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ 
-    className, 
-    variant = 'default', 
-    size = 'md', 
-    label,
-    helperText,
-    error,
-    leftIcon, 
-    rightIcon, 
-    disabled,
-    ...props 
+    ${destructuring}
   }, ref) => {
     const variants = {
       ${variants.map((v) => `${v.id}: 'border-[${v.border}] bg-[${v.background}] focus:border-[${v.focusBorder}] focus:ring-[${v.focusRing}]'`).join(',\n      ')}
@@ -123,17 +132,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="w-full">
-        {label && (
+        ${config.label ? `{label && (
           <label className="block text-sm font-bold mb-2">
             {label}
           </label>
-        )}
+        )}` : ''}
         <div className="relative">
-          {leftIcon && (
+          ${config.leftIcon ? `{leftIcon && (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               {leftIcon}
             </div>
-          )}
+          )}` : ''}
           <input
             ref={ref}
             className={cn(
@@ -141,9 +150,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               '${config.rounded ? `rounded-[${tokens.radius}rem]` : ''}',
               'focus:ring-4',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              leftIcon && 'pl-10',
-              rightIcon && 'pr-10',
-              error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
+              ${config.leftIcon ? "leftIcon && 'pl-10'," : ''}
+              ${config.rightIcon ? "rightIcon && 'pr-10'," : ''}
+              ${config.errorState ? "error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20'," : ''}
               variants[variant],
               sizes[size],
               className
@@ -151,17 +160,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             disabled={disabled}
             {...props}
           />
-          {rightIcon && (
+          ${config.rightIcon ? `{rightIcon && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               {rightIcon}
             </div>
-          )}
+          )}` : ''}
         </div>
-        {error ? (
+        ${config.errorState ? `{error ? (
           <p className="text-sm text-red-500 mt-1">{error}</p>
-        ) : helperText ? (
+        ) : ${config.helperText ? `helperText ? (
           <p className="text-sm text-muted-foreground mt-1">{helperText}</p>
-        ) : null}
+        ) : null` : 'null'}}` : config.helperText ? `{helperText && (
+          <p className="text-sm text-muted-foreground mt-1">{helperText}</p>
+        )}` : ''}
       </div>
     );
   }
@@ -171,8 +182,39 @@ Input.displayName = 'Input';
 `;
     };
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(generateReactCode());
+    const copyCode = async () => {
+        try {
+            await navigator.clipboard.writeText(generateReactCode());
+            console.log('Code copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy code:', err);
+            const textArea = document.createElement('textarea');
+            textArea.value = generateReactCode();
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                console.log('Code copied using fallback method!');
+            } catch (fallbackErr) {
+                console.error('Fallback copy also failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
+
+    const exportComponent = () => {
+        const code = generateReactCode();
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Input.tsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const currentVariant = variants.find((v) => v.id === selectedVariant);
@@ -261,8 +303,8 @@ Input.displayName = 'Input';
                                                     key={type.id}
                                                     onClick={() => setSelectedType(type.id)}
                                                     className={`p-3 rounded-lg border-2 transition-all ${selectedType === type.id
-                                                            ? 'border-primary bg-primary/5'
-                                                            : 'border-border hover:border-primary/50'
+                                                        ? 'border-primary bg-primary/5'
+                                                        : 'border-border hover:border-primary/50'
                                                         }`}
                                                 >
                                                     <Icon className="w-4 h-4 mx-auto mb-1" />
@@ -285,8 +327,8 @@ Input.displayName = 'Input';
                                                 key={variant.id}
                                                 onClick={() => setSelectedVariant(variant.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedVariant === variant.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <span className="text-sm font-bold">{variant.name}</span>
@@ -374,8 +416,8 @@ Input.displayName = 'Input';
                                                 key={size.id}
                                                 onClick={() => setSelectedSize(size.id)}
                                                 className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedSize === size.id
-                                                        ? 'border-primary bg-primary/5'
-                                                        : 'border-border hover:border-primary/50'
+                                                    ? 'border-primary bg-primary/5'
+                                                    : 'border-border hover:border-primary/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between">
@@ -456,7 +498,7 @@ Input.displayName = 'Input';
                         <Copy className="w-4 h-4" />
                         Copy React Code
                     </Button>
-                    <Button className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2">
                         <Download className="w-4 h-4" />
                         Export Component
                     </Button>
@@ -492,17 +534,24 @@ Input.displayName = 'Input';
                                         type={selectedType}
                                         placeholder={`Enter your ${selectedType}...`}
                                         style={{
-                                            ...getInputStyle(),
+                                            ...getInputStyle(config.errorState ? 'error' : 'default'),
                                             paddingLeft: config.leftIcon ? '2.5rem' : currentSize?.padding.split(' ')[1],
                                             paddingRight: config.rightIcon ? '2.5rem' : currentSize?.padding.split(' ')[1],
                                         }}
                                     />
+                                    {config.rightIcon && (
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                            <AlertCircle className="w-4 h-4" />
+                                        </div>
+                                    )}
                                 </div>
-                                {config.helperText && (
+                                {config.errorState ? (
+                                    <p className="text-sm text-red-500 mt-1">Invalid email address</p>
+                                ) : config.helperText ? (
                                     <p className="text-sm text-muted-foreground mt-1">
                                         We'll never share your {selectedType}.
                                     </p>
-                                )}
+                                ) : null}
                             </div>
                         </div>
 

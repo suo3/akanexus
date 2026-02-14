@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Component, Copy, Download, Plus, Trash2 } from 'lucide-react';
+import { Component, Copy, Download, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
@@ -94,20 +94,83 @@ const ButtonComponentBuilder = () => {
         fullWidth: false,
     });
 
+    const addVariant = () => {
+        const newId = `variant-${Date.now()}`;
+        const newVariant: ButtonVariant = {
+            id: newId,
+            name: `Variant ${variants.length + 1}`,
+            background: tokens.colors.primary,
+            foreground: '#ffffff',
+            border: 'transparent',
+            hoverBackground: tokens.colors.primaryScale[600] || tokens.colors.primary,
+            hoverForeground: '#ffffff',
+            activeBackground: tokens.colors.primaryScale[700] || tokens.colors.primary,
+        };
+        setVariants([...variants, newVariant]);
+        setSelectedVariant(newId);
+    };
+
+    const addSize = () => {
+        const newId = `size-${Date.now()}`;
+        const newSize: ButtonSize = {
+            id: newId,
+            name: `Size ${sizes.length + 1}`,
+            padding: '0.75rem 1.5rem',
+            fontSize: '1rem',
+            height: '2.5rem',
+        };
+        setSizes([...sizes, newSize]);
+        setSelectedSize(newId);
+    };
+
+    const deleteVariant = (id: string) => {
+        if (variants.length <= 1) return; // Keep at least one variant
+        setVariants(variants.filter(v => v.id !== id));
+        if (selectedVariant === id) {
+            setSelectedVariant(variants[0].id);
+        }
+    };
+
+    const deleteSize = (id: string) => {
+        if (sizes.length <= 1) return; // Keep at least one size
+        setSizes(sizes.filter(s => s.id !== id));
+        if (selectedSize === id) {
+            setSelectedSize(sizes[0].id);
+        }
+    };
+
     const generateReactCode = () => {
+        const props = [
+            `variant?: '${variants.map((v) => v.id).join("' | '")}'`,
+            `size?: '${sizes.map((s) => s.id).join("' | '")}'`,
+        ];
+
+        if (config.loadingState) props.push('isLoading?: boolean');
+        if (config.iconSupport) {
+            props.push('leftIcon?: React.ReactNode');
+            props.push('rightIcon?: React.ReactNode');
+        }
+
+        const destructuring = [
+            "className",
+            "variant = 'primary'",
+            "size = 'md'",
+            config.loadingState ? "isLoading" : "",
+            config.iconSupport ? "leftIcon, rightIcon" : "",
+            "children",
+            config.disabledState ? "disabled" : "",
+            "...props"
+        ].filter(Boolean).join(", ");
+
         return `import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: '${variants.map((v) => v.id).join("' | '")}';
-  size?: '${sizes.map((s) => s.id).join("' | '")}';
-  isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  ${props.join(';\n  ')};
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
+  ({ ${destructuring} }, ref) => {
     const variants = {
       ${variants.map((v) => `${v.id}: 'bg-[${v.background}] text-[${v.foreground}] border-[${v.border}] hover:bg-[${v.hoverBackground}] hover:text-[${v.hoverForeground}]'`).join(',\n      ')}
     };
@@ -122,22 +185,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           'inline-flex items-center justify-center gap-2 font-bold transition-all',
           'border ${config.rounded ? `rounded-[${tokens.radius}rem]` : ''}',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          ${config.disabledState ? "'disabled:opacity-50 disabled:cursor-not-allowed'," : ""}
           variants[variant],
           sizes[size],
           className
         )}
-        disabled={disabled || isLoading}
+        ${config.disabledState || config.loadingState ? `disabled={${[config.disabledState ? "disabled" : "", config.loadingState ? "isLoading" : ""].filter(Boolean).join(" || ")}}` : ""}
         {...props}
       >
-        {isLoading ? (
+        ${config.loadingState ? `{isLoading ? (
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
-        ) : leftIcon}
+        ) : ${config.iconSupport ? "leftIcon" : "null"}}` : (config.iconSupport ? "{leftIcon}" : "")}
         {children}
-        {rightIcon}
+        ${config.iconSupport ? "{rightIcon}" : ""}
       </button>
     );
   }
@@ -147,8 +210,42 @@ Button.displayName = 'Button';
 `;
     };
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(generateReactCode());
+    const copyCode = async () => {
+        try {
+            await navigator.clipboard.writeText(generateReactCode());
+            // Optional: Add toast notification here if you have a toast system
+            console.log('Code copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy code:', err);
+            // Fallback: try using the older execCommand method
+            const textArea = document.createElement('textarea');
+            textArea.value = generateReactCode();
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                console.log('Code copied using fallback method!');
+            } catch (fallbackErr) {
+                console.error('Fallback copy also failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
+
+    const exportComponent = () => {
+        const code = generateReactCode();
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Button.tsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        console.log('Component exported as Button.tsx');
     };
 
     const currentVariant = variants.find((v) => v.id === selectedVariant);
@@ -201,7 +298,7 @@ Button.displayName = 'Button';
     };
 
     return (
-        <div className="h-full flex">
+        <div className="h-full flex overflow-hidden">
             {/* Left Panel - Controls */}
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
@@ -233,7 +330,7 @@ Button.displayName = 'Button';
                                         <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
                                             Variants
                                         </Label>
-                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5">
+                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={addVariant}>
                                             <Plus className="w-3 h-3" />
                                             Add
                                         </Button>
@@ -363,9 +460,15 @@ Button.displayName = 'Button';
 
                             <TabsContent value="sizes" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                        Size Presets
-                                    </Label>
+                                    <div className="flex justify-between items-center">
+                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                            Size Presets
+                                        </Label>
+                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={addSize}>
+                                            <Plus className="w-3 h-3" />
+                                            Add
+                                        </Button>
+                                    </div>
                                     <div className="space-y-2">
                                         {sizes.map((size) => (
                                             <button
@@ -440,7 +543,7 @@ Button.displayName = 'Button';
                         <Copy className="w-4 h-4" />
                         Copy React Code
                     </Button>
-                    <Button className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2">
                         <Download className="w-4 h-4" />
                         Export Component
                     </Button>
@@ -463,7 +566,26 @@ Button.displayName = 'Button';
                                 Interactive Preview
                             </h4>
                             <div className="flex items-center justify-center p-16 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
-                                <button style={getButtonStyle()}>Click Me</button>
+                                <button
+                                    style={{
+                                        ...getButtonStyle(),
+                                        opacity: config.loadingState && selectedState === 'loading' ? 0.7 : 1,
+                                        cursor: config.loadingState && selectedState === 'loading' ? 'wait' : 'pointer'
+                                    }}
+                                    onClick={() => {
+                                        if (config.loadingState) {
+                                            setSelectedState('loading');
+                                            setTimeout(() => setSelectedState('default'), 2000);
+                                        }
+                                    }}
+                                    disabled={config.loadingState && selectedState === 'loading'}
+                                >
+                                    {config.loadingState && selectedState === 'loading' ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (config.iconSupport && <Sparkles className="w-4 h-4" />)}
+                                    {config.loadingState && selectedState === 'loading' ? 'Loading...' : 'Click Me'}
+                                    {config.iconSupport && !(config.loadingState && selectedState === 'loading') && <Sparkles className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
 
@@ -502,6 +624,17 @@ Button.displayName = 'Button';
                                     </p>
                                     <button style={getButtonStyle('disabled')}>Button</button>
                                 </div>
+
+                                {config.loadingState && (
+                                    <div className="p-6 border rounded-xl bg-card space-y-3">
+                                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                            Loading
+                                        </p>
+                                        <button style={getButtonStyle()}>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -528,6 +661,9 @@ Button.displayName = 'Button';
                                                 height: currentSize?.height,
                                                 borderRadius: config.rounded ? `${tokens.radius}rem` : '0',
                                                 fontWeight: 700,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                             }}
                                         >
                                             {variant.name} Button
@@ -560,6 +696,9 @@ Button.displayName = 'Button';
                                                 height: size.height,
                                                 borderRadius: config.rounded ? `${tokens.radius}rem` : '0',
                                                 fontWeight: 700,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                             }}
                                         >
                                             {size.name} Button
@@ -587,9 +726,10 @@ Button.displayName = 'Button';
                             </pre>
                         </div>
                     </div>
+
                 </ScrollArea>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

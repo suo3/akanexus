@@ -12,7 +12,7 @@ import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
 
 const ProjectExport = () => {
-    const { tokens, typography, components } = useDesignSystemStore();
+    const { tokens, typography, spacing, shadows, motion, components } = useDesignSystemStore();
     const [activeTab, setActiveTab] = useState('config');
     const [isExporting, setIsExporting] = useState(false);
 
@@ -102,8 +102,32 @@ export default {
         serif: [${typography.fontFamilies.serif.split(',').map(f => `'${f.trim()}'`).join(', ')}],
         mono: [${typography.fontFamilies.mono.split(',').map(f => `'${f.trim()}'`).join(', ')}],
       },
+      fontSize: {
+        ${Object.entries(typography.fontSizes).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      fontWeight: {
+        ${Object.entries(typography.fontWeights).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      lineHeight: {
+        ${Object.entries(typography.lineHeights).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      letterSpacing: {
+        ${Object.entries(typography.letterSpacing).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
       borderRadius: {
         DEFAULT: '${tokens.radius}rem',
+      },
+      spacing: {
+        ${Object.entries(spacing.scale).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      boxShadow: {
+        ${shadows.levels.map(level => `'${level.name}': '${level.shadow}'`).join(',\n        ')}
+      },
+      transitionTimingFunction: {
+        ${Object.entries(motion.easings).map(([key, value]) => `'${key}': '${value}'`).join(',\n        ')}
+      },
+      transitionDuration: {
+        ${Object.entries(motion.durations).map(([key, value]) => `'${key}': '${value}ms'`).join(',\n        ')}
       },
     },
   },
@@ -308,6 +332,7 @@ export default App;`;
 @tailwind utilities;
 
 :root {
+  /* Colors */
   --color-primary: ${tokens.colors.primary};
   --color-secondary: ${tokens.colors.secondary};
   --color-accent: ${tokens.colors.accent};
@@ -315,11 +340,21 @@ export default App;`;
   --color-foreground: ${tokens.colors.foreground};
   --color-border: ${tokens.colors.border};
   --radius: ${tokens.radius}rem;
+
+  /* Typography */
+  --font-sans: ${typography.fontFamilies.sans};
+  --font-serif: ${typography.fontFamilies.serif};
+  --font-mono: ${typography.fontFamilies.mono};
+
+  /* Spacing */
+  ${Object.entries(spacing.scale).map(([key, value]) => `--spacing-${key}: ${value};`).join('\n  ')}
+
+  /* Shadows */
+  ${shadows.levels.map(level => `--shadow-${level.name}: ${level.shadow};`).join('\n  ')}
 }
 
 body {
-  font-family: ${typography.fontFamilies.sans};
-  color: var(--color-foreground);
+  font-family: var(--font-sans);
   background: var(--color-background);
 }`;
     };
@@ -366,20 +401,212 @@ body {
                     }
                 }
 
-                // Components
-                const components = src.folder('components');
-                if (components && exportConfig.includeButton) {
-                    // Get the actual component code from the store or generate it
-                    components.file('Button.tsx', `// Button component will be generated here`);
-                }
-                if (components && exportConfig.includeInput) {
-                    components.file('Input.tsx', `// Input component will be generated here`);
-                }
-                if (components && exportConfig.includeCard) {
-                    components.file('Card.tsx', `// Card component will be generated here`);
-                }
-                if (components && exportConfig.includeModal) {
-                    components.file('Modal.tsx', `// Modal component will be generated here`);
+                // Components declaration helper
+                const getComponentCode = (type: string, fallback: string) => {
+                    const component = components.find(c => c.type === type);
+                    if (component && component.code && component.code.react) {
+                        return component.code.react;
+                    }
+                    return fallback;
+                };
+
+                // Components - using actual code from store or fallbacks
+                const componentsDir = src.folder('components');
+                if (componentsDir) {
+                    if (exportConfig.includeButton) {
+                        const fallbackButton = `import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "../lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        primary: "bg-primary text-white hover:opacity-90",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+`;
+                        componentsDir.file('Button.tsx', getComponentCode('button', fallbackButton));
+                    }
+
+                    if (exportConfig.includeInput) {
+                        const fallbackInput = `import * as React from "react"
+import { cn } from "../lib/utils"
+
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
+
+export { Input }
+`;
+                        componentsDir.file('Input.tsx', getComponentCode('input', fallbackInput));
+                    }
+
+                    if (exportConfig.includeCard) {
+                        const fallbackCard = `import * as React from "react"
+import { cn } from "../lib/utils"
+
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      className
+    )}
+    {...props}
+  />
+))
+Card.displayName = "Card"
+
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    {...props}
+  />
+))
+CardHeader.displayName = "CardHeader"
+
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className
+    )}
+    {...props}
+  />
+))
+CardTitle.displayName = "CardTitle"
+
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+CardDescription.displayName = "CardDescription"
+
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+))
+CardContent.displayName = "CardContent"
+
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex items-center p-6 pt-0", className)}
+    {...props}
+  />
+))
+CardFooter.displayName = "CardFooter"
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+`;
+                        componentsDir.file('Card.tsx', getComponentCode('card', fallbackCard));
+                    }
+
+                    if (exportConfig.includeModal) {
+                        const fallbackModal = `import * as React from "react"
+import { cn } from "../lib/utils"
+
+const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="relative w-full max-w-lg rounded-lg bg-background p-6 shadow-lg">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+        >
+          <span className="sr-only">Close</span>
+          X
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+};
+export { Modal }
+`;
+                        componentsDir.file('Modal.tsx', getComponentCode('modal', fallbackModal));
+                    }
                 }
             }
 
@@ -621,6 +848,25 @@ body {
                                                     Production-ready components with your styling
                                                 </p>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <Separator />
+
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="text-lg font-bold">Configuration Preview</h3>
+                                            <div className="text-xs text-muted-foreground font-mono">tailwind.config.js</div>
+                                        </div>
+                                        <div className="relative">
+                                            <div className="absolute right-4 top-4">
+                                                <FileCode className="w-5 h-5 text-muted-foreground" />
+                                            </div>
+                                            <ScrollArea className="h-[300px] w-full rounded-md border bg-muted p-4">
+                                                <pre className="text-xs font-mono language-js">
+                                                    <code>{generateTailwindConfig()}</code>
+                                                </pre>
+                                            </ScrollArea>
                                         </div>
                                     </div>
                                 </TabsContent>

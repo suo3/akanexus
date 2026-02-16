@@ -32,23 +32,12 @@ import GuidelinesEditor from './modules/documentation/GuidelinesEditor';
 
 // Developer modules
 import ProjectExport from './modules/developer/ProjectExport';
-import GitHubIntegration from './modules/developer/GitHubIntegration';
-import CLIConfig from './modules/developer/CLIConfig';
-import RegressionTesting from './modules/developer/RegressionTesting';
-import FigmaIntegration from './modules/developer/FigmaIntegration';
 
-// Governance modules
-import TeamManagement from './modules/governance/TeamManagement';
-import MultiBrandManager from './modules/governance/MultiBrandManager';
-import Changelog from './modules/governance/Changelog';
-import ComponentRequests from './modules/governance/ComponentRequests';
-import ContributionWorkspace from './modules/governance/ContributionWorkspace';
 
-// Quality modules
-import HealthDashboard from './modules/quality/HealthDashboard';
-import AccessibilityChecker from './modules/quality/AccessibilityChecker';
-import IconLibrary from './modules/quality/IconLibrary';
-import LocalizationManager from './modules/quality/LocalizationManager';
+
+
+
+
 
 const DesignSystemGenerator = () => {
     return (
@@ -84,23 +73,12 @@ const DesignSystemGenerator = () => {
 
                 {/* Developer routes */}
                 <Route path="developer/export" element={<ProjectExport />} />
-                <Route path="developer/github" element={<GitHubIntegration />} />
-                <Route path="developer/cli" element={<CLIConfig />} />
-                <Route path="developer/testing" element={<RegressionTesting />} />
-                <Route path="developer/figma" element={<FigmaIntegration />} />
 
-                {/* Governance routes */}
-                <Route path="governance/team" element={<TeamManagement />} />
-                <Route path="governance/brands" element={<MultiBrandManager />} />
-                <Route path="governance/changelog" element={<Changelog />} />
-                <Route path="governance/requests" element={<ComponentRequests />} />
-                <Route path="governance/contribution" element={<ContributionWorkspace />} />
 
-                {/* Quality routes */}
-                <Route path="quality/health" element={<HealthDashboard />} />
-                <Route path="quality/accessibility" element={<AccessibilityChecker />} />
-                <Route path="quality/assets" element={<IconLibrary />} />
-                <Route path="quality/localization" element={<LocalizationManager />} />
+
+
+
+
             </Route>
         </Routes>
     );

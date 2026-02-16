@@ -84,33 +84,12 @@ const navigationSections: NavSection[] = [
         icon: Settings,
         items: [
             { label: 'Export Project', path: '/design-system-generator/developer/export' },
-            { label: 'GitHub Sync', path: '/design-system-generator/developer/github', badge: 'Beta' },
-            { label: 'Figma Connect', path: '/design-system-generator/developer/figma' },
-            { label: 'CLI Config', path: '/design-system-generator/developer/cli' },
-            { label: 'Regression Testing', path: '/design-system-generator/developer/testing' },
+
+
         ],
     },
-    {
-        title: 'Governance',
-        icon: Shield,
-        items: [
-            { label: 'Team', path: '/design-system-generator/governance/team' },
-            { label: 'Multi-Brand', path: '/design-system-generator/governance/brands' },
-            { label: 'Requests', path: '/design-system-generator/governance/requests' },
-            { label: 'Guidelines', path: '/design-system-generator/governance/contribution' },
-            { label: 'Changelog', path: '/design-system-generator/governance/changelog' },
-        ],
-    },
-    {
-        title: 'Quality',
-        icon: Activity,
-        items: [
-            { label: 'System Health', path: '/design-system-generator/quality/health' },
-            { label: 'Accessibility', path: '/design-system-generator/quality/accessibility' },
-            { label: 'Localization (RTL)', path: '/design-system-generator/quality/localization' },
-            { label: 'Asset Library', path: '/design-system-generator/quality/assets' },
-        ],
-    },
+
+
 ];
 
 export const Sidebar = () => {

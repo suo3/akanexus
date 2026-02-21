@@ -12,7 +12,23 @@ import { SettingsModal } from '../components/Settings/SettingsModal';
 
 export const MainLayout = () => {
     const { theme, setTheme } = useTheme();
+    const { toggleSidebar } = useDesignSystemStore();
 
+    // Ctrl+/ (or Cmd+/) → toggle sidebar
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === '/' && (e.ctrlKey || e.metaKey)) {
+                const target = e.target as HTMLElement;
+                const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+                if (!isInput) {
+                    e.preventDefault();
+                    toggleSidebar();
+                }
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [toggleSidebar]);
 
     return (
         <div className="flex h-screen w-full bg-background overflow-hidden">

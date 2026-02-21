@@ -22,16 +22,46 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
+const STORAGE_KEY_REDUCE_MOTION = 'akanexus-reduce-motion';
+const STORAGE_KEY_AUTO_SAVE = 'akanexus-auto-save';
+
+const applyReduceMotion = (enabled: boolean) => {
+    if (enabled) {
+        document.documentElement.classList.add('reduce-motion');
+    } else {
+        document.documentElement.classList.remove('reduce-motion');
+    }
+};
+
 export const SettingsModal = () => {
     const [open, setOpen] = useState(false);
     const { theme, setTheme } = useTheme();
 
+    // Persisted settings state
+    const [reduceMotion, setReduceMotion] = useState<boolean>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY_REDUCE_MOTION);
+        return stored === 'true';
+    });
+    const [autoSave, setAutoSave] = useState<boolean>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY_AUTO_SAVE);
+        return stored === null ? true : stored === 'true'; // defaults to true
+    });
+
+    // Apply reduce-motion class on mount
+    useEffect(() => {
+        applyReduceMotion(reduceMotion);
+    }, []);
+
+    // Keyboard shortcuts & event listeners
     useEffect(() => {
         const handleOpen = () => setOpen(true);
         window.addEventListener('open-settings', handleOpen);
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === '?' && !e.metaKey && !e.ctrlKey && !e.altKey && (e.target as HTMLElement).tagName !== 'INPUT' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+            const target = e.target as HTMLElement;
+            const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
+            if (e.key === '?' && !e.metaKey && !e.ctrlKey && !e.altKey && !isInput) {
                 e.preventDefault();
                 setOpen(true);
             }
@@ -45,12 +75,21 @@ export const SettingsModal = () => {
         };
     }, []);
 
+    const handleReduceMotionChange = (checked: boolean) => {
+        setReduceMotion(checked);
+        localStorage.setItem(STORAGE_KEY_REDUCE_MOTION, String(checked));
+        applyReduceMotion(checked);
+    };
+
+    const handleAutoSaveChange = (checked: boolean) => {
+        setAutoSave(checked);
+        localStorage.setItem(STORAGE_KEY_AUTO_SAVE, String(checked));
+    };
+
     const shortcuts = [
-        { key: '⌘ + K', description: 'Open Command Palette' },
+        { key: 'Ctrl + K', description: 'Open Command Palette' },
         { key: '?', description: 'Open Settings / Shortcuts' },
-        { key: '⌘ + Z', description: 'Undo last action' },
-        { key: '⌘ + ⇧ + Z', description: 'Redo last action' },
-        { key: '⌘ + /', description: 'Toggle Sidebar' },
+        { key: 'Ctrl + /', description: 'Toggle Sidebar' },
         { key: 'Esc', description: 'Close Modals' },
     ];
 
@@ -116,21 +155,29 @@ export const SettingsModal = () => {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-0.5">
-                                        <Label className="text-base">Reduce Motion</Label>
+                                        <Label className="text-base" htmlFor="reduce-motion-switch">Reduce Motion</Label>
                                         <p className="text-sm text-muted-foreground">
                                             Minimize animations throughout the application
                                         </p>
                                     </div>
-                                    <Switch />
+                                    <Switch
+                                        id="reduce-motion-switch"
+                                        checked={reduceMotion}
+                                        onCheckedChange={handleReduceMotionChange}
+                                    />
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-0.5">
-                                        <Label className="text-base">Auto-Save</Label>
+                                        <Label className="text-base" htmlFor="auto-save-switch">Auto-Save</Label>
                                         <p className="text-sm text-muted-foreground">
                                             Automatically save changes to local storage
                                         </p>
                                     </div>
-                                    <Switch defaultChecked />
+                                    <Switch
+                                        id="auto-save-switch"
+                                        checked={autoSave}
+                                        onCheckedChange={handleAutoSaveChange}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -145,13 +192,15 @@ export const SettingsModal = () => {
                                 >
                                     <span className="text-sm font-medium">{shortcut.description}</span>
                                     <div className="flex gap-1">
-                                        {shortcut.key.split(' ').map((k, i) => (
-                                            <kbd
-                                                key={i}
-                                                className="px-2 py-1 bg-muted rounded border text-xs font-mono font-bold text-muted-foreground min-w-[20px] text-center"
-                                            >
-                                                {k}
-                                            </kbd>
+                                        {shortcut.key.split(' + ').map((k, i, arr) => (
+                                            <React.Fragment key={i}>
+                                                <kbd className="px-2 py-1 bg-muted rounded border text-xs font-mono font-bold text-muted-foreground min-w-[20px] text-center">
+                                                    {k}
+                                                </kbd>
+                                                {i < arr.length - 1 && (
+                                                    <span className="text-xs text-muted-foreground self-center">+</span>
+                                                )}
+                                            </React.Fragment>
                                         ))}
                                     </div>
                                 </div>
@@ -170,18 +219,28 @@ export const SettingsModal = () => {
                                 A professional-grade platform for building, managing, and exporting enterprise design systems.
                             </p>
                             <div className="flex justify-center gap-2">
-                                <Button variant="outline" size="sm" className="gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-2"
+                                    onClick={() => window.open('https://akanexus.com', '_blank')}
+                                >
                                     <Globe className="w-4 h-4" />
                                     Website
                                 </Button>
-                                <Button variant="outline" size="sm" className="gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-2"
+                                    onClick={() => window.open('https://github.com/akanexus', '_blank')}
+                                >
                                     GitHub
                                 </Button>
                             </div>
                         </div>
 
                         <div className="text-xs text-center text-muted-foreground">
-                            &copy; 2024 GhanaWebSolutions. All rights reserved.
+                            &copy; 2024 Akanexus. All rights reserved.
                         </div>
                     </TabsContent>
                 </Tabs>

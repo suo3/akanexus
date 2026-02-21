@@ -26,15 +26,15 @@ const CTA = () => {
 
           {/* Description */}
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-            All our components and templates are completely free. If you find them useful, 
+            All our components and templates are completely free. If you find them useful,
             consider supporting our work with a donation.
           </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button variant="hero" size="xl" asChild>
-              <Link to="/gallery">
-                Browse Free Components
+              <Link to="/design-system-generator">
+                Design Components
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>

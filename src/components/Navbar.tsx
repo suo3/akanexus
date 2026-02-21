@@ -38,7 +38,7 @@ const Navbar = () => {
               Services
             </NavLink>
             <NavLink
-              to="/gallery"
+              to="/design-system-generator"
               className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
             >
@@ -111,7 +111,7 @@ const Navbar = () => {
               Services
             </NavLink>
             <NavLink
-              to="/gallery"
+              to="/design-system-generator"
               className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
               activeClassName="text-foreground font-medium border-l-primary"
             >

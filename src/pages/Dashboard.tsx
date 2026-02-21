@@ -28,9 +28,9 @@ const Dashboard = () => {
   }
 
   const quickActions = [
-    { icon: Package, label: 'My Components', description: 'View purchased components', href: '/gallery' },
+    { icon: Package, label: 'Design Components', description: 'Create and customize components', href: '/design-system-generator' },
     { icon: Layout, label: 'My Templates', description: 'Access your templates', href: '/templates' },
-    { icon: Code, label: 'Browse Library', description: 'Explore all components', href: '/gallery' },
+    { icon: Code, label: 'Browse System', description: 'Explore the design system', href: '/design-system-generator' },
     { icon: Settings, label: 'Settings', description: 'Manage your account', href: '/dashboard' },
   ];
 
@@ -52,11 +52,11 @@ const Dashboard = () => {
               </div>
               <span className="text-xl font-bold text-foreground">Akanexus</span>
             </a>
-            
+
             <div className="flex items-center gap-4">
               {isAdmin && (
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   onClick={() => navigate('/admin')}
                   className="gap-2"
                 >

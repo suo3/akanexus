@@ -12,7 +12,7 @@ const services = [
     description: "Free React components built on shadcn/ui and Tailwind CSS. Production-ready buttons, forms, modals, charts, and more.",
     features: ["100% Free", "React & TypeScript", "shadcn/ui Based", "Lifetime Updates"],
     cta: "Get Free Components",
-    link: "/gallery",
+    link: "/design-system-generator",
     badge: "Free",
   },
   {
@@ -44,7 +44,7 @@ const Services = () => {
         keywords="React components, frontend templates, custom development, shadcn, Tailwind CSS, web development services"
       />
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         {/* Hero Section */}
         <section className="relative py-16 overflow-hidden">
@@ -76,11 +76,10 @@ const Services = () => {
                       <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         <service.icon className="w-7 h-7 text-primary" />
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        service.badge === "Free" 
-                          ? "bg-primary/10 text-primary" 
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${service.badge === "Free"
+                          ? "bg-primary/10 text-primary"
                           : "bg-accent/10 text-accent-foreground"
-                      }`}>
+                        }`}>
                         {service.badge}
                       </span>
                     </div>

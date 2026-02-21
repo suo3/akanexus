@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const footerLinks = {
   Product: [
-    { label: "Components", href: "/gallery" },
+    { label: "Components", href: "/design-system-generator" },
     { label: "Templates", href: "/templates" },
     { label: "Pricing", href: "/pricing" },
   ],

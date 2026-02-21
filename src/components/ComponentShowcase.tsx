@@ -30,7 +30,7 @@ const ComponentShowcase = () => {
               <span className="text-gradient">just work</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Production-ready React components built with TypeScript and Tailwind CSS. 
+              Production-ready React components built with TypeScript and Tailwind CSS.
               Free to use, with optional donations to support development.
             </p>
 
@@ -51,8 +51,8 @@ const ComponentShowcase = () => {
             </div>
 
             <Button variant="hero" size="lg" asChild>
-              <Link to="/gallery">
-                Get Free Components
+              <Link to="/design-system-generator">
+                Design Components
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
@@ -111,7 +111,7 @@ const ComponentShowcase = () => {
                 <p className="text-xs text-muted-foreground mb-4">Live Preview</p>
                 <div className="flex items-center gap-4">
                   <Button variant="hero" size="lg" asChild>
-                    <Link to="/gallery">Download Free</Link>
+                    <Link to="/design-system-generator">Open Design System</Link>
                   </Button>
                   <Button variant="glass" size="lg" asChild>
                     <Link to="/contact">Support Us</Link>

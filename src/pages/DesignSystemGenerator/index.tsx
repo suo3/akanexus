@@ -18,7 +18,18 @@ import CardBuilder from './modules/components/Card';
 import ModalBuilder from './modules/components/Modal';
 import StateMachineDesigner from './modules/components/StateMachineDesigner';
 import PatternLibrary from './modules/components/PatternLibrary';
-const FormComponent = () => <div className="p-8"><h1 className="text-2xl font-bold">Form Component</h1><p className="text-muted-foreground mt-2">Coming soon...</p></div>;
+import BadgeBuilder from './modules/components/Badge';
+import AvatarBuilder from './modules/components/Avatar';
+import ToastBuilder from './modules/components/Toast';
+import AlertBuilder from './modules/components/Alert';
+import SpinnerBuilder from './modules/components/Spinner';
+import TabsBuilder from './modules/components/Tabs';
+import BreadcrumbBuilder from './modules/components/Breadcrumb';
+import TableBuilder from './modules/components/Table';
+import SelectBuilder from './modules/components/SelectInput';
+import ListBuilder from './modules/components/ListBuilder';
+import NavbarBuilder from './modules/components/Navbar';
+import PaginationBuilder from './modules/components/Pagination';
 
 // Token modules
 import TokenManager from './modules/tokens/TokenManager';
@@ -60,6 +71,18 @@ const DesignSystemGenerator = () => {
                 <Route path="components/modal" element={<ModalBuilder />} />
                 <Route path="components/state-machine" element={<StateMachineDesigner />} />
                 <Route path="components/patterns" element={<PatternLibrary />} />
+                <Route path="components/badge" element={<BadgeBuilder />} />
+                <Route path="components/avatar" element={<AvatarBuilder />} />
+                <Route path="components/toast" element={<ToastBuilder />} />
+                <Route path="components/alert" element={<AlertBuilder />} />
+                <Route path="components/spinner" element={<SpinnerBuilder />} />
+                <Route path="components/tabs" element={<TabsBuilder />} />
+                <Route path="components/breadcrumb" element={<BreadcrumbBuilder />} />
+                <Route path="components/table" element={<TableBuilder />} />
+                <Route path="components/select" element={<SelectBuilder />} />
+                <Route path="components/list" element={<ListBuilder />} />
+                <Route path="components/navbar" element={<NavbarBuilder />} />
+                <Route path="components/pagination" element={<PaginationBuilder />} />
 
                 {/* Token routes */}
                 <Route path="tokens/manager" element={<TokenManager />} />

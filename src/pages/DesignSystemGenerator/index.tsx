@@ -30,6 +30,7 @@ import SelectBuilder from './modules/components/SelectInput';
 import ListBuilder from './modules/components/ListBuilder';
 import NavbarBuilder from './modules/components/Navbar';
 import PaginationBuilder from './modules/components/Pagination';
+import AccordionBuilder from './modules/components/Accordion';
 
 // Token modules
 import TokenManager from './modules/tokens/TokenManager';
@@ -83,6 +84,7 @@ const DesignSystemGenerator = () => {
                 <Route path="components/list" element={<ListBuilder />} />
                 <Route path="components/navbar" element={<NavbarBuilder />} />
                 <Route path="components/pagination" element={<PaginationBuilder />} />
+                <Route path="components/accordion" element={<AccordionBuilder />} />
 
                 {/* Token routes */}
                 <Route path="tokens/manager" element={<TokenManager />} />

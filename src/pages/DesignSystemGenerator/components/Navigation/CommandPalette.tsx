@@ -64,6 +64,7 @@ const commandItems: CommandItem[] = [
     { label: 'List', path: '/design-system-generator/components/list', icon: ComponentIcon, category: 'Components', keywords: ['menu', 'items', 'listbox'] },
     { label: 'Navbar', path: '/design-system-generator/components/navbar', icon: ComponentIcon, category: 'Components', keywords: ['navigation', 'header', 'menu'] },
     { label: 'Pagination', path: '/design-system-generator/components/pagination', icon: ComponentIcon, category: 'Components', keywords: ['pages', 'next', 'prev'] },
+    { label: 'Accordion', path: '/design-system-generator/components/accordion', icon: ComponentIcon, category: 'Components', keywords: ['collapse', 'expand', 'faq', 'disclosure'] },
     { label: 'State Machine', path: '/design-system-generator/components/state-machine', icon: Sparkles, category: 'Components', keywords: ['logic', 'xstate', 'flow', 'diagram'] },
     { label: 'Pattern Library', path: '/design-system-generator/components/patterns', icon: LayoutTemplate, category: 'Components', keywords: ['templates', 'layouts', 'forms'] },
 

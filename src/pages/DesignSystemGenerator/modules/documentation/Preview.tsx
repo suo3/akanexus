@@ -343,40 +343,36 @@ ${Object.entries(typography.fontFamilies)
                                     {activeSection === 'overview' && (
                                         <div className="space-y-8">
                                             <div>
-                                                <h2 className="text-2xl font-black mb-4">Welcome</h2>
-                                                <p className="text-muted-foreground mb-4">
-                                                    This design system provides a comprehensive set of reusable components,
-                                                    design tokens, and guidelines to help you build consistent and accessible
-                                                    user interfaces.
+                                                <h2 className="text-2xl font-black mb-3">Welcome</h2>
+                                                <p className="text-muted-foreground">
+                                                    This is your custom design system — a curated set of design tokens,
+                                                    reusable components, and usage guidelines generated to match your brand.
+                                                    Use it as the single source of truth for your UI.
                                                 </p>
                                             </div>
 
                                             <Separator />
 
                                             <div className="grid grid-cols-2 gap-4">
-                                                <div className="p-6 border rounded-xl">
-                                                    <h3 className="font-black mb-2">Foundation</h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Colors, typography, spacing, and more
-                                                    </p>
+                                                <div className="p-5 border rounded-xl bg-primary/5">
+                                                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold mb-1">Design Tokens</p>
+                                                    <h3 className="font-black text-lg mb-1">Colors &amp; Theme</h3>
+                                                    <p className="text-sm text-muted-foreground">Primary, secondary, accent, semantic, and neutral color scales.</p>
                                                 </div>
-                                                <div className="p-6 border rounded-xl">
-                                                    <h3 className="font-black mb-2">Components</h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Pre-built UI components ready to use
-                                                    </p>
+                                                <div className="p-5 border rounded-xl bg-secondary/5">
+                                                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold mb-1">Typography</p>
+                                                    <h3 className="font-black text-lg mb-1">Type System</h3>
+                                                    <p className="text-sm text-muted-foreground">Font families, size scale, weights, line heights, and letter spacing.</p>
                                                 </div>
-                                                <div className="p-6 border rounded-xl">
-                                                    <h3 className="font-black mb-2">Patterns</h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Common UI patterns and best practices
-                                                    </p>
+                                                <div className="p-5 border rounded-xl bg-accent/5">
+                                                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold mb-1">Components</p>
+                                                    <h3 className="font-black text-lg mb-1">13 Builders</h3>
+                                                    <p className="text-sm text-muted-foreground">Button, Input, Card, Badge, Modal, Tabs, Avatar, Alert, and more.</p>
                                                 </div>
-                                                <div className="p-6 border rounded-xl">
-                                                    <h3 className="font-black mb-2">Guidelines</h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Usage guidelines and accessibility
-                                                    </p>
+                                                <div className="p-5 border rounded-xl">
+                                                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-bold mb-1">Utilities</p>
+                                                    <h3 className="font-black text-lg mb-1">Spacing &amp; Motion</h3>
+                                                    <p className="text-sm text-muted-foreground">Consistent spacing scale, grid, breakpoints, shadows, and animations.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -385,24 +381,66 @@ ${Object.entries(typography.fontFamilies)
                                     {activeSection === 'getting-started' && (
                                         <div className="space-y-6">
                                             <h2 className="text-2xl font-black">Getting Started</h2>
+                                            <p className="text-muted-foreground">Follow these steps to start using your exported design system in any React project.</p>
 
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <h3 className="text-lg font-bold mb-2">Installation</h3>
-                                                    <pre className="p-4 bg-muted rounded-lg font-mono text-sm">
-                                                        npm install my-design-system
-                                                    </pre>
+                                            <div className="space-y-6">
+                                                {/* Step 1 */}
+                                                <div className="flex gap-4">
+                                                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-black shrink-0 mt-0.5">1</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-lg font-bold mb-2">Export your project</h3>
+                                                        <p className="text-sm text-muted-foreground mb-3">
+                                                            Head to the <strong>Developer → Project Export</strong> tab and download your design system as a ready-to-use React + Tailwind project.
+                                                        </p>
+                                                    </div>
                                                 </div>
 
-                                                <div>
-                                                    <h3 className="text-lg font-bold mb-2">Usage</h3>
-                                                    <pre className="p-4 bg-muted rounded-lg font-mono text-sm overflow-x-auto">
-                                                        {`import { Button } from 'my-design-system';
+                                                {/* Step 2 */}
+                                                <div className="flex gap-4">
+                                                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-black shrink-0 mt-0.5">2</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-lg font-bold mb-2">Copy your tokens</h3>
+                                                        <p className="text-sm text-muted-foreground mb-3">Add the generated CSS variables to your global stylesheet:</p>
+                                                        <pre className="p-4 bg-muted rounded-lg font-mono text-xs overflow-x-auto">{`:root {
+  --color-primary: ${tokens.colors.primary};
+  --color-secondary: ${tokens.colors.secondary};
+  --color-accent: ${tokens.colors.accent};
+  --color-background: ${tokens.colors.background};
+  --color-foreground: ${tokens.colors.foreground};
+}`}</pre>
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 3 */}
+                                                <div className="flex gap-4">
+                                                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-black shrink-0 mt-0.5">3</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-lg font-bold mb-2">Import and use components</h3>
+                                                        <p className="text-sm text-muted-foreground mb-3">Import components from the exported <code className="px-1 py-0.5 bg-muted rounded text-xs">src/components</code> directory:</p>
+                                                        <pre className="p-4 bg-muted rounded-lg font-mono text-xs overflow-x-auto">{`import { Button } from './components/Button';
+import { Card } from './components/Card';
+import { Badge } from './components/Badge';
 
 function App() {
-  return <Button variant="primary">Click me</Button>;
-}`}
-                                                    </pre>
+  return (
+    <Card>
+      <Badge>New</Badge>
+      <Button variant="primary">Get Started</Button>
+    </Card>
+  );
+}`}</pre>
+                                                    </div>
+                                                </div>
+
+                                                {/* Step 4 */}
+                                                <div className="flex gap-4">
+                                                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-black shrink-0 mt-0.5">4</div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-lg font-bold mb-2">Extend and customize</h3>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Every component is a plain React + Tailwind file — no locked-in dependencies. Modify styles, add props, or compose new components freely.
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -676,64 +714,249 @@ function App() {
                                         <div className="space-y-8">
                                             <h2 className="text-2xl font-black">Components</h2>
 
-                                            {/* Button Examples */}
+                                            {/* Buttons */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold">Buttons</h3>
+                                                <h3 className="text-lg font-bold">Button</h3>
                                                 <div className="p-6 border rounded-xl bg-muted/30">
                                                     <div className="flex flex-wrap gap-4">
-                                                        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold">
-                                                            Primary
-                                                        </button>
-                                                        <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-bold">
-                                                            Secondary
-                                                        </button>
-                                                        <button className="px-4 py-2 border-2 rounded-lg font-bold">
-                                                            Outline
-                                                        </button>
-                                                        <button className="px-4 py-2 hover:bg-muted rounded-lg font-bold">
-                                                            Ghost
-                                                        </button>
+                                                        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold">Primary</button>
+                                                        <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-bold">Secondary</button>
+                                                        <button className="px-4 py-2 border-2 rounded-lg font-bold">Outline</button>
+                                                        <button className="px-4 py-2 hover:bg-muted rounded-lg font-bold">Ghost</button>
+                                                        <button className="px-4 py-2 bg-destructive text-white rounded-lg font-bold">Destructive</button>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            {/* Input Examples */}
+                                            {/* Badge */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold">Inputs</h3>
-                                                <div className="p-6 border rounded-xl bg-muted/30 space-y-4">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Default input"
-                                                        className="w-full px-4 py-2 border-2 rounded-lg"
-                                                    />
-                                                    <input
-                                                        type="email"
-                                                        placeholder="Email input"
-                                                        className="w-full px-4 py-2 border-2 rounded-lg"
-                                                    />
+                                                <h3 className="text-lg font-bold">Badge</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <div className="flex flex-wrap gap-3">
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">Default</span>
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">Secondary</span>
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-destructive text-white">Destructive</span>
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border">Outline</span>
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500 text-white">Success</span>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            {/* Card Examples */}
+                                            {/* Input */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold">Cards</h3>
+                                                <h3 className="text-lg font-bold">Input</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30 space-y-4">
+                                                    <input type="text" placeholder="Default input" className="w-full px-4 py-2 border-2 rounded-lg bg-background" />
+                                                    <input type="email" placeholder="Email input" className="w-full px-4 py-2 border-2 rounded-lg bg-background" />
+                                                    <input type="password" placeholder="Password input" className="w-full px-4 py-2 border-2 rounded-lg bg-background" />
+                                                </div>
+                                            </div>
+
+                                            {/* Card */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Card</h3>
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="p-6 border rounded-xl">
-                                                        <h4 className="font-bold mb-2">Card Title</h4>
-                                                        <p className="text-sm text-muted-foreground">
-                                                            Card description goes here
-                                                        </p>
+                                                        <h4 className="font-bold mb-2">Default Card</h4>
+                                                        <p className="text-sm text-muted-foreground">Card description goes here</p>
                                                     </div>
                                                     <div className="p-6 border rounded-xl shadow-lg">
                                                         <h4 className="font-bold mb-2">Elevated Card</h4>
-                                                        <p className="text-sm text-muted-foreground">
-                                                            Card with elevation
-                                                        </p>
+                                                        <p className="text-sm text-muted-foreground">Card with elevation shadow</p>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Avatar */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Avatar</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <div className="flex gap-4 items-center">
+                                                        {[{ init: 'JD', color: 'bg-primary text-primary-foreground', size: 'w-10 h-10' },
+                                                        { init: 'AB', color: 'bg-secondary text-secondary-foreground', size: 'w-12 h-12' },
+                                                        { init: 'MK', color: 'bg-accent text-accent-foreground', size: 'w-16 h-16' },
+                                                        ].map((av, i) => (
+                                                            <div key={i} className={`${av.size} ${av.color} rounded-full flex items-center justify-center text-sm font-bold ring-2 ring-background`}>
+                                                                {av.init}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Alert */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Alert</h3>
+                                                <div className="space-y-3">
+                                                    <div className="flex gap-3 p-4 border rounded-lg bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300">
+                                                        <span className="font-bold text-sm">ℹ Info:</span>
+                                                        <span className="text-sm">This is an informational alert message.</span>
+                                                    </div>
+                                                    <div className="flex gap-3 p-4 border rounded-lg bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300">
+                                                        <span className="font-bold text-sm">✓ Success:</span>
+                                                        <span className="text-sm">Action completed successfully!</span>
+                                                    </div>
+                                                    <div className="flex gap-3 p-4 border rounded-lg bg-destructive/10 border-destructive/25 text-destructive">
+                                                        <span className="font-bold text-sm">✕ Error:</span>
+                                                        <span className="text-sm">Something went wrong. Please try again.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Spinner */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Spinner / Loading</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <div className="flex gap-6 items-center">
+                                                        {['w-4 h-4', 'w-6 h-6', 'w-8 h-8', 'w-12 h-12'].map((size, i) => (
+                                                            <div key={i} className={`${size} border-2 border-primary border-t-transparent rounded-full animate-spin`} />
+                                                        ))}
+                                                        <span className="text-sm text-muted-foreground">xs / sm / md / lg</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Tabs */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Tabs</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <div className="flex gap-1 bg-muted p-1 rounded-lg w-fit">
+                                                        {['Overview', 'Settings', 'Analytics'].map((tab, i) => (
+                                                            <button key={i} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${i === 0 ? 'bg-background shadow-sm' : 'hover:bg-muted-foreground/10'}`}>
+                                                                {tab}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                    <div className="mt-4 p-4 border rounded-lg bg-background">
+                                                        <p className="text-sm text-muted-foreground">Tab panel content appears here</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Breadcrumb */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Breadcrumb</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <nav className="flex" aria-label="Breadcrumb">
+                                                        <ol className="flex items-center gap-2 text-sm">
+                                                            {['Home', 'Products', 'Categories', 'Current Page'].map((crumb, i, arr) => (
+                                                                <li key={i} className="flex items-center gap-2">
+                                                                    <span className={i === arr.length - 1 ? 'font-bold' : 'text-muted-foreground hover:text-foreground cursor-pointer'}>
+                                                                        {crumb}
+                                                                    </span>
+                                                                    {i < arr.length - 1 && <span className="text-muted-foreground">/</span>}
+                                                                </li>
+                                                            ))}
+                                                        </ol>
+                                                    </nav>
+                                                </div>
+                                            </div>
+
+                                            {/* Select */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Select</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <select className="w-full max-w-xs px-4 py-2 border-2 rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                                        <option value="">Select an option...</option>
+                                                        <option>Option A</option>
+                                                        <option>Option B</option>
+                                                        <option>Option C</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {/* List */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">List</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <ul className="divide-y border rounded-lg bg-background overflow-hidden">
+                                                        {['Alice Johnson', 'Bob Smith', 'Carol Williams'].map((name, i) => (
+                                                            <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors cursor-pointer">
+                                                                <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">{name[0]}</div>
+                                                                <div>
+                                                                    <p className="text-sm font-bold">{name}</p>
+                                                                    <p className="text-xs text-muted-foreground">user@example.com</p>
+                                                                </div>
+                                                                <span className="ml-auto text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">Active</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            {/* Table */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Table</h3>
+                                                <div className="border rounded-xl overflow-hidden">
+                                                    <table className="w-full text-sm">
+                                                        <thead className="bg-muted">
+                                                            <tr>
+                                                                {['Name', 'Role', 'Status', 'Date'].map(h => (
+                                                                    <th key={h} className="px-4 py-3 text-left font-bold">{h}</th>
+                                                                ))}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y">
+                                                            {[
+                                                                ['Alice Johnson', 'Admin', 'Active', 'Jan 10'],
+                                                                ['Bob Smith', 'Developer', 'Inactive', 'Feb 5'],
+                                                                ['Carol Williams', 'Designer', 'Active', 'Mar 3'],
+                                                            ].map((row, i) => (
+                                                                <tr key={i} className="hover:bg-muted/40 transition-colors">
+                                                                    {row.map((cell, j) => (
+                                                                        <td key={j} className="px-4 py-3">
+                                                                            {j === 2
+                                                                                ? <span className={`px-2 py-1 rounded-full text-xs font-medium ${cell === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{cell}</span>
+                                                                                : cell
+                                                                            }
+                                                                        </td>
+                                                                    ))}
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            {/* Accordion */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Accordion</h3>
+                                                <div className="border rounded-xl overflow-hidden divide-y">
+                                                    {[
+                                                        { q: 'What is a design system?', a: 'A design system is a collection of reusable components, standards, and guidelines.' },
+                                                        { q: 'How do I get started?', a: 'Start by defining your color tokens, typography scale, and spacing system.' },
+                                                        { q: 'Can I customize components?', a: 'Yes, all components support variants and can be extended with custom styles.' },
+                                                    ].map((item, i) => (
+                                                        <details key={i} className="group">
+                                                            <summary className="flex items-center justify-between px-4 py-4 cursor-pointer font-bold hover:bg-muted/40 transition-colors list-none">
+                                                                {item.q}
+                                                                <span className="ml-4 text-muted-foreground">+</span>
+                                                            </summary>
+                                                            <div className="px-4 pb-4 text-sm text-muted-foreground">{item.a}</div>
+                                                        </details>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* Pagination */}
+                                            <div className="space-y-4">
+                                                <h3 className="text-lg font-bold">Pagination</h3>
+                                                <div className="p-6 border rounded-xl bg-muted/30">
+                                                    <div className="flex items-center gap-1">
+                                                        <button className="px-3 py-1.5 border rounded-md text-sm hover:bg-muted">‹</button>
+                                                        {[1, 2, 3, '...', 8, 9, 10].map((p, i) => (
+                                                            <button key={i} className={`px-3 py-1.5 border rounded-md text-sm ${p === 2 ? 'bg-primary text-primary-foreground border-primary' : 'hover:bg-muted'}`}>
+                                                                {p}
+                                                            </button>
+                                                        ))}
+                                                        <button className="px-3 py-1.5 border rounded-md text-sm hover:bg-muted">›</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     )}
+
                                 </div>
                             </ScrollArea>
                         </div>

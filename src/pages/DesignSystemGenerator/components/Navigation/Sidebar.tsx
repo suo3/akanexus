@@ -39,6 +39,14 @@ interface NavItem {
 
 const navigationSections: NavSection[] = [
     {
+        title: 'General',
+        icon: Activity,
+        items: [
+            { label: 'Back to Home', path: '/', icon: Activity },
+            { label: 'Dashboard', path: '/design-system-generator', icon: Grid3x3 },
+        ],
+    },
+    {
         title: 'Foundation',
         icon: Palette,
         items: [
@@ -69,6 +77,7 @@ const navigationSections: NavSection[] = [
             { label: 'List', path: '/design-system-generator/components/list' },
             { label: 'Navbar', path: '/design-system-generator/components/navbar' },
             { label: 'Pagination', path: '/design-system-generator/components/pagination' },
+            { label: 'Accordion', path: '/design-system-generator/components/accordion' },
             { label: 'State Machine', path: '/design-system-generator/components/state-machine', badge: 'New' },
             { label: 'Patterns', path: '/design-system-generator/components/patterns' },
         ],
@@ -105,9 +114,9 @@ const navigationSections: NavSection[] = [
 ];
 
 export const Sidebar = () => {
-    const location = useLocation();
     const { sidebarCollapsed, toggleSidebar } = useDesignSystemStore();
-    const [expandedSections, setExpandedSections] = React.useState<string[]>(['Foundation']);
+    const [expandedSections, setExpandedSections] = React.useState<string[]>(['Foundation', 'Components']);
+    const [searchQuery, setSearchQuery] = React.useState('');
 
     // Auto-expand section based on current path
     React.useEffect(() => {
@@ -128,6 +137,21 @@ export const Sidebar = () => {
             prev.includes(title) ? prev.filter((s) => s !== title) : [...prev, title]
         );
     };
+
+    const filteredSections = navigationSections.map(section => ({
+        ...section,
+        items: section.items.filter(item =>
+            item.label.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    })).filter(section => section.items.length > 0);
+
+    // If searching, keep all sections with matches expanded
+    React.useEffect(() => {
+        if (searchQuery) {
+            const sectionsWithMatches = filteredSections.map(s => s.title);
+            setExpandedSections(prev => Array.from(new Set([...prev, ...sectionsWithMatches])));
+        }
+    }, [searchQuery]);
 
     if (sidebarCollapsed) {
         return (
@@ -163,7 +187,7 @@ export const Sidebar = () => {
         <aside className="w-72 border-r bg-card/50 backdrop-blur-xl flex flex-col" data-tour="sidebar">
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+                <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/30 flex items-center justify-center text-primary-foreground">
                         <Palette className="w-5 h-5" />
                     </div>
@@ -173,7 +197,7 @@ export const Sidebar = () => {
                             Professional
                         </span>
                     </div>
-                </div>
+                </Link>
                 <Button
                     variant="ghost"
                     size="icon"
@@ -184,10 +208,28 @@ export const Sidebar = () => {
                 </Button>
             </div>
 
+            {/* Search */}
+            {!sidebarCollapsed && (
+                <div className="px-4 py-3 border-b">
+                    <div className="relative">
+                        <span className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="Filter..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border bg-muted/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all font-medium"
+                        />
+                    </div>
+                </div>
+            )}
+
             {/* Navigation */}
             <ScrollArea className="flex-1">
                 <div className="p-3 space-y-1">
-                    {navigationSections.map((section) => {
+                    {filteredSections.map((section) => {
                         const SectionIcon = section.icon;
                         const isExpanded = expandedSections.includes(section.title);
 

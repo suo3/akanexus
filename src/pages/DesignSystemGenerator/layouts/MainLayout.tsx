@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar } from '../components/Navigation/Sidebar';
 import { CommandPalette, CommandPaletteTrigger } from '../components/Navigation/CommandPalette';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { SettingsModal } from '../components/Settings/SettingsModal';
 export const MainLayout = () => {
     const { theme, setTheme } = useTheme();
     const { toggleSidebar } = useDesignSystemStore();
+    const navigate = useNavigate();
 
     // Ctrl+/ (or Cmd+/) → toggle sidebar
     React.useEffect(() => {
@@ -60,10 +61,20 @@ export const MainLayout = () => {
                         </Button>
 
                         {/* Export Button */}
-                        <Button className="gap-2 font-bold rounded-xl">
-                            <Download className="w-4 h-4" />
-                            Export
-                        </Button>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        className="gap-2 font-bold rounded-xl"
+                                        onClick={() => navigate('/design-system-generator/developer/export')}
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Export
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Export design system as a React project</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                 </header>
 

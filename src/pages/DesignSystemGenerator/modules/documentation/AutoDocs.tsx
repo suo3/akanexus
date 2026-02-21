@@ -61,7 +61,6 @@ type DocItem = ComponentDoc | TokenDoc;
 
 // Comprehensive Component and Token Documentation
 const COMPONENT_DOCS: ComponentDoc[] = [
-    // UI Components
     {
         name: 'Button',
         category: 'component',
@@ -70,7 +69,6 @@ const COMPONENT_DOCS: ComponentDoc[] = [
         props: [
             { name: 'variant', type: "'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'", default: "'default'", description: 'The visual style variant of the button.' },
             { name: 'size', type: "'default' | 'sm' | 'lg' | 'icon'", default: "'default'", description: 'The size of the button.' },
-            { name: 'asChild', type: 'boolean', default: 'false', description: 'Render as a child component for composition.' },
             { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the button and prevents interactions.' },
         ],
         examples: [
@@ -90,7 +88,6 @@ const COMPONENT_DOCS: ComponentDoc[] = [
             { name: 'type', type: 'string', default: "'text'", description: 'HTML input type (text, email, password, etc.).' },
             { name: 'placeholder', type: 'string', default: '-', description: 'Placeholder text shown when empty.' },
             { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the input field.' },
-            { name: 'value', type: 'string', default: '-', description: 'Controlled input value.' },
         ],
         examples: [
             { title: 'Email Input', code: '<Input type="email" placeholder="you@example.com" />' },
@@ -129,6 +126,22 @@ const COMPONENT_DOCS: ComponentDoc[] = [
         usage: { whenToUse: 'For grouping related information', whenNotToUse: 'For simple text blocks' }
     },
     {
+        name: 'Modal',
+        category: 'component',
+        description: 'Dialog overlay component for focused user interactions, confirmations, and content display.',
+        import: "import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'",
+        props: [
+            { name: 'open', type: 'boolean', default: 'false', description: 'Controls modal visibility.' },
+            { name: 'onOpenChange', type: '(open: boolean) => void', default: '-', description: 'Callback when open state changes.' },
+            { name: 'modal', type: 'boolean', default: 'true', description: 'Whether to block background interaction.' },
+        ],
+        examples: [
+            { title: 'Basic Modal', code: '<Dialog open={open} onOpenChange={setOpen}>\n  <DialogContent>\n    <DialogHeader><DialogTitle>Title</DialogTitle></DialogHeader>\n    Content\n  </DialogContent>\n</Dialog>' },
+        ],
+        accessibility: 'Focus trapped inside dialog, ESC to close, ARIA role="dialog".',
+        usage: { whenToUse: 'For confirmations, forms, and detail views', whenNotToUse: 'For non-blocking notifications (use Toast)' }
+    },
+    {
         name: 'Tabs',
         category: 'component',
         description: 'Organize content into multiple panels with tab navigation.',
@@ -138,10 +151,188 @@ const COMPONENT_DOCS: ComponentDoc[] = [
             { name: 'value', type: 'string', default: '-', description: 'Controlled active tab value.' },
         ],
         examples: [
-            { title: 'Basic Tabs', code: '<Tabs defaultValue="tab1">\n  <TabsList>\n    <TabsTrigger value="tab1">Tab 1</TabsTrigger>\n  </TabsList>\n  <TabsContent value="tab1">Content</TabsContent>\n</Tabs>' },
+            { title: 'Basic Tabs', code: '<Tabs defaultValue="tab1">\n  <TabsList><TabsTrigger value="tab1">Tab 1</TabsTrigger></TabsList>\n  <TabsContent value="tab1">Content</TabsContent>\n</Tabs>' },
         ],
         accessibility: 'ARIA tablist pattern with keyboard navigation (Arrow keys).',
         usage: { whenToUse: 'For organizing related content sections', whenNotToUse: 'For navigation (use Nav)' }
+    },
+    {
+        name: 'Avatar',
+        category: 'component',
+        description: 'User profile image or initials display with fallback support and status indicators.',
+        import: "import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'",
+        props: [
+            { name: 'src', type: 'string', default: '-', description: 'Image URL for the avatar.' },
+            { name: 'alt', type: 'string', default: '-', description: 'Alt text for accessibility.' },
+            { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Avatar size preset.' },
+        ],
+        examples: [
+            { title: 'With Image', code: '<Avatar>\n  <AvatarImage src="/avatar.jpg" alt="User" />\n  <AvatarFallback>JD</AvatarFallback>\n</Avatar>' },
+        ],
+        accessibility: 'Alt text required for images; initials used as fallback.',
+        usage: { whenToUse: 'For displaying user profile images or initials', whenNotToUse: 'For decorative icons' }
+    },
+    {
+        name: 'Alert',
+        category: 'component',
+        description: 'Status and feedback messages for informational, warning, error, and success states.',
+        import: "import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'",
+        props: [
+            { name: 'variant', type: "'default' | 'destructive' | 'success' | 'warning' | 'info'", default: "'default'", description: 'Alert severity variant.' },
+            { name: 'dismissible', type: 'boolean', default: 'false', description: 'Whether the alert can be dismissed.' },
+        ],
+        examples: [
+            { title: 'Info Alert', code: '<Alert>\n  <AlertTitle>Info</AlertTitle>\n  <AlertDescription>Informational message.</AlertDescription>\n</Alert>' },
+            { title: 'Destructive', code: '<Alert variant="destructive">\n  <AlertTitle>Error</AlertTitle>\n  <AlertDescription>Something went wrong.</AlertDescription>\n</Alert>' },
+        ],
+        accessibility: 'ARIA role="alert" for immediate announcements.',
+        usage: { whenToUse: 'For inline status messages and feedback', whenNotToUse: 'For temporary messages (use Toast)' }
+    },
+    {
+        name: 'Toast',
+        category: 'component',
+        description: 'Temporary non-blocking notification that appears briefly and auto-dismisses.',
+        import: "import { toast } from 'sonner'",
+        props: [
+            { name: 'message', type: 'string', default: '-', description: 'Toast message content.' },
+            { name: 'type', type: "'success' | 'error' | 'warning' | 'info'", default: "'default'", description: 'Toast severity type.' },
+            { name: 'duration', type: 'number', default: '3000', description: 'Auto-dismiss duration in ms.' },
+            { name: 'position', type: "'top-right' | 'bottom-right' | 'top-center' | 'bottom-center'", default: "'top-right'", description: 'Toast screen position.' },
+        ],
+        examples: [
+            { title: 'Success Toast', code: "toast.success('Saved successfully!')" },
+            { title: 'Error Toast', code: "toast.error('Something went wrong')" },
+        ],
+        accessibility: 'ARIA live region for screen reader announcements.',
+        usage: { whenToUse: 'For brief feedback after user actions', whenNotToUse: 'For critical errors requiring user action (use Alert or Modal)' }
+    },
+    {
+        name: 'Spinner',
+        category: 'component',
+        description: 'Loading state indicator with multiple animation styles and configurable sizes.',
+        import: "import { Loader2 } from 'lucide-react'",
+        props: [
+            { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Spinner size.' },
+            { name: 'color', type: 'string', default: "'primary'", description: 'Spinner color class.' },
+        ],
+        examples: [
+            { title: 'Basic Spinner', code: '<Loader2 className="animate-spin w-6 h-6 text-primary" />' },
+        ],
+        accessibility: 'Use aria-label="Loading" and aria-live="polite".',
+        usage: { whenToUse: 'For async operations and loading states', whenNotToUse: 'For determinate progress (use Progress bar)' }
+    },
+    {
+        name: 'Breadcrumb',
+        category: 'component',
+        description: 'Navigation trail showing current location within a hierarchical structure.',
+        import: "import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from '@/components/ui/breadcrumb'",
+        props: [
+            { name: 'separator', type: "'slash' | 'arrow' | 'dot' | 'chevron'", default: "'slash'", description: 'Separator style between items.' },
+            { name: 'showHome', type: 'boolean', default: 'true', description: 'Show home icon as first item.' },
+        ],
+        examples: [
+            { title: 'Basic Breadcrumb', code: '<Breadcrumb>\n  <BreadcrumbItem><BreadcrumbLink href="/">Home</BreadcrumbLink></BreadcrumbItem>\n  <BreadcrumbSeparator />\n  <BreadcrumbItem>Current Page</BreadcrumbItem>\n</Breadcrumb>' },
+        ],
+        accessibility: 'ARIA nav with aria-label="breadcrumb" and aria-current="page".',
+        usage: { whenToUse: 'For hierarchical navigation in deep page structures', whenNotToUse: 'For flat navigation structures' }
+    },
+    {
+        name: 'Table',
+        category: 'component',
+        description: 'Data table with sorting, filtering, selection, and pagination capabilities.',
+        import: "import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'",
+        props: [
+            { name: 'data', type: 'T[]', default: '-', description: 'Array of data rows to display.' },
+            { name: 'sortable', type: 'boolean', default: 'false', description: 'Enable column sorting.' },
+            { name: 'selectable', type: 'boolean', default: 'false', description: 'Enable row selection checkboxes.' },
+        ],
+        examples: [
+            { title: 'Basic Table', code: '<Table>\n  <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>\n  <TableBody><TableRow><TableCell>Alice</TableCell><TableCell>Active</TableCell></TableRow></TableBody>\n</Table>' },
+        ],
+        accessibility: 'ARIA table roles, column headers with scope, keyboard navigation.',
+        usage: { whenToUse: 'For structured data with multiple attributes', whenNotToUse: 'For simple lists with one or two properties' }
+    },
+    {
+        name: 'Select',
+        category: 'component',
+        description: 'Dropdown selection with search, multi-select, and clearable options.',
+        import: "import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'",
+        props: [
+            { name: 'value', type: 'string', default: '-', description: 'Controlled selected value.' },
+            { name: 'onValueChange', type: '(value: string) => void', default: '-', description: 'Callback when selection changes.' },
+            { name: 'placeholder', type: 'string', default: "'Select...'", description: 'Placeholder text when empty.' },
+            { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the select.' },
+        ],
+        examples: [
+            { title: 'Basic Select', code: '<Select value={value} onValueChange={setValue}>\n  <SelectTrigger><SelectValue placeholder="Choose..." /></SelectTrigger>\n  <SelectContent>\n    <SelectItem value="a">Option A</SelectItem>\n  </SelectContent>\n</Select>' },
+        ],
+        accessibility: 'ARIA combobox pattern with keyboard navigation.',
+        usage: { whenToUse: 'When users need to choose from a list of options', whenNotToUse: 'For fewer than 4 options (use Radio Group instead)' }
+    },
+    {
+        name: 'List',
+        category: 'component',
+        description: 'Structured list component with selectable items, icons, badges, and descriptions.',
+        import: "import { ListItem } from '@/components/ui/list'",
+        props: [
+            { name: 'variant', type: "'default' | 'bordered' | 'divided' | 'card'", default: "'default'", description: 'List visual style.' },
+            { name: 'selectable', type: 'boolean', default: 'false', description: 'Enable item selection.' },
+            { name: 'multiSelect', type: 'boolean', default: 'false', description: 'Allow multiple selections.' },
+        ],
+        examples: [
+            { title: 'Basic List', code: '<ul className="divide-y rounded-lg border">\n  <li className="px-4 py-3">Item 1</li>\n  <li className="px-4 py-3">Item 2</li>\n</ul>' },
+        ],
+        accessibility: 'Proper list semantics with ul/li, ARIA roles for interactive lists.',
+        usage: { whenToUse: 'For collections of items with consistent structure', whenNotToUse: 'For navigation menus (use Nav)' }
+    },
+    {
+        name: 'Navbar',
+        category: 'component',
+        description: 'Top navigation bar with logo, links, search, notifications, and responsive mobile menu.',
+        import: "import { Navbar } from '@/components/ui/navbar'",
+        props: [
+            { name: 'variant', type: "'default' | 'bordered' | 'floating' | 'minimal' | 'dark'", default: "'default'", description: 'Navbar style variant.' },
+            { name: 'sticky', type: 'boolean', default: 'false', description: 'Makes navbar sticky on scroll.' },
+            { name: 'showSearch', type: 'boolean', default: 'false', description: 'Show search input.' },
+        ],
+        examples: [
+            { title: 'Basic Navbar', code: '<nav className="flex items-center justify-between px-6 py-4 border-b">\n  <span className="font-bold">Logo</span>\n  <div className="flex gap-6"><a href="/">Home</a><a href="/about">About</a></div>\n</nav>' },
+        ],
+        accessibility: 'ARIA role="navigation", landmark regions, keyboard accessible.',
+        usage: { whenToUse: 'For top-level app navigation', whenNotToUse: 'For in-page navigation (use Tabs or Sidebar)' }
+    },
+    {
+        name: 'Pagination',
+        category: 'component',
+        description: 'Page navigation controls with configurable variants, sibling count, and first/last buttons.',
+        import: "import { Pagination } from '@/components/ui/pagination'",
+        props: [
+            { name: 'currentPage', type: 'number', default: '1', description: 'Active page number.' },
+            { name: 'totalPages', type: 'number', default: '-', description: 'Total number of pages.' },
+            { name: 'onPageChange', type: '(page: number) => void', default: '-', description: 'Callback when page changes.' },
+            { name: 'siblingCount', type: 'number', default: '1', description: 'Number of siblings around current page.' },
+        ],
+        examples: [
+            { title: 'Basic Pagination', code: '<Pagination currentPage={page} totalPages={10} onPageChange={setPage} />' },
+        ],
+        accessibility: 'ARIA role="navigation" with aria-label="Pagination", aria-current="page".',
+        usage: { whenToUse: 'For navigating large datasets split across pages', whenNotToUse: 'For small datasets (use infinite scroll or show all)' }
+    },
+    {
+        name: 'Accordion',
+        category: 'component',
+        description: 'Collapsible content panels with animated expand/collapse, icons, and single/multiple open modes.',
+        import: "import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'",
+        props: [
+            { name: 'type', type: "'single' | 'multiple'", default: "'single'", description: 'Whether one or multiple items can be open.' },
+            { name: 'collapsible', type: 'boolean', default: 'true', description: 'Allow collapsing the open item.' },
+            { name: 'defaultValue', type: 'string | string[]', default: '-', description: 'Initially open item(s).' },
+        ],
+        examples: [
+            { title: 'Basic Accordion', code: '<Accordion type="single" collapsible>\n  <AccordionItem value="item-1">\n    <AccordionTrigger>Question?</AccordionTrigger>\n    <AccordionContent>Answer goes here.</AccordionContent>\n  </AccordionItem>\n</Accordion>' },
+        ],
+        accessibility: 'ARIA expanded state, keyboard navigation (Enter, Space, Arrow keys).',
+        usage: { whenToUse: 'For FAQs, settings panels, and collapsible content sections', whenNotToUse: 'For content that should always be visible' }
     },
     {
         name: 'Separator',
@@ -175,8 +366,10 @@ const COMPONENT_DOCS: ComponentDoc[] = [
 ];
 
 // Design Token Documentation
+
 const TOKEN_DOCS: TokenDoc[] = [
     {
+
         name: 'Colors',
         category: 'token',
         icon: Palette,

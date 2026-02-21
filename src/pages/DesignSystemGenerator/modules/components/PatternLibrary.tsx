@@ -752,14 +752,18 @@ export function ProductCard({ product }: {
 
 export default function PatternLibrary() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [previewPattern, setPreviewPattern] = useState<typeof PATTERNS[0] | null>(null);
 
   const categories = ['All', ...Array.from(new Set(PATTERNS.map(p => p.category)))];
 
-  const filteredPatterns = activeCategory === 'All'
-    ? PATTERNS
-    : PATTERNS.filter(p => p.category === activeCategory);
+  const filteredPatterns = PATTERNS.filter(p => {
+    const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleCopy = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -789,19 +793,32 @@ export default function PatternLibrary() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Filter Bar */}
-        <div className="px-8 py-4 border-b bg-card/10 flex gap-2">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === cat
-                ? 'bg-primary text-primary-foreground shadow-md'
-                : 'bg-background hover:bg-muted text-muted-foreground'
-                }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="px-8 py-4 border-b bg-card/10 flex flex-wrap items-center gap-4">
+          <div className="flex gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === cat
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'bg-background hover:bg-muted text-muted-foreground'
+                  }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 max-w-sm ml-auto relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            <input
+              type="text"
+              placeholder="Search patterns..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+          </div>
         </div>
 
         <ScrollArea className="flex-1 p-8">

@@ -18,19 +18,19 @@ interface Product {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  'Tool': { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30' },
-  'Library': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
-  'API': { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  'Service': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
-  'Plugin': { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' },
-  'Extension': { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/30' },
-  'Music': { bg: 'bg-pink-500/10', text: 'text-pink-400', border: 'border-pink-500/30' },
-  'Video': { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/30' },
-  'Audio': { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/30' },
-  'Design': { bg: 'bg-indigo-500/10', text: 'text-indigo-400', border: 'border-indigo-500/30' },
-  'AI': { bg: 'bg-teal-500/10', text: 'text-teal-400', border: 'border-teal-500/30' },
-  'Resource': { bg: 'bg-lime-500/10', text: 'text-lime-400', border: 'border-lime-500/30' },
-  'Other': { bg: 'bg-slate-500/10', text: 'text-slate-400', border: 'border-slate-500/30' },
+  'Tool': { bg: 'bg-cyan-500/10', text: 'text-cyan-700 dark:text-cyan-400', border: 'border-cyan-500/30' },
+  'Library': { bg: 'bg-purple-500/10', text: 'text-purple-700 dark:text-purple-400', border: 'border-purple-500/30' },
+  'API': { bg: 'bg-emerald-500/10', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-500/30' },
+  'Service': { bg: 'bg-amber-500/10', text: 'text-amber-700 dark:text-amber-400', border: 'border-amber-500/30' },
+  'Plugin': { bg: 'bg-rose-500/10', text: 'text-rose-700 dark:text-rose-400', border: 'border-rose-500/30' },
+  'Extension': { bg: 'bg-violet-500/10', text: 'text-violet-700 dark:text-violet-400', border: 'border-violet-500/30' },
+  'Music': { bg: 'bg-pink-500/10', text: 'text-pink-700 dark:text-pink-400', border: 'border-pink-500/30' },
+  'Video': { bg: 'bg-red-500/10', text: 'text-red-700 dark:text-red-400', border: 'border-red-500/30' },
+  'Audio': { bg: 'bg-orange-500/10', text: 'text-orange-700 dark:text-orange-400', border: 'border-orange-500/30' },
+  'Design': { bg: 'bg-indigo-500/10', text: 'text-indigo-700 dark:text-indigo-400', border: 'border-indigo-500/30' },
+  'AI': { bg: 'bg-teal-500/10', text: 'text-teal-700 dark:text-teal-400', border: 'border-teal-500/30' },
+  'Resource': { bg: 'bg-lime-500/10', text: 'text-lime-700 dark:text-lime-400', border: 'border-lime-500/30' },
+  'Other': { bg: 'bg-slate-500/10', text: 'text-slate-700 dark:text-slate-400', border: 'border-slate-500/30' },
 };
 
 const getCategoryColors = (category: string) => {
@@ -61,7 +61,7 @@ const Hero = () => {
       .eq('is_published', true)
       .order('order_index', { ascending: true })
       .limit(6);
-    
+
     if (!error && data) {
       setProducts(data);
     }
@@ -78,7 +78,7 @@ const Hero = () => {
       </div>
 
       {/* Grid Pattern */}
-      <div 
+      <div
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
@@ -116,7 +116,7 @@ const Hero = () => {
               <p className="text-muted-foreground">No products available yet</p>
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -126,7 +126,7 @@ const Hero = () => {
                 const IconComponent = getIcon(product.icon);
                 const isInternal = isInternalUrl(product.url);
                 const colors = getCategoryColors(product.category);
-                
+
                 const cardContent = (
                   <motion.div
                     key={product.id}
@@ -138,8 +138,8 @@ const Hero = () => {
                     <div className="flex items-start gap-4">
                       {product.preview_image_url ? (
                         <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-                          <img 
-                            src={product.preview_image_url} 
+                          <img
+                            src={product.preview_image_url}
                             alt={product.name}
                             className="w-full h-full object-cover"
                           />
@@ -160,8 +160,8 @@ const Hero = () => {
                             <ExternalLink size={14} className="text-muted-foreground flex-shrink-0" />
                           )}
                         </div>
-                        <Badge 
-                          variant="outline" 
+                        <Badge
+                          variant="outline"
                           className={`text-[10px] px-1.5 py-0 ${colors.bg} ${colors.text} ${colors.border}`}
                         >
                           {product.category}
@@ -183,10 +183,10 @@ const Hero = () => {
                 }
 
                 return (
-                  <a 
-                    key={product.id} 
-                    href={product.url} 
-                    target="_blank" 
+                  <a
+                    key={product.id}
+                    href={product.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     {cardContent}
@@ -197,14 +197,14 @@ const Hero = () => {
           )}
 
           {/* View All Link */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
             className="text-center mt-10"
           >
-            <Link 
-              to="/products" 
+            <Link
+              to="/products"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium transition-colors"
             >
               View all products

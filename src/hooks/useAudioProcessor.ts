@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { encodeToMp3, ExportFormat } from '@/utils/mp3Encoder';
 
 export interface EQBand {
   frequency: number;
@@ -66,9 +67,12 @@ export function useAudioProcessor() {
   const compressorNodeRef = useRef<DynamicsCompressorNode | null>(null);
   const limiterNodeRef = useRef<DynamicsCompressorNode | null>(null);
   const analyserNodeRef = useRef<AnalyserNode | null>(null);
+  const stereoWidthGainRef = useRef<GainNode | null>(null); // controls the Side gain in M/S
   const startTimeRef = useRef<number>(0);
   const pauseTimeRef = useRef<number>(0);
   const animationFrameRef = useRef<number | null>(null);
+  // Monotonically-increasing ID so stale rAF loops self-terminate
+  const loopIdRef = useRef<number>(0);
 
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
@@ -155,13 +159,43 @@ export function useAudioProcessor() {
 
     // Create analyser for visualization
     const analyser = ctx.createAnalyser();
-    analyser.fftSize = 256;
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.8;
     analyserNodeRef.current = analyser;
+
+    // ── M/S Stereo Width ──────────────────────────────────────────────────
+    // Only possible for stereo sources; mono sources pass through untouched.
+    const buildStereoWidth = (ctx: AudioContext, inputNode: AudioNode): AudioNode => {
+      const widthFactor = settings.stereoWidth / 100; // 0=mono, 1=unity, 2=double
+      // If the input is mono (1 ch) or width is unity, skip processing
+      if (widthFactor === 1) return inputNode;
+
+      const splitter = ctx.createChannelSplitter(2);
+      const merger = ctx.createChannelMerger(2);
+
+      // Mid = (L + R) * 0.5  |  Side = (L - R) * 0.5 * widthFactor
+      const midL = ctx.createGain(); midL.gain.value = 0.5;
+      const midR = ctx.createGain(); midR.gain.value = 0.5;
+      const sideL = ctx.createGain(); sideL.gain.value = 0.5 * widthFactor;
+      const sideR = ctx.createGain(); sideR.gain.value = -0.5 * widthFactor;
+      stereoWidthGainRef.current = sideL; // exposed for live updates
+
+      inputNode.connect(splitter);
+      // Left channel
+      splitter.connect(midL, 0); splitter.connect(sideL, 0);
+      // Right channel
+      splitter.connect(midR, 1); splitter.connect(sideR, 1);
+      // Re-combine: outL = midL + sideL,  outR = midR + sideR
+      midL.connect(merger, 0, 0); sideL.connect(merger, 0, 0);
+      midR.connect(merger, 0, 1); sideR.connect(merger, 0, 1);
+
+      return merger;
+    };
 
     // Connect the chain
     if (isProcessed) {
       let currentNode: AudioNode = source;
-      
+
       // Connect EQ chain
       eqNodes.forEach(filter => {
         currentNode.connect(filter);
@@ -172,7 +206,10 @@ export function useAudioProcessor() {
       currentNode.connect(compressor);
       compressor.connect(limiter);
       limiter.connect(gainNode);
-      gainNode.connect(analyser);
+
+      // Stereo width → analyser → destination
+      const widthOut = buildStereoWidth(ctx, gainNode);
+      widthOut.connect(analyser);
       analyser.connect(ctx.destination);
     } else {
       // Bypass processing
@@ -190,9 +227,13 @@ export function useAudioProcessor() {
       ctx.resume();
     }
 
-    // Stop any existing playback
+    // Stop any existing playback and kill the old rAF loop
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
     if (sourceNodeRef.current) {
-      sourceNodeRef.current.stop();
+      try { sourceNodeRef.current.stop(); } catch (_) {/* already stopped */ }
       sourceNodeRef.current.disconnect();
     }
 
@@ -212,30 +253,40 @@ export function useAudioProcessor() {
         setIsPlaying(false);
         pauseTimeRef.current = 0;
         setCurrentTime(0);
+        if (animationFrameRef.current !== null) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
+        }
       }
     };
 
-    // Update current time
+    // Stamp a unique ID for this play session so stale loops self-terminate
+    const myLoopId = ++loopIdRef.current;
     const updateTime = () => {
-      if (sourceNodeRef.current && audioContextRef.current) {
+      // Bail out if a newer loop has started
+      if (myLoopId !== loopIdRef.current) return;
+      if (audioContextRef.current) {
         const elapsed = audioContextRef.current.currentTime - startTimeRef.current;
-        setCurrentTime(Math.min(elapsed, audioBuffer.duration));
+        setCurrentTime(Math.min(Math.max(elapsed, 0), audioBuffer.duration));
         animationFrameRef.current = requestAnimationFrame(updateTime);
       }
     };
-    updateTime();
+    animationFrameRef.current = requestAnimationFrame(updateTime);
   }, [audioBuffer, getAudioContext, createProcessingChain]);
 
   const pause = useCallback(() => {
     if (sourceNodeRef.current && audioContextRef.current) {
       pauseTimeRef.current = audioContextRef.current.currentTime - startTimeRef.current;
-      sourceNodeRef.current.stop();
+      // Invalidate the running loop before stopping the source
+      loopIdRef.current++;
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+      try { sourceNodeRef.current.stop(); } catch (_) {/* already stopped */ }
       sourceNodeRef.current.disconnect();
       sourceNodeRef.current = null;
       setIsPlaying(false);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
     }
   }, []);
 
@@ -254,7 +305,7 @@ export function useAudioProcessor() {
   const toggleProcessing = useCallback(() => {
     const wasPlaying = isPlaying;
     const currentPosition = pauseTimeRef.current || (audioContextRef.current ? audioContextRef.current.currentTime - startTimeRef.current : 0);
-    
+
     if (wasPlaying && sourceNodeRef.current) {
       sourceNodeRef.current.stop();
       sourceNodeRef.current.disconnect();
@@ -263,13 +314,13 @@ export function useAudioProcessor() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     }
-    
+
     // Store position before toggling
     pauseTimeRef.current = currentPosition;
-    
+
     setIsProcessed(prev => {
       const newValue = !prev;
-      
+
       // Restart playback after state update if was playing
       if (wasPlaying && audioBuffer) {
         setTimeout(() => {
@@ -277,11 +328,11 @@ export function useAudioProcessor() {
           if (ctx.state === 'suspended') {
             ctx.resume();
           }
-          
+
           const source = ctx.createBufferSource();
           source.buffer = audioBuffer;
           sourceNodeRef.current = source;
-          
+
           // Rebuild processing chain with new isProcessed value
           const gainNode = ctx.createGain();
           gainNode.gain.value = Math.pow(10, settings.outputGain / 20);
@@ -315,7 +366,8 @@ export function useAudioProcessor() {
           limiterNodeRef.current = limiter;
 
           const analyser = ctx.createAnalyser();
-          analyser.fftSize = 256;
+          analyser.fftSize = 2048;
+          analyser.smoothingTimeConstant = 0.8;
           analyserNodeRef.current = analyser;
 
           // Connect based on newValue (the toggled state)
@@ -328,7 +380,25 @@ export function useAudioProcessor() {
             currentNode.connect(compressor);
             compressor.connect(limiter);
             limiter.connect(gainNode);
-            gainNode.connect(analyser);
+            // M/S width in processed mode
+            const widthFactor = settings.stereoWidth / 100;
+            if (widthFactor !== 1) {
+              const splitter = ctx.createChannelSplitter(2);
+              const merger = ctx.createChannelMerger(2);
+              const midL = ctx.createGain(); midL.gain.value = 0.5;
+              const midR = ctx.createGain(); midR.gain.value = 0.5;
+              const sideL = ctx.createGain(); sideL.gain.value = 0.5 * widthFactor;
+              const sideR = ctx.createGain(); sideR.gain.value = -0.5 * widthFactor;
+              stereoWidthGainRef.current = sideL;
+              gainNode.connect(splitter);
+              splitter.connect(midL, 0); splitter.connect(sideL, 0);
+              splitter.connect(midR, 1); splitter.connect(sideR, 1);
+              midL.connect(merger, 0, 0); sideL.connect(merger, 0, 0);
+              midR.connect(merger, 0, 1); sideR.connect(merger, 0, 1);
+              merger.connect(analyser);
+            } else {
+              gainNode.connect(analyser);
+            }
             analyser.connect(ctx.destination);
           } else {
             source.connect(gainNode);
@@ -348,25 +418,40 @@ export function useAudioProcessor() {
             }
           };
 
+          const myLoopId = ++loopIdRef.current;
+          if (animationFrameRef.current !== null) {
+            cancelAnimationFrame(animationFrameRef.current);
+            animationFrameRef.current = null;
+          }
           const updateTime = () => {
-            if (sourceNodeRef.current && audioContextRef.current) {
+            if (myLoopId !== loopIdRef.current) return;
+            if (audioContextRef.current) {
               const elapsed = audioContextRef.current.currentTime - startTimeRef.current;
-              setCurrentTime(Math.min(elapsed, audioBuffer.duration));
+              setCurrentTime(Math.min(Math.max(elapsed, 0), audioBuffer.duration));
               animationFrameRef.current = requestAnimationFrame(updateTime);
             }
           };
-          updateTime();
+          animationFrameRef.current = requestAnimationFrame(updateTime);
         }, 10);
       }
-      
+
       return newValue;
     });
   }, [isPlaying, audioBuffer, settings, getAudioContext]);
 
+  const updateStereoWidth = useCallback((value: number) => {
+    setSettings(prev => ({ ...prev, stereoWidth: value }));
+    // Live-update the side gain without restarting playback
+    if (stereoWidthGainRef.current) {
+      const widthFactor = value / 100;
+      stereoWidthGainRef.current.gain.value = 0.5 * widthFactor;
+    }
+  }, []);
+
   const updateEQBand = useCallback((index: number, gain: number) => {
     setSettings(prev => ({
       ...prev,
-      eqBands: prev.eqBands.map((band, i) => 
+      eqBands: prev.eqBands.map((band, i) =>
         i === index ? { ...band, gain } : band
       ),
     }));
@@ -464,7 +549,7 @@ export function useAudioProcessor() {
 
   const resetSettings = useCallback(() => {
     setSettings(DEFAULT_SETTINGS);
-    
+
     // Sync nodes to default values
     eqNodesRef.current.forEach((node, index) => {
       node.gain.value = 0;
@@ -483,17 +568,27 @@ export function useAudioProcessor() {
     }
   }, []);
 
-  const exportAudio = useCallback(async (): Promise<Blob | null> => {
-    if (!audioBuffer) return null;
+  const exportAudio = useCallback(async (fileOverride?: File, format: ExportFormat = 'wav', kbps = 320): Promise<Blob | null> => {
+    let bufferToExport = audioBuffer;
+
+    // If a file was provided (batch mode), decode it fresh
+    if (fileOverride) {
+      const tempCtx = new AudioContext();
+      const arrayBuf = await fileOverride.arrayBuffer();
+      bufferToExport = await tempCtx.decodeAudioData(arrayBuf);
+      await tempCtx.close();
+    }
+
+    if (!bufferToExport) return null;
 
     const ctx = new OfflineAudioContext(
-      audioBuffer.numberOfChannels,
-      audioBuffer.length,
-      audioBuffer.sampleRate
+      bufferToExport.numberOfChannels,
+      bufferToExport.length,
+      bufferToExport.sampleRate
     );
 
     const source = ctx.createBufferSource();
-    source.buffer = audioBuffer;
+    source.buffer = bufferToExport;
 
     // Create processing chain for offline context
     const gainNode = ctx.createGain();
@@ -530,15 +625,36 @@ export function useAudioProcessor() {
     currentNode.connect(compressor);
     compressor.connect(limiter);
     limiter.connect(gainNode);
-    gainNode.connect(ctx.destination);
+
+    // M/S stereo width in offline context
+    const widthFactor = settings.stereoWidth / 100;
+    if (widthFactor !== 1 && bufferToExport.numberOfChannels >= 2) {
+      const splitter = ctx.createChannelSplitter(2);
+      const merger = ctx.createChannelMerger(2);
+      const midL = ctx.createGain(); midL.gain.value = 0.5;
+      const midR = ctx.createGain(); midR.gain.value = 0.5;
+      const sideL = ctx.createGain(); sideL.gain.value = 0.5 * widthFactor;
+      const sideR = ctx.createGain(); sideR.gain.value = -0.5 * widthFactor;
+      gainNode.connect(splitter);
+      splitter.connect(midL, 0); splitter.connect(sideL, 0);
+      splitter.connect(midR, 1); splitter.connect(sideR, 1);
+      midL.connect(merger, 0, 0); sideL.connect(merger, 0, 0);
+      midR.connect(merger, 0, 1); sideR.connect(merger, 0, 1);
+      merger.connect(ctx.destination);
+    } else {
+      gainNode.connect(ctx.destination);
+    }
 
     source.start();
     const renderedBuffer = await ctx.startRendering();
 
-    // Convert to WAV
-    const wavBlob = audioBufferToWav(renderedBuffer);
-    return wavBlob;
+    // Encode to requested format
+    if (format === 'mp3') {
+      return encodeToMp3(renderedBuffer, kbps);
+    }
+    return audioBufferToWav(renderedBuffer);
   }, [audioBuffer, settings]);
+
 
   useEffect(() => {
     return () => {
@@ -565,6 +681,7 @@ export function useAudioProcessor() {
     settings,
     isLoading,
     waveformData,
+    analyserNode: analyserNodeRef,
     loadAudioFile,
     play,
     pause,
@@ -573,6 +690,7 @@ export function useAudioProcessor() {
     updateEQBand,
     updateCompression,
     updateOutputGain,
+    updateStereoWidth,
     applyAISettings,
     resetSettings,
     exportAudio,
@@ -585,23 +703,23 @@ function audioBufferToWav(buffer: AudioBuffer): Blob {
   const sampleRate = buffer.sampleRate;
   const format = 1; // PCM
   const bitDepth = 16;
-  
+
   const bytesPerSample = bitDepth / 8;
   const blockAlign = numChannels * bytesPerSample;
-  
+
   const dataLength = buffer.length * blockAlign;
   const bufferLength = 44 + dataLength;
-  
+
   const arrayBuffer = new ArrayBuffer(bufferLength);
   const view = new DataView(arrayBuffer);
-  
+
   // WAV header
   const writeString = (offset: number, str: string) => {
     for (let i = 0; i < str.length; i++) {
       view.setUint8(offset + i, str.charCodeAt(i));
     }
   };
-  
+
   writeString(0, 'RIFF');
   view.setUint32(4, 36 + dataLength, true);
   writeString(8, 'WAVE');
@@ -615,13 +733,13 @@ function audioBufferToWav(buffer: AudioBuffer): Blob {
   view.setUint16(34, bitDepth, true);
   writeString(36, 'data');
   view.setUint32(40, dataLength, true);
-  
+
   // Write samples
   const channels: Float32Array[] = [];
   for (let i = 0; i < numChannels; i++) {
     channels.push(buffer.getChannelData(i));
   }
-  
+
   let offset = 44;
   for (let i = 0; i < buffer.length; i++) {
     for (let ch = 0; ch < numChannels; ch++) {
@@ -631,6 +749,6 @@ function audioBufferToWav(buffer: AudioBuffer): Blob {
       offset += 2;
     }
   }
-  
+
   return new Blob([arrayBuffer], { type: 'audio/wav' });
 }

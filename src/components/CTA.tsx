@@ -19,15 +19,14 @@ const CTA = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-            Ready to build{" "}
-            <span className="text-gradient">something amazing?</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 uppercase tracking-tightest">
+            Ready to build for <span className="text-gradient">free?</span>
           </h2>
 
           {/* Description */}
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-            All our components and templates are completely free. If you find them useful,
-            consider supporting our work with a donation.
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60 max-w-2xl mx-auto mb-10">
+            All our components and templates are 100% free-to-use. If you find them useful,
+            consider supporting the project with a donation.
           </p>
 
           {/* CTAs */}

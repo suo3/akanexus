@@ -43,12 +43,12 @@ const Services = () => {
       <div className="container relative z-10 px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Everything you need to{" "}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tighter">
+            Free industrial tools to{" "}
             <span className="text-gradient">ship faster</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Free components and templates for everyone. Need something custom? Our team is here to help.
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60 max-w-2xl mx-auto">
+            Free-to-use components and templates for the community. Need custom engineering? Our team is here to help.
           </p>
         </div>
 

@@ -69,7 +69,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
+    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-24 pb-12">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 tool-grid opacity-[0.15]" />
@@ -80,19 +80,19 @@ const Hero = () => {
 
       <div className="container relative z-10 px-6">
         {/* Hero Content */}
-        <div className="text-center mb-16 animate-fade-up">
+        <div className="text-center mb-12 animate-fade-up">
           <div className="inline-flex items-center gap-3 px-3 py-1.5 border border-border bg-muted/50 mb-8 mono-label">
             <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
             <span className="text-muted-foreground uppercase tracking-widest">Akanexus Workspace v1.0.4</span>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter mb-6">
+          <h1 className="text-5xl sm:text-6xl md:text-[80px] font-bold tracking-tightest leading-[0.9] mb-8">
             Industrial grade tools for{" "}
             <span className="text-gradient">creators</span>
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Explore our collection of tools and products designed to supercharge your workflow.
+            Explore our collection of free industrial tools and products designed to supercharge your workflow.
           </p>
         </div>
 

@@ -35,7 +35,7 @@ const About = () => {
         keywords="about Akanexus, frontend development company, React developers, web development team"
       />
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         {/* Hero Section */}
         <section className="relative py-16 overflow-hidden">
@@ -49,7 +49,7 @@ const About = () => {
                 About <span className="text-gradient">Akanexus</span>
               </h1>
               <p className="text-lg text-muted-foreground">
-                We're a team of passionate developers and designers building the future of frontend development. Our mission is to help you ship faster with premium components and templates.
+                We're a team of passionate developers and designers building the future of frontend development. Our mission is to provide high-quality free tools and templates to help you ship faster.
               </p>
             </div>
 

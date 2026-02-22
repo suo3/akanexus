@@ -17,6 +17,9 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
+      letterSpacing: {
+        'tightest': '-0.06em',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -22,8 +22,8 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 border border-foreground flex items-center justify-center bg-foreground">
-              <span className="text-background font-bold text-lg mono-label">A</span>
+            <div className="w-9 h-9 border border-foreground flex items-center justify-center bg-foreground transition-transform hover:scale-105">
+              <span className="text-background font-bold text-xl mono-label pb-0.5">A</span>
             </div>
             <span className="text-xl font-bold tracking-tighter text-foreground uppercase">Akanexus</span>
           </Link>

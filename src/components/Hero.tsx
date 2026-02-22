@@ -71,31 +71,23 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
       {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-glow-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary/5 to-accent/5 rounded-full blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 tool-grid opacity-[0.15]" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
 
-      {/* Grid Pattern */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }}
-      />
 
       <div className="container relative z-10 px-6">
         {/* Hero Content */}
-        <div className="text-center mb-12 animate-fade-up">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Tools & Products</span>
+        <div className="text-center mb-16 animate-fade-up">
+          <div className="inline-flex items-center gap-3 px-3 py-1.5 border border-border bg-muted/50 mb-8 mono-label">
+            <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
+            <span className="text-muted-foreground uppercase tracking-widest">Akanexus Workspace v1.0.4</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
-            Powerful tools for{" "}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter mb-6">
+            Industrial grade tools for{" "}
             <span className="text-gradient">creators</span>
           </h1>
 
@@ -130,14 +122,19 @@ const Hero = () => {
                 const cardContent = (
                   <motion.div
                     key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="glass rounded-xl p-5 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 group cursor-pointer"
+                    className="group relative border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all duration-200 cursor-pointer overflow-hidden p-6"
                   >
+                    {/* Tool Identifier Mockup */}
+                    <div className="absolute top-0 right-0 p-2 opacity-20 transition-opacity group-hover:opacity-40">
+                      <span className="mono-label text-[8px]">{product.id.split('-')[0]}</span>
+                    </div>
+
                     <div className="flex items-start gap-4">
                       {product.preview_image_url ? (
-                        <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-none overflow-hidden flex-shrink-0">
                           <img
                             src={product.preview_image_url}
                             alt={product.name}
@@ -145,7 +142,7 @@ const Hero = () => {
                           />
                         </div>
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                        <div className="w-12 h-12 rounded-none bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                           <IconComponent className="text-primary" size={24} />
                         </div>
                       )}
@@ -162,9 +159,9 @@ const Hero = () => {
                         </div>
                         <Badge
                           variant="outline"
-                          className={`text-[10px] px-1.5 py-0 ${colors.bg} ${colors.text} ${colors.border}`}
+                          className={`${colors.bg} ${colors.text} ${colors.border} mono-label rounded-none border-0 px-0`}
                         >
-                          {product.category}
+                          // {product.category}
                         </Badge>
                         <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
                           {product.description || 'No description available'}
@@ -205,10 +202,10 @@ const Hero = () => {
           >
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium transition-colors"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 font-medium transition-all group border border-foreground"
             >
-              View all products
-              <ArrowRight size={18} />
+              <span className="mono-label tracking-widest">Browse full inventory</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>

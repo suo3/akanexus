@@ -43,7 +43,7 @@ export const MainLayout = () => {
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col">
                 {/* Top Toolbar */}
-                <header className="h-16 border-b bg-card/50 backdrop-blur-md flex items-center justify-between px-6 z-10 shadow-sm" data-tour="toolbar-actions">
+                <header className="h-16 border-b bg-muted/30 backdrop-blur-md flex items-center justify-between px-6 z-10" data-tour="toolbar-actions">
                     <div className="flex items-center gap-4" data-tour="command-palette">
                         <CommandPaletteTrigger />
                     </div>
@@ -53,7 +53,7 @@ export const MainLayout = () => {
                         <Button
                             variant="outline"
                             size="icon"
-                            className="h-9 w-9 rounded-full"
+                            className="h-9 w-9 rounded-none border-border"
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                         >
                             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -65,7 +65,7 @@ export const MainLayout = () => {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
-                                        className="gap-2 font-bold rounded-xl"
+                                        className="gap-2 font-bold rounded-none mono-label uppercase text-xs"
                                         onClick={() => navigate('/design-system-generator/developer/export')}
                                     >
                                         <Download className="w-4 h-4" />

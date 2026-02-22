@@ -155,12 +155,12 @@ export const Sidebar = () => {
 
     if (sidebarCollapsed) {
         return (
-            <aside className="w-16 border-r bg-card/50 backdrop-blur-xl flex flex-col items-center py-4 gap-4">
+            <aside className="w-16 border-r bg-muted/30 backdrop-blur-xl flex flex-col items-center py-4 gap-4">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={toggleSidebar}
-                    className="h-10 w-10 rounded-xl"
+                    className="h-10 w-10 rounded-none"
                 >
                     <PanelLeft className="h-5 w-5" />
                 </Button>
@@ -172,7 +172,7 @@ export const Sidebar = () => {
                             key={section.title}
                             variant="ghost"
                             size="icon"
-                            className="h-10 w-10 rounded-xl"
+                            className="h-10 w-10 rounded-none"
                             title={section.title}
                         >
                             <Icon className="h-5 w-5" />
@@ -184,17 +184,17 @@ export const Sidebar = () => {
     }
 
     return (
-        <aside className="w-72 border-r bg-card/50 backdrop-blur-xl flex flex-col" data-tour="sidebar">
+        <aside className="w-72 border-r bg-muted/30 backdrop-blur-xl flex flex-col" data-tour="sidebar">
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/30 flex items-center justify-center text-primary-foreground">
+                    <div className="w-9 h-9 rounded-none bg-primary flex items-center justify-center text-primary-foreground">
                         <Palette className="w-5 h-5" />
                     </div>
                     <div>
-                        <h1 className="font-black text-base tracking-tighter leading-none">Design System</h1>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground opacity-60">
-                            Professional
+                        <h1 className="font-bold text-sm tracking-tighter leading-none uppercase">DSG_SYSTEM</h1>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mono-label">
+                            CORE_UI_v2.0
                         </span>
                     </div>
                 </Link>
@@ -202,7 +202,7 @@ export const Sidebar = () => {
                     variant="ghost"
                     size="icon"
                     onClick={toggleSidebar}
-                    className="h-8 w-8 rounded-lg"
+                    className="h-8 w-8 rounded-none"
                 >
                     <PanelLeftClose className="h-4 w-4" />
                 </Button>
@@ -217,10 +217,10 @@ export const Sidebar = () => {
                         </span>
                         <input
                             type="text"
-                            placeholder="Filter..."
+                            placeholder="FIND_MODULE..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border bg-muted/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all font-medium"
+                            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-none border bg-muted/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all font-medium mono-label uppercase"
                         />
                     </div>
                 </div>
@@ -237,11 +237,11 @@ export const Sidebar = () => {
                             <div key={section.title} className="space-y-1">
                                 <button
                                     onClick={() => toggleSection(section.title)}
-                                    className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors group"
+                                    className="w-full flex items-center justify-between px-3 py-2 rounded-none hover:bg-muted/50 transition-colors group"
                                 >
                                     <div className="flex items-center gap-2.5">
                                         <SectionIcon className="h-4 w-4 text-muted-foreground" />
-                                        <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">
+                                        <span className="text-[11px] font-bold text-muted-foreground group-hover:text-foreground mono-label uppercase tracking-wider">
                                             {section.title}
                                         </span>
                                     </div>
@@ -263,9 +263,9 @@ export const Sidebar = () => {
                                                     key={item.path}
                                                     to={item.path}
                                                     className={cn(
-                                                        'flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all',
+                                                        'flex items-center justify-between px-3 py-1.5 rounded-none text-xs transition-all mono-label uppercase',
                                                         isActive
-                                                            ? 'bg-primary/10 text-primary font-bold'
+                                                            ? 'bg-primary/10 text-primary font-bold border-l-2 border-primary'
                                                             : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground font-medium'
                                                     )}
                                                 >
@@ -274,7 +274,7 @@ export const Sidebar = () => {
                                                         <span>{item.label}</span>
                                                     </div>
                                                     {item.badge && (
-                                                        <span className="text-[10px] font-black uppercase tracking-wider bg-primary/20 text-primary px-1.5 py-0.5 rounded">
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-1 py-0.5 rounded-none border border-primary/20">
                                                             {item.badge}
                                                         </span>
                                                     )}
@@ -293,7 +293,7 @@ export const Sidebar = () => {
             <div className="p-3 border-t">
                 <Button
                     variant="outline"
-                    className="w-full justify-start gap-2 font-bold text-xs"
+                    className="w-full justify-start gap-2 font-bold text-xs rounded-none mono-label uppercase"
                     onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
                 >
                     <Settings className="h-4 w-4" />

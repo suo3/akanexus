@@ -8,13 +8,13 @@ const CTA = () => {
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/10 rounded-none blur-3xl" />
       </div>
 
       <div className="container relative z-10 px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Icon */}
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-none bg-primary/10 mb-8">
             <Zap className="w-8 h-8 text-primary" />
           </div>
 

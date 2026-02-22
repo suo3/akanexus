@@ -87,7 +87,7 @@ const ButtonComponentBuilder = () => {
     ]);
 
     const [config, setConfig] = useState({
-        rounded: true,
+        rounded: false,
         iconSupport: true,
         loadingState: true,
         disabledState: true,
@@ -184,7 +184,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center gap-2 font-bold transition-all',
-          'border ${config.rounded ? `rounded-[${tokens.radius}rem]` : ''}',
+          'border ${config.rounded ? `rounded-[${tokens.radius}rem]` : 'rounded-none'}',
           ${config.disabledState ? "'disabled:opacity-50 disabled:cursor-not-allowed'," : ""}
           variants[variant],
           sizes[size],
@@ -303,13 +303,13 @@ Button.displayName = 'Button';
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <Component className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Button Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Component Workbench
+                            <h2 className="text-lg font-bold tracking-tight uppercase">BTN_COMPILER</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                COMPONENT_v2.0
                             </p>
                         </div>
                     </div>
@@ -318,21 +318,21 @@ Button.displayName = 'Button';
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid grid-cols-3 w-full">
-                                <TabsTrigger value="variants" className="text-xs">Variants</TabsTrigger>
-                                <TabsTrigger value="sizes" className="text-xs">Sizes</TabsTrigger>
-                                <TabsTrigger value="config" className="text-xs">Config</TabsTrigger>
+                            <TabsList className="grid grid-cols-3 w-full rounded-none">
+                                <TabsTrigger value="variants" className="text-xs rounded-none mono-label uppercase">VARIANTS</TabsTrigger>
+                                <TabsTrigger value="sizes" className="text-xs rounded-none mono-label uppercase">SIZES</TabsTrigger>
+                                <TabsTrigger value="config" className="text-xs rounded-none mono-label uppercase">OPTS</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                            Variants
+                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                            VARIANT_LIST
                                         </Label>
-                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={addVariant}>
+                                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 rounded-none mono-label text-[10px] uppercase" onClick={addVariant}>
                                             <Plus className="w-3 h-3" />
-                                            Add
+                                            ADD_NEW
                                         </Button>
                                     </div>
                                     <div className="space-y-2">
@@ -340,7 +340,7 @@ Button.displayName = 'Button';
                                             <button
                                                 key={variant.id}
                                                 onClick={() => setSelectedVariant(variant.id)}
-                                                className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedVariant === variant.id
+                                                className={`w-full p-3 rounded-none border-2 transition-all text-left ${selectedVariant === variant.id
                                                     ? 'border-primary bg-primary/5'
                                                     : 'border-border hover:border-primary/50'
                                                     }`}
@@ -474,7 +474,7 @@ Button.displayName = 'Button';
                                             <button
                                                 key={size.id}
                                                 onClick={() => setSelectedSize(size.id)}
-                                                className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedSize === size.id
+                                                className={`w-full p-3 rounded-none border-2 transition-all text-left ${selectedSize === size.id
                                                     ? 'border-primary bg-primary/5'
                                                     : 'border-border hover:border-primary/50'
                                                     }`}
@@ -539,13 +539,13 @@ Button.displayName = 'Button';
                 </ScrollArea>
 
                 <div className="border-t p-4 space-y-2">
-                    <Button onClick={copyCode} variant="outline" className="w-full gap-2">
+                    <Button onClick={copyCode} variant="outline" className="w-full gap-2 rounded-none mono-label uppercase text-xs">
                         <Copy className="w-4 h-4" />
-                        Copy React Code
+                        COPY_SOURCE_CODE
                     </Button>
-                    <Button onClick={exportComponent} className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2 rounded-none mono-label uppercase text-xs">
                         <Download className="w-4 h-4" />
-                        Export Component
+                        EXPORT_TSX_UNIT
                     </Button>
                 </div>
             </div>
@@ -562,10 +562,10 @@ Button.displayName = 'Button';
                     <div className="p-12 space-y-12">
                         {/* Interactive Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Interactive Preview
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                RENDER_LIVE_PORT
                             </h4>
-                            <div className="flex items-center justify-center p-16 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
+                            <div className="flex items-center justify-center p-16 bg-muted/20 border border-dashed rounded-none">
                                 <button
                                     style={{
                                         ...getButtonStyle(),
@@ -597,30 +597,30 @@ Button.displayName = 'Button';
                                 States
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Default
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                        ST_DEFAULT
                                     </p>
                                     <button style={getButtonStyle('default')}>Button</button>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Hover
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                        ST_HOVER
                                     </p>
                                     <button style={getButtonStyle('hover')}>Button</button>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Active
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                        ST_ACTIVE
                                     </p>
                                     <button style={getButtonStyle('active')}>Button</button>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Disabled
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                        ST_DISABLED
                                     </p>
                                     <button style={getButtonStyle('disabled')}>Button</button>
                                 </div>
@@ -647,9 +647,9 @@ Button.displayName = 'Button';
                             </h4>
                             <div className="grid grid-cols-2 gap-4">
                                 {variants.map((variant) => (
-                                    <div key={variant.id} className="p-6 border rounded-xl bg-card space-y-3">
-                                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                            {variant.name}
+                                    <div key={variant.id} className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                            {variant.name}_VAR
                                         </p>
                                         <button
                                             style={{
@@ -721,7 +721,7 @@ Button.displayName = 'Button';
                                     Copy
                                 </Button>
                             </div>
-                            <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">
+                            <pre className="text-xs font-mono bg-muted/50 p-6 rounded-none border border-dashed overflow-x-auto max-h-96 overflow-y-auto mono-label">
                                 {generateReactCode()}
                             </pre>
                         </div>

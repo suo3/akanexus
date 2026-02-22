@@ -104,13 +104,13 @@ const ShadowsFoundation = () => {
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <Box className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Shadows & Elevation</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Foundation
+                            <h2 className="text-lg font-bold tracking-tight uppercase">SHADOW_ENGINE</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                FOUNDATION_CORE_v1.0
                             </p>
                         </div>
                     </div>
@@ -120,23 +120,23 @@ const ShadowsFoundation = () => {
                     <div className="p-6 space-y-6">
                         {/* Presets */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Presets
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                SHADOW_PRESETS
                             </Label>
                             <div className="grid grid-cols-2 gap-2">
                                 <Button
                                     variant="outline"
                                     onClick={() => applyPreset('material')}
-                                    className="h-9 text-xs"
+                                    className="h-9 text-xs rounded-none mono-label uppercase"
                                 >
-                                    Material Design
+                                    MATERIAL_ST
                                 </Button>
                                 <Button
                                     variant="outline"
                                     onClick={() => applyPreset('ios')}
-                                    className="h-9 text-xs"
+                                    className="h-9 text-xs rounded-none mono-label uppercase"
                                 >
-                                    iOS
+                                    IOS_BASE
                                 </Button>
                             </div>
                         </div>
@@ -145,14 +145,14 @@ const ShadowsFoundation = () => {
 
                         {/* Elevation Level Selector */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Elevation Level
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                ELEVATION_LVL
                             </Label>
                             <Select
                                 value={selectedLevel.toString()}
                                 onValueChange={(value) => setSelectedLevel(parseInt(value))}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="rounded-none mono-label">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -169,16 +169,16 @@ const ShadowsFoundation = () => {
 
                         {/* Shadow Editor */}
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Shadow Properties
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                SHADOW_PROPS
                             </Label>
 
                             {/* X Offset */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-xs">X Offset</Label>
-                                    <span className="text-xs font-mono text-muted-foreground">
-                                        {shadowConfig.x}px
+                                    <Label className="text-xs uppercase mono-label opacity-60">OFFSET_X</Label>
+                                    <span className="text-xs font-mono text-primary font-bold">
+                                        {shadowConfig.x}PX
                                     </span>
                                 </div>
                                 <input
@@ -196,9 +196,9 @@ const ShadowsFoundation = () => {
                             {/* Y Offset */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-xs">Y Offset</Label>
-                                    <span className="text-xs font-mono text-muted-foreground">
-                                        {shadowConfig.y}px
+                                    <Label className="text-xs uppercase mono-label opacity-60">OFFSET_Y</Label>
+                                    <span className="text-xs font-mono text-primary font-bold">
+                                        {shadowConfig.y}PX
                                     </span>
                                 </div>
                                 <input
@@ -216,9 +216,9 @@ const ShadowsFoundation = () => {
                             {/* Blur */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-xs">Blur</Label>
-                                    <span className="text-xs font-mono text-muted-foreground">
-                                        {shadowConfig.blur}px
+                                    <Label className="text-xs uppercase mono-label opacity-60">BLUR_RADIUS</Label>
+                                    <span className="text-xs font-mono text-primary font-bold">
+                                        {shadowConfig.blur}PX
                                     </span>
                                 </div>
                                 <input
@@ -236,9 +236,9 @@ const ShadowsFoundation = () => {
                             {/* Spread */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-xs">Spread</Label>
-                                    <span className="text-xs font-mono text-muted-foreground">
-                                        {shadowConfig.spread}px
+                                    <Label className="text-xs uppercase mono-label opacity-60">SPREAD_RADIUS</Label>
+                                    <span className="text-xs font-mono text-primary font-bold">
+                                        {shadowConfig.spread}PX
                                     </span>
                                 </div>
                                 <input
@@ -256,8 +256,8 @@ const ShadowsFoundation = () => {
                             {/* Opacity */}
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
-                                    <Label className="text-xs">Opacity</Label>
-                                    <span className="text-xs font-mono text-muted-foreground">
+                                    <Label className="text-xs uppercase mono-label opacity-60">OPACITY_VAL</Label>
+                                    <span className="text-xs font-mono text-primary font-bold">
                                         {(shadowConfig.opacity * 100).toFixed(0)}%
                                     </span>
                                 </div>
@@ -276,18 +276,18 @@ const ShadowsFoundation = () => {
 
                             {/* Color */}
                             <div className="space-y-2">
-                                <Label className="text-xs">Color</Label>
+                                <Label className="text-xs uppercase mono-label opacity-60">HEX_COLOR</Label>
                                 <div className="flex gap-2">
                                     <Input
                                         type="color"
                                         value={shadowConfig.color}
                                         onChange={(e) => updateCurrentShadow({ color: e.target.value })}
-                                        className="w-16 h-9 p-1"
+                                        className="w-16 h-9 p-1 rounded-none"
                                     />
                                     <Input
                                         value={shadowConfig.color}
                                         onChange={(e) => updateCurrentShadow({ color: e.target.value })}
-                                        className="flex-1 h-9 font-mono text-xs"
+                                        className="flex-1 h-9 font-mono text-xs rounded-none mono-label"
                                     />
                                 </div>
                             </div>
@@ -297,11 +297,11 @@ const ShadowsFoundation = () => {
 
                         {/* CSS Output */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                CSS Output
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                CSS_SOURCE_CODE
                             </Label>
                             <div className="relative">
-                                <pre className="text-xs font-mono bg-muted p-3 rounded-lg overflow-x-auto">
+                                <pre className="text-xs font-mono bg-muted/50 p-3 rounded-none border border-dashed overflow-x-auto mono-label">
                                     {shadows.levels.find(l => l.level === selectedLevel)?.shadow || 'none'}
                                 </pre>
                                 <Button
@@ -323,9 +323,9 @@ const ShadowsFoundation = () => {
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-card/30">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Live Preview
+                <div className="border-b px-8 py-5 bg-muted/10">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                        SHADOW_RENDER_PORT
                     </h3>
                 </div>
 
@@ -333,17 +333,17 @@ const ShadowsFoundation = () => {
                     <div className="p-12 space-y-12">
                         {/* Current Shadow Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Current Shadow - Level {selectedLevel}
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                SELECTED_LVL: {selectedLevel}
                             </h4>
-                            <div className="flex items-center justify-center p-16 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
+                            <div className="flex items-center justify-center p-16 bg-muted/20 border border-dashed rounded-none">
                                 <div
-                                    className="w-64 h-64 bg-card rounded-2xl flex items-center justify-center"
+                                    className="w-64 h-64 bg-card rounded-none border flex items-center justify-center"
                                     style={{
                                         boxShadow: shadows.levels.find(l => l.level === selectedLevel)?.shadow || 'none',
                                     }}
                                 >
-                                    <p className="text-sm text-muted-foreground">Level {selectedLevel}</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/40 mono-label">LVL_{selectedLevel}_RENDER</p>
                                 </div>
                             </div>
                         </div>
@@ -352,23 +352,23 @@ const ShadowsFoundation = () => {
 
                         {/* Elevation Levels */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Elevation System
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                ELEVATION_MATRIX
                             </h4>
                             <div className="grid grid-cols-3 gap-6">
                                 {shadows.levels.map((level) => (
                                     <div key={level.level} className="space-y-3">
-                                        <p className="text-xs font-bold text-muted-foreground">
-                                            Level {level.level} - {level.name}
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                            LVL_{level.level} » {level.name.toUpperCase()}
                                         </p>
-                                        <div className="aspect-square bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl p-8 flex items-center justify-center">
+                                        <div className="aspect-square bg-muted/10 border border-dashed rounded-none p-8 flex items-center justify-center">
                                             <div
-                                                className="w-full h-full bg-card rounded-xl flex items-center justify-center"
+                                                className="w-full h-full bg-card rounded-none border border-border/50 flex items-center justify-center"
                                                 style={{
                                                     boxShadow: level.shadow,
                                                 }}
                                             >
-                                                <span className="text-2xl font-black text-muted-foreground/30">
+                                                <span className="text-2xl font-black text-muted-foreground/10 mono-label">
                                                     {level.level}
                                                 </span>
                                             </div>
@@ -382,63 +382,63 @@ const ShadowsFoundation = () => {
 
                         {/* Use Cases */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Common Use Cases
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                COMPONENT_USE_CASES
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Button
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        CTRL_BUTTON
                                     </p>
                                     <button
-                                        className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold"
+                                        className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-none font-bold uppercase text-xs tracking-widest mono-label"
                                         style={{
                                             boxShadow: shadows.levels[1]?.shadow || 'none',
                                         }}
                                     >
-                                        Click Me
+                                        BTN_UNIT
                                     </button>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Card
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        DATA_CONTAINER
                                     </p>
                                     <div
-                                        className="p-4 bg-background rounded-lg"
+                                        className="p-4 bg-background border rounded-none"
                                         style={{
                                             boxShadow: shadows.levels[2]?.shadow || 'none',
                                         }}
                                     >
-                                        <p className="text-sm">Card content</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest opacity-40 mono-label">STORAGE_UNIT_v1.0</p>
                                     </div>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Modal
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        OVERLAY_DIALOG
                                     </p>
                                     <div
-                                        className="p-4 bg-background rounded-lg"
+                                        className="p-4 bg-background border rounded-none"
                                         style={{
                                             boxShadow: shadows.levels[4]?.shadow || 'none',
                                         }}
                                     >
-                                        <p className="text-sm">Modal dialog</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest opacity-40 mono-label">MODAL_PRIME</p>
                                     </div>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-3">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Dropdown
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        POP_MENU
                                     </p>
                                     <div
-                                        className="p-4 bg-background rounded-lg"
+                                        className="p-4 bg-background border rounded-none"
                                         style={{
                                             boxShadow: shadows.levels[3]?.shadow || 'none',
                                         }}
                                     >
-                                        <p className="text-sm">Dropdown menu</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest opacity-40 mono-label">DROP_SELECTION</p>
                                     </div>
                                 </div>
                             </div>

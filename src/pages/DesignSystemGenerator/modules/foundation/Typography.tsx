@@ -152,13 +152,13 @@ const TypographyFoundation = () => {
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <Type className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Typography</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Foundation
+                            <h2 className="text-lg font-bold tracking-tight uppercase">TYPE_FOUNDRY</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                FOUNDATION_CORE_v1.0
                             </p>
                         </div>
                     </div>
@@ -167,10 +167,10 @@ const TypographyFoundation = () => {
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid grid-cols-3 w-full">
-                                <TabsTrigger value="families" className="text-xs">Families</TabsTrigger>
-                                <TabsTrigger value="scale" className="text-xs">Scale</TabsTrigger>
-                                <TabsTrigger value="properties" className="text-xs">Properties</TabsTrigger>
+                            <TabsList className="grid grid-cols-3 w-full rounded-none">
+                                <TabsTrigger value="families" className="text-xs rounded-none mono-label uppercase">FAMILIES</TabsTrigger>
+                                <TabsTrigger value="scale" className="text-xs rounded-none mono-label uppercase">SCALE</TabsTrigger>
+                                <TabsTrigger value="properties" className="text-xs rounded-none mono-label uppercase">PROPS</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="families" className="space-y-6 mt-6">
@@ -245,11 +245,11 @@ const TypographyFoundation = () => {
                                 {/* Base Size */}
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                            Base Size
+                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60 mono-label">
+                                            BASE_SIZE
                                         </Label>
-                                        <span className="text-xs font-mono font-black bg-primary/10 text-primary px-2 py-1 rounded">
-                                            {typography.baseSize}px
+                                        <span className="text-xs font-mono font-bold bg-primary/10 text-primary px-2 py-1 rounded-none border border-primary/20">
+                                            {typography.baseSize}PX
                                         </span>
                                     </div>
                                     <input
@@ -287,11 +287,11 @@ const TypographyFoundation = () => {
 
                                 <Button
                                     variant="outline"
-                                    className="w-full gap-2"
+                                    className="w-full gap-2 rounded-none mono-label uppercase text-xs"
                                     onClick={generateTypeScale}
                                 >
                                     <RefreshCw className="w-4 h-4" />
-                                    Regenerate Scale
+                                    RE_CALC_SCALE
                                 </Button>
                             </TabsContent>
 
@@ -351,9 +351,9 @@ const TypographyFoundation = () => {
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-card/30">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Live Preview
+                <div className="border-b px-8 py-5 bg-muted/10">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                        LIVE_RENDER_PORT
                     </h3>
                 </div>
 
@@ -368,7 +368,7 @@ const TypographyFoundation = () => {
                                 {Object.entries(typography.fontSizes).reverse().map(([key, size]) => (
                                     <div
                                         key={key}
-                                        className="flex items-baseline gap-6 group hover:bg-muted/30 p-4 rounded-xl transition-colors"
+                                        className="flex items-baseline gap-6 group hover:bg-muted/30 p-4 rounded-none border border-transparent hover:border-border transition-all"
                                     >
                                         <span className="text-xs font-mono text-muted-foreground w-12 shrink-0">
                                             {key}
@@ -399,9 +399,9 @@ const TypographyFoundation = () => {
                                 Font Families
                             </h4>
                             <div className="space-y-6">
-                                <div className="p-6 border rounded-xl bg-card">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                                        Sans Serif
+                                <div className="p-6 border rounded-none bg-muted/5">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mono-label">
+                                        SANS_SERIF
                                     </p>
                                     <p
                                         style={{ fontFamily: typography.fontFamilies.sans }}
@@ -410,10 +410,9 @@ const TypographyFoundation = () => {
                                         The quick brown fox jumps over the lazy dog
                                     </p>
                                 </div>
-
-                                <div className="p-6 border rounded-xl bg-card">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                                        Serif
+                                <div className="p-6 border rounded-none bg-muted/5">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mono-label">
+                                        SERIF_LABEL
                                     </p>
                                     <p
                                         style={{ fontFamily: typography.fontFamilies.serif }}
@@ -422,10 +421,9 @@ const TypographyFoundation = () => {
                                         The quick brown fox jumps over the lazy dog
                                     </p>
                                 </div>
-
-                                <div className="p-6 border rounded-xl bg-card">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-                                        Monospace
+                                <div className="p-6 border rounded-none bg-muted/5">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 mono-label">
+                                        MONO_LABEL
                                     </p>
                                     <p
                                         style={{ fontFamily: typography.fontFamilies.mono }}

@@ -13,21 +13,21 @@ interface ColorScalePreviewProps {
 
 const ColorScalePreview = ({ label, baseColor, scale, onChange }: ColorScalePreviewProps) => {
     return (
-        <div className="space-y-3 p-4 border rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow">
+        <div className="space-y-3 p-4 border rounded-none bg-muted/20 shadow-none hover:bg-muted/30 transition-colors">
             <div className="flex items-center justify-between">
-                <label className="text-sm font-bold capitalize">{label}</label>
+                <label className="text-[11px] font-bold uppercase mono-label tracking-wider">{label}</label>
                 <div className="flex items-center gap-2">
                     <input
                         type="color"
                         value={baseColor}
                         onChange={(e) => onChange(e.target.value)}
-                        className="w-6 h-6 rounded-full border-none cursor-pointer overflow-hidden p-0"
+                        className="w-6 h-6 rounded-none border-none cursor-pointer overflow-hidden p-0"
                     />
                     <input
                         type="text"
                         value={baseColor}
                         onChange={(e) => onChange(e.target.value)}
-                        className="text-xs font-mono uppercase w-20 bg-muted/50 border rounded px-2 py-1"
+                        className="text-xs font-mono uppercase w-20 bg-background border rounded-none px-2 py-1 mono-label"
                     />
                 </div>
             </div>
@@ -41,7 +41,7 @@ const ColorScalePreview = ({ label, baseColor, scale, onChange }: ColorScalePrev
                         title={`${label}-${weight}: ${hex}`}
                     >
                         <span
-                            className="hidden group-hover:block text-[8px] font-bold"
+                            className="hidden group-hover:block text-[8px] font-bold mono-label"
                             style={{ color: getColorContrast(hex as string) }}
                         >
                             {weight}
@@ -62,7 +62,7 @@ export const ColorEditor = ({ colors, onUpdate }: ColorEditorProps) => {
     return (
         <div className="space-y-6">
             <div className="space-y-4">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">Main Palette</h3>
+                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1 mono-label">PALETTE_MAIN</h3>
                 <ColorScalePreview
                     label="Primary"
                     baseColor={colors.primary}
@@ -92,33 +92,33 @@ export const ColorEditor = ({ colors, onUpdate }: ColorEditorProps) => {
             <Separator />
 
             <div className="space-y-4">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">Functional</h3>
+                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1 mono-label">PALETTE_FUNC</h3>
                 <div className="grid grid-cols-1 gap-3">
-                    <div className="flex items-center justify-between p-3 border rounded-lg bg-background">
-                        <span className="text-sm font-medium">Background</span>
+                    <div className="flex items-center justify-between p-3 border rounded-none bg-muted/10">
+                        <span className="text-xs font-bold uppercase mono-label">BACKGROUND</span>
                         <input
                             type="color"
                             value={colors.background}
                             onChange={(e) => onUpdate("background", e.target.value)}
-                            className="w-6 h-6 rounded-full border-none cursor-pointer"
+                            className="w-6 h-6 rounded-none border-none cursor-pointer"
                         />
                     </div>
-                    <div className="flex items-center justify-between p-3 border rounded-lg bg-background">
-                        <span className="text-sm font-medium">Foreground</span>
+                    <div className="flex items-center justify-between p-3 border rounded-none bg-muted/10">
+                        <span className="text-xs font-bold uppercase mono-label">FOREGROUND</span>
                         <input
                             type="color"
                             value={colors.foreground}
                             onChange={(e) => onUpdate("foreground", e.target.value)}
-                            className="w-6 h-6 rounded-full border-none cursor-pointer"
+                            className="w-6 h-6 rounded-none border-none cursor-pointer"
                         />
                     </div>
-                    <div className="flex items-center justify-between p-3 border rounded-lg bg-background">
-                        <span className="text-sm font-medium">Border</span>
+                    <div className="flex items-center justify-between p-3 border rounded-none bg-muted/10">
+                        <span className="text-xs font-bold uppercase mono-label">BORDER_COLOR</span>
                         <input
                             type="color"
                             value={colors.border}
                             onChange={(e) => onUpdate("border", e.target.value)}
-                            className="w-6 h-6 rounded-full border-none cursor-pointer"
+                            className="w-6 h-6 rounded-none border-none cursor-pointer"
                         />
                     </div>
                 </div>

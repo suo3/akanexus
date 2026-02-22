@@ -22,11 +22,15 @@ const ColorsFoundation = () => {
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="border-b bg-card/30 px-8 py-6">
+            <div className="border-b bg-muted/10 px-8 py-8">
                 <div className="max-w-5xl">
-                    <h1 className="text-3xl font-black tracking-tight">Color Foundation</h1>
-                    <p className="text-muted-foreground mt-2 text-sm">
-                        Define your brand colors and generate harmonious color scales automatically.
+                    <div className="inline-flex items-center gap-2 px-2 py-0.5 border border-primary/20 bg-primary/5 mb-4 mono-label text-[10px] uppercase text-primary">
+                        <div className="w-1 h-1 rounded-none bg-primary animate-pulse" />
+                        FOUNDATION_CORE_v1.0
+                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight uppercase">COLOR_STORAGE</h1>
+                    <p className="text-muted-foreground mt-2 text-sm max-w-2xl">
+                        Define brand color tokens and generate harmonious industrial color scales.
                     </p>
                 </div>
             </div>

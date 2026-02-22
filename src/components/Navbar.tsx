@@ -18,52 +18,45 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
-      <div className="container mx-auto px-6 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md">
+      <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">A</span>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 border border-foreground flex items-center justify-center bg-foreground">
+              <span className="text-background font-bold text-lg mono-label">A</span>
             </div>
-            <span className="text-xl font-bold text-foreground">Akanexus</span>
+            <span className="text-xl font-bold tracking-tighter text-foreground uppercase">Akanexus</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <NavLink
               to="/services"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
-              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
-              Services
+              /Services
             </NavLink>
             <NavLink
               to="/design-system-generator"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
-              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
-              Components
-            </NavLink>
-            <NavLink
-              to="/templates"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
-              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
-            >
-              Templates
+              /Components
             </NavLink>
             <NavLink
               to="/products"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
-              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
-              Products
+              /Products
             </NavLink>
             <NavLink
               to="/pricing"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1"
-              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
-              Pricing
+              /Pricing
             </NavLink>
           </div>
 
@@ -71,7 +64,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 rounded-full"
+              className="h-9 w-9 rounded-none"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               aria-label="Toggle theme"
             >
@@ -85,8 +78,8 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Button variant="ghost" onClick={() => navigate('/auth')}>Sign In</Button>
-                <Button variant="hero" onClick={() => navigate('/auth')}>Get Started</Button>
+                <Button variant="ghost" onClick={() => navigate('/auth')} className="mono-label">Sign In</Button>
+                <Button variant="default" onClick={() => navigate('/products')} className="mono-label">Get Started</Button>
               </>
             )}
           </div>
@@ -118,13 +111,6 @@ const Navbar = () => {
               Components
             </NavLink>
             <NavLink
-              to="/templates"
-              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
-              activeClassName="text-foreground font-medium border-l-primary"
-            >
-              Templates
-            </NavLink>
-            <NavLink
               to="/products"
               className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
               activeClassName="text-foreground font-medium border-l-primary"
@@ -133,7 +119,7 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               to="/pricing"
-              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l-2 border-transparent pl-3"
+              className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l border-transparent pl-3 mono-label"
               activeClassName="text-foreground font-medium border-l-primary"
             >
               Pricing
@@ -155,7 +141,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <Button variant="ghost" className="w-full" onClick={() => navigate('/auth')}>Sign In</Button>
-                  <Button variant="hero" className="w-full" onClick={() => navigate('/auth')}>Get Started</Button>
+                  <Button variant="hero" className="w-full" onClick={() => navigate('/products')}>Get Started</Button>
                 </>
               )}
             </div>

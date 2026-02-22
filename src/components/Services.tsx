@@ -37,7 +37,7 @@ const Services = () => {
     <section id="services" className="relative py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-none blur-3xl" />
       </div>
 
       <div className="container relative z-10 px-6">
@@ -57,21 +57,21 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group relative p-8 rounded-2xl glass hover:border-primary/50 transition-all duration-500"
+              className="group relative p-8 rounded-none glass hover:border-primary/50 transition-all duration-500"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Glow Effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 rounded-none bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="relative z-10">
                 {/* Icon & Badge */}
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="w-14 h-14 rounded-none bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <service.icon className="w-7 h-7 text-primary" />
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${service.badge === "Free"
-                      ? "bg-primary/10 text-primary"
-                      : "bg-accent/10 text-accent-foreground"
+                  <span className={`px-3 py-1 rounded-none text-xs font-medium ${service.badge === "Free"
+                    ? "bg-primary/10 text-primary"
+                    : "bg-accent/10 text-accent-foreground"
                     }`}>
                     {service.badge}
                   </span>
@@ -87,7 +87,7 @@ const Services = () => {
                 <ul className="space-y-2 mb-8">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      <div className="w-1.5 h-1.5 rounded-none bg-primary" />
                       {feature}
                     </li>
                   ))}

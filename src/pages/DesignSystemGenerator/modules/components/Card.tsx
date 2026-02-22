@@ -56,7 +56,7 @@ const CardComponentBuilder = () => {
     const [config, setConfig] = useState({
         header: true,
         footer: true,
-        rounded: true,
+        rounded: false,
         padding: true,
         dividers: true,
         hoverable: false,
@@ -196,13 +196,13 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <LayoutGrid className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Card Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Component Workbench
+                            <h2 className="text-lg font-bold tracking-tight uppercase">CARD_COMPILER</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                COMPONENT_v2.0
                             </p>
                         </div>
                     </div>
@@ -211,22 +211,22 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid grid-cols-2 w-full">
-                                <TabsTrigger value="variants" className="text-xs">Variants</TabsTrigger>
-                                <TabsTrigger value="config" className="text-xs">Config</TabsTrigger>
+                            <TabsList className="grid grid-cols-2 w-full rounded-none">
+                                <TabsTrigger value="variants" className="text-xs rounded-none mono-label uppercase">VARIANTS</TabsTrigger>
+                                <TabsTrigger value="config" className="text-xs rounded-none mono-label uppercase">CONFIG</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                        Card Variants
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        CARD_VARIANTS
                                     </Label>
                                     <div className="space-y-2">
                                         {variants.map((variant) => (
                                             <button
                                                 key={variant.id}
                                                 onClick={() => setSelectedVariant(variant.id)}
-                                                className={`w-full p-3 rounded-lg border-2 transition-all text-left ${selectedVariant === variant.id
+                                                className={`w-full p-3 rounded-none border-2 transition-all text-left ${selectedVariant === variant.id
                                                     ? 'border-primary bg-primary/5'
                                                     : 'border-border hover:border-primary/50'
                                                     }`}
@@ -241,8 +241,8 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                                Edit {currentVariant.name}
+                                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                                EDIT_VARIANT: {currentVariant.id.toUpperCase()}
                                             </Label>
 
                                             <div className="space-y-3">
@@ -274,7 +274,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs">Border Color</Label>
+                                                    <Label className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">HEX_COLOR</Label>
                                                     <div className="flex gap-2">
                                                         <Input
                                                             type="color"
@@ -285,7 +285,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                                                 );
                                                                 setVariants(updated);
                                                             }}
-                                                            className="w-12 h-9 p-1"
+                                                            className="w-12 h-9 p-1 rounded-none"
                                                         />
                                                         <Input
                                                             value={currentVariant.border}
@@ -295,13 +295,13 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                                                 );
                                                                 setVariants(updated);
                                                             }}
-                                                            className="flex-1 h-9 font-mono text-xs"
+                                                            className="flex-1 h-9 font-mono text-xs rounded-none mono-label"
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs">Shadow</Label>
+                                                    <Label className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">SHADOW_VAL</Label>
                                                     <Input
                                                         value={currentVariant.shadow}
                                                         onChange={(e) => {
@@ -310,7 +310,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                                             );
                                                             setVariants(updated);
                                                         }}
-                                                        className="h-9 font-mono text-xs"
+                                                        className="h-9 font-mono text-xs rounded-none mono-label"
                                                     />
                                                 </div>
                                             </div>
@@ -321,13 +321,13 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                        Card Structure
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        CARD_SCHEMA
                                     </Label>
 
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <Label className="text-sm">Header Section</Label>
+                                            <Label className="text-xs uppercase mono-label opacity-60">HEADER_UNIT</Label>
                                             <Switch
                                                 checked={config.header}
                                                 onCheckedChange={(checked) => setConfig({ ...config, header: checked })}
@@ -399,22 +399,22 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                 </ScrollArea>
 
                 <div className="border-t p-4 space-y-2">
-                    <Button onClick={copyCode} variant="outline" className="w-full gap-2">
+                    <Button onClick={copyCode} variant="outline" className="w-full gap-2 rounded-none mono-label text-xs uppercase">
                         <Copy className="w-4 h-4" />
-                        Copy React Code
+                        COPY_REACT_SRC
                     </Button>
-                    <Button onClick={exportComponent} className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2 rounded-none mono-label text-xs uppercase">
                         <Download className="w-4 h-4" />
-                        Export Component
+                        EXPORT_ENTITY
                     </Button>
                 </div>
             </div>
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-card/30">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Live Preview
+                <div className="border-b px-8 py-5 bg-muted/10">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                        CARD_PREVIEW_PORT
                     </h3>
                 </div>
 
@@ -422,8 +422,8 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                     <div className="p-12 space-y-12">
                         {/* Interactive Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Interactive Preview
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                INTERACTIVE_RENDER
                             </h4>
                             <div className="max-w-md">
                                 <div style={getCardStyle()} className={getCardClassName()}>
@@ -470,8 +470,8 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
 
                         {/* All Variants */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                All Variants
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                VARIANT_MATRIX
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
                                 {variants.map((variant) => (
@@ -503,8 +503,8 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
 
                         {/* Use Cases */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Common Use Cases
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                BEHAVIOR_PATTERNS
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
                                 <div style={getCardStyle()} className={getCardClassName()}>
@@ -519,11 +519,11 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                                 </div>
 
                                 <div style={getCardStyle()} className={getCardClassName()}>
-                                    <div className="aspect-video bg-muted rounded mb-3" />
-                                    <h4 className="font-bold mb-1">Product Card</h4>
-                                    <p className="text-sm text-muted-foreground mb-3">$99.99</p>
-                                    <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded font-bold text-sm">
-                                        Add to Cart
+                                    <div className="aspect-video bg-muted border border-dashed rounded-none mb-3" />
+                                    <h4 className="font-bold mb-1 mono-label uppercase">PROD_UNIT_404</h4>
+                                    <p className="text-sm text-muted-foreground mb-3 font-mono">$99.99</p>
+                                    <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-none font-bold text-xs uppercase tracking-widest mono-label">
+                                        ADD_TO_CART
                                     </button>
                                 </div>
 
@@ -546,15 +546,15 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                         {/* Code Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                    Generated Code
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                    GENERATED_SRC
                                 </h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2">
                                     <Copy className="w-3 h-3" />
                                     Copy
                                 </Button>
                             </div>
-                            <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">
+                            <pre className="text-xs font-mono bg-muted/50 p-6 rounded-none border border-dashed overflow-x-auto max-h-96 overflow-y-auto mono-label">
                                 {generateReactCode()}
                             </pre>
                         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, Sparkles } from 'lucide-react';
+import { Heart, X, Terminal } from 'lucide-react';
 import SupportDialog from './SupportDialog';
 
 const FloatingSupportButton = () => {
@@ -15,74 +15,63 @@ const FloatingSupportButton = () => {
       {/* Floating Button */}
       <motion.div
         className="fixed bottom-6 right-6 z-50"
-        initial={{ opacity: 0, scale: 0.5, y: 50 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 2, duration: 0.5, type: 'spring' }}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 2, duration: 0.5 }}
       >
         <AnimatePresence mode="wait">
           {isExpanded ? (
             <motion.div
               key="expanded"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="relative"
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative flex items-center bg-background border border-border overflow-hidden"
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 via-primary to-purple-500 blur-lg opacity-60 animate-pulse" />
-              
-              {/* Main button container */}
-              <div className="relative flex items-center gap-2 bg-gradient-to-r from-pink-500 via-primary to-purple-600 rounded-full shadow-2xl overflow-hidden">
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-                
-                {/* Close button */}
-                <button
-                  onClick={() => setIsExpanded(false)}
-                  className="p-2 pl-3 hover:bg-white/10 transition-colors"
-                  aria-label="Minimize"
-                >
-                  <X className="h-4 w-4 text-white/70" />
-                </button>
-                
-                {/* Main action */}
-                <button
-                  onClick={() => setShowDialog(true)}
-                  className="flex items-center gap-2 pr-5 py-3 font-semibold text-white"
-                >
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
-                  >
-                    <Heart className="h-5 w-5 fill-white" />
-                  </motion.div>
-                  <span>Support Us</span>
-                  <Sparkles className="h-4 w-4 text-yellow-300" />
-                </button>
+              {/* Status indicator line */}
+              <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary" />
+
+              {/* Close button */}
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="p-3 hover:bg-muted transition-colors border-r border-border"
+                aria-label="Minimize"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+
+              {/* Main action */}
+              <button
+                onClick={() => setShowDialog(true)}
+                className="flex flex-col items-start gap-0.5 px-4 py-2 hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Heart className="h-3 w-3 text-primary" />
+                  <span className="mono-label text-[10px] text-primary">System.Support</span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-foreground">
+                  <span className="uppercase tracking-tighter">Support Us</span>
+                  <Terminal className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </button>
+
+              {/* Version/ID Tag */}
+              <div className="px-3 py-1 bg-muted border-l border-border h-full flex items-center">
+                <span className="mono-label text-[8px] opacity-40">SR-71</span>
               </div>
             </motion.div>
           ) : (
             <motion.button
               key="collapsed"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0.9 }}
               onClick={() => setShowDialog(true)}
               onMouseEnter={() => setIsExpanded(true)}
-              className="relative group"
+              className="relative group border border-border bg-background p-4 hover:border-primary transition-all overflow-hidden"
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 blur-md opacity-50 group-hover:opacity-80 transition-opacity" />
-              
-              {/* Button */}
-              <div className="relative w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 via-primary to-purple-600 flex items-center justify-center shadow-xl">
-                <motion.div
-                  animate={{ scale: [1, 1.15, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
-                >
-                  <Heart className="h-6 w-6 text-white fill-white" />
-                </motion.div>
-              </div>
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-primary/20 group-hover:bg-primary transition-colors" />
+              <Heart className="h-5 w-5 text-primary" />
             </motion.button>
           )}
         </AnimatePresence>

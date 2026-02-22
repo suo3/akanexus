@@ -198,7 +198,7 @@ export default function Mastering() {
     setIsAIMastering(true);
     try {
       const { data, error } = await supabase.functions.invoke('ai-master', {
-        body: { 
+        body: {
           fileName: audioFile.name,
           fileType: audioFile.type,
           duration: duration,
@@ -267,11 +267,15 @@ export default function Mastering() {
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">
-              <span className="text-gradient">Audio Mastering Studio</span>
+            <div className="inline-flex items-center gap-3 px-3 py-1.5 border border-border bg-muted/50 mb-8 mono-label mx-auto">
+              <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
+              <span className="text-muted-foreground uppercase tracking-widest">Mastering Suite v2.1.0</span>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tighter mb-4 uppercase">
+              Audio <span className="text-gradient">Mastering Studio</span>
             </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Professional audio mastering with AI-powered enhancement. Upload your track, 
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+              Professional audio mastering with AI-powered enhancement. Upload your track,
               fine-tune the mix, and export studio-quality audio.
             </p>
           </div>
@@ -286,20 +290,19 @@ export default function Mastering() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="mb-8"
               >
-                <Card 
-                  className={`border-2 border-dashed transition-colors cursor-pointer ${
-                    dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
-                  }`}
+                <Card
+                  className={`border-2 border-dashed transition-colors cursor-pointer ${dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                    }`}
                   onClick={() => fileInputRef.current?.click()}
                   onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
                 >
                   <CardContent className="flex flex-col items-center justify-center py-16">
-                    <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <div className="w-20 h-20 rounded-none bg-primary/10 flex items-center justify-center mb-6 border border-primary/20">
                       <Upload className="w-10 h-10 text-primary" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">Upload Your Audio</h3>
+                    <h3 className="text-xl font-bold mb-2 uppercase tracking-tight">Upload Source Audio</h3>
                     <p className="text-muted-foreground text-center mb-4">
                       Drag and drop or click to select<br />
                       Supports MP3, WAV, FLAC, AAC, OGG
@@ -331,13 +334,13 @@ export default function Mastering() {
                     {/* File Info */}
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-none bg-primary/10 flex items-center justify-center border border-primary/20">
                           <Music2 className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                          <h3 className="font-semibold truncate max-w-[300px]">{audioFile.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {formatTime(duration)} • {(audioFile.size / (1024 * 1024)).toFixed(2)} MB
+                          <h3 className="font-bold truncate max-w-[300px] uppercase tracking-tight">{audioFile.name}</h3>
+                          <p className="text-sm text-muted-foreground mono-label uppercase">
+                            {formatTime(duration)} // {(audioFile.size / (1024 * 1024)).toFixed(2)} MB
                           </p>
                         </div>
                       </div>
@@ -356,8 +359,8 @@ export default function Mastering() {
                     </div>
 
                     {/* Waveform */}
-                    <div 
-                      className="relative h-24 bg-secondary/50 rounded-lg mb-4 overflow-hidden cursor-pointer"
+                    <div
+                      className="relative h-24 bg-secondary/50 rounded-none mb-4 overflow-hidden cursor-pointer border border-border"
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const x = e.clientX - rect.left;
@@ -369,26 +372,25 @@ export default function Mastering() {
                         {waveformData.map((val, i) => (
                           <div
                             key={i}
-                            className={`w-1 rounded-full transition-colors ${
-                              (i / waveformData.length) * 100 < progressPercent
-                                ? isProcessed ? 'bg-accent' : 'bg-primary'
-                                : 'bg-muted-foreground/30'
-                            }`}
+                            className={`w-1 rounded-none transition-colors ${(i / waveformData.length) * 100 < progressPercent
+                              ? isProcessed ? 'bg-accent' : 'bg-primary'
+                              : 'bg-muted-foreground/30'
+                              }`}
                             style={{ height: `${Math.max(4, val * 80)}%` }}
                           />
                         ))}
                       </div>
                       {/* Playhead */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-primary"
                         style={{ left: `${progressPercent}%` }}
                       />
                     </div>
 
                     {/* Time Display */}
-                    <div className="flex justify-between text-sm text-muted-foreground mb-4">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{formatTime(duration)}</span>
+                    <div className="flex justify-between text-sm text-muted-foreground mb-4 mono-label uppercase tracking-widest">
+                      <span>TIME: {formatTime(currentTime)}</span>
+                      <span>TOTAL: {formatTime(duration)}</span>
                     </div>
 
                     {/* Controls */}
@@ -398,13 +400,14 @@ export default function Mastering() {
                         size="icon"
                         onClick={() => seek(0)}
                         disabled={isLoading}
+                        className="rounded-none"
                       >
                         <SkipBack className="h-5 w-5" />
                       </Button>
                       <Button
                         variant="hero"
                         size="lg"
-                        className="rounded-full w-14 h-14"
+                        className="rounded-none w-14 h-14"
                         onClick={isPlaying ? pause : play}
                         disabled={isLoading}
                       >
@@ -433,17 +436,17 @@ export default function Mastering() {
                 {/* Controls Tabs */}
                 <Tabs defaultValue="eq" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="eq" className="gap-2">
+                    <TabsTrigger value="eq" className="gap-2 uppercase mono-label text-xs">
                       <Settings2 className="h-4 w-4" />
-                      Equalizer
+                      EQ_STATION
                     </TabsTrigger>
-                    <TabsTrigger value="dynamics" className="gap-2">
+                    <TabsTrigger value="dynamics" className="gap-2 uppercase mono-label text-xs">
                       <Volume2 className="h-4 w-4" />
-                      Dynamics
+                      DYNAMICS_CORE
                     </TabsTrigger>
-                    <TabsTrigger value="ai" className="gap-2">
+                    <TabsTrigger value="ai" className="gap-2 uppercase mono-label text-xs">
                       <Sparkles className="h-4 w-4" />
-                      AI Master
+                      AI_MAST_V1
                     </TabsTrigger>
                   </TabsList>
 
@@ -452,7 +455,7 @@ export default function Mastering() {
                     <Card>
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">6-Band Equalizer</CardTitle>
+                          <CardTitle className="text-lg mono-label uppercase">EQ_MODULE_6B</CardTitle>
                           <Button variant="ghost" size="sm" onClick={() => { resetSettings(); setActivePreset(null); }}>
                             <RotateCcw className="h-4 w-4 mr-1" />
                             Reset
@@ -471,11 +474,10 @@ export default function Mastering() {
                                   key={preset.name}
                                   variant={isActive ? "default" : "outline"}
                                   size="sm"
-                                  className={`flex flex-col h-auto py-3 transition-all ${
-                                    isActive 
-                                      ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' 
-                                      : 'hover:border-primary hover:bg-primary/5'
-                                  }`}
+                                  className={`flex flex-col h-auto py-3 transition-all rounded-none mono-label uppercase text-[10px] ${isActive
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'hover:border-primary hover:bg-primary/5'
+                                    }`}
                                   onClick={() => {
                                     setActivePreset(preset.name);
                                     applyAISettings({
@@ -533,7 +535,7 @@ export default function Mastering() {
                   <TabsContent value="dynamics">
                     <Card>
                       <CardHeader className="pb-4">
-                        <CardTitle className="text-lg">Dynamics & Output</CardTitle>
+                        <CardTitle className="text-lg mono-label uppercase">DYN_PROC // OUTPUT_GAIN</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-6">
                         {/* Compressor */}
@@ -593,12 +595,12 @@ export default function Mastering() {
                       <CardHeader className="pb-4">
                         <CardTitle className="text-lg flex items-center gap-2">
                           <Wand2 className="h-5 w-5 text-primary" />
-                          AI-Powered Mastering
+                          NEURAL_MAST_ENGINE_V1.0
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-muted-foreground mb-6">
-                          Let AI analyze your track and automatically apply professional mastering 
+                          Let AI analyze your track and automatically apply professional mastering
                           settings optimized for your audio content.
                         </p>
                         <Button

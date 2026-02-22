@@ -20,7 +20,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  
+
   const { signIn, resetPassword, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -33,30 +33,30 @@ const Auth = () => {
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    
+
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
       newErrors.email = emailResult.error.errors[0].message;
     }
-    
+
     if (mode !== 'forgotPassword') {
       const passwordResult = passwordSchema.safeParse(password);
       if (!passwordResult.success) {
         newErrors.password = passwordResult.error.errors[0].message;
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       if (mode === 'forgotPassword') {
         const { error } = await resetPassword(email);
@@ -106,123 +106,123 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-glow-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[120px] rounded-none" />
       </div>
-      
+
       <div className="w-full max-w-md relative z-10">
-        <button 
+        <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 mono-label uppercase text-xs tracking-widest"
         >
-          <ArrowLeft size={20} />
-          Back to home
+          <ArrowLeft size={16} />
+          RETURN_TO_BASE
         </button>
-        
-        <div className="glass rounded-2xl p-8 animate-fade-up">
-          <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mx-auto mb-4">
+
+        <div className="bg-card border-2 border-border rounded-none p-8 animate-fade-up shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+          <div className="text-center mb-10">
+            <div className="w-14 h-14 rounded-none bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6">
               {mode === 'forgotPassword' ? (
-                <Mail className="w-6 h-6 text-primary-foreground" />
+                <Mail className="w-6 h-6 text-primary" />
               ) : (
-                <span className="text-primary-foreground font-bold text-xl">A</span>
+                <span className="text-primary font-bold text-xl font-mono">A</span>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-foreground mb-2">
-              {getTitle()}
+            <h1 className="text-xl font-bold text-foreground mb-2 uppercase tracking-tighter">
+              {mode === 'forgotPassword' ? 'RECOVERY_PROTOCOL' : 'SESSION_INITIALIZER'}
             </h1>
-            <p className="text-muted-foreground">
-              {getSubtitle()}
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+              {mode === 'forgotPassword' ? 'IDENT_RECOVERY_v2.0' : 'AUTH_GATEWAY_ACCESS_v2.4'}
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">USER_IDENTITY</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="ID_ENCODING"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrors((prev) => ({ ...prev, email: undefined }));
                 }}
-                className={`bg-secondary border-border focus:border-primary ${errors.email ? 'border-destructive' : ''}`}
+                className={`bg-secondary/50 border-2 border-border focus:border-primary rounded-none h-11 mono-label ${errors.email ? 'border-destructive' : ''}`}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
+                <p className="text-xs text-destructive font-mono">{errors.email}</p>
               )}
             </div>
-            
+
             {mode !== 'forgotPassword' && (
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">ACCESS_KEY</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="KEY_ENCRYPTED"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
                       setErrors((prev) => ({ ...prev, password: undefined }));
                     }}
-                    className={`bg-secondary border-border focus:border-primary pr-10 ${errors.password ? 'border-destructive' : ''}`}
+                    className={`bg-secondary/50 border-2 border-border focus:border-primary rounded-none h-11 pr-10 mono-label ${errors.password ? 'border-destructive' : ''}`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
+                  <p className="text-xs text-destructive font-mono">{errors.password}</p>
                 )}
               </div>
             )}
 
             {mode === 'signIn' && (
-              <div className="text-right">
+              <div className="flex justify-center pt-2 pb-2">
                 <button
                   type="button"
                   onClick={() => {
                     setMode('forgotPassword');
                     setErrors({});
                   }}
-                  className="text-sm text-primary hover:underline"
+                  className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline mono-label"
                 >
-                  Forgot password?
+                  LOST_ACCESS_KEY?
                 </button>
               </div>
             )}
-            
-            <Button 
-              type="submit" 
-              variant="hero" 
-              className="w-full"
+
+            <Button
+              type="submit"
+              variant="default"
+              className="w-full rounded-none h-12 uppercase tracking-widest font-bold mono-label border-2 border-primary hover:bg-primary/90 transition-all"
               disabled={isLoading}
             >
-              {isLoading ? 'Loading...' : (
-                mode === 'forgotPassword' ? 'Send Reset Link' : 'Sign In'
+              {isLoading ? 'EXECUTING...' : (
+                mode === 'forgotPassword' ? 'SEND_RECOVERY_KEY' : 'INITIALIZE_SESSION'
               )}
             </Button>
           </form>
-          
-          <div className="mt-6 text-center">
+
+          <div className="mt-8 text-center border-t border-border pt-6">
             {mode === 'forgotPassword' && (
-              <p className="text-muted-foreground">
-                Remember your password?{' '}
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                IDENTITY_RETAINED?{' '}
                 <button
                   onClick={() => {
                     setMode('signIn');
                     setErrors({});
                   }}
-                  className="text-primary hover:underline font-medium"
+                  className="text-primary hover:underline"
                 >
-                  Sign in
+                  RETURN_TO_LOGIN
                 </button>
               </p>
             )}

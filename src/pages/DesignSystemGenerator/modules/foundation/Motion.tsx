@@ -102,13 +102,13 @@ const MotionFoundation = () => {
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <Sparkles className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Motion & Animation</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Foundation
+                            <h2 className="text-lg font-bold tracking-tight uppercase">TIMING_ENGINE</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                FOUNDATION_CORE_v1.0
                             </p>
                         </div>
                     </div>
@@ -118,8 +118,8 @@ const MotionFoundation = () => {
                     <div className="p-6 space-y-6">
                         {/* Easing Curves */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Easing Curve
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                EASING_CURVE
                             </Label>
                             <Select
                                 value={selectedEasing.name}
@@ -128,7 +128,7 @@ const MotionFoundation = () => {
                                     if (curve) updateEasing(curve);
                                 }}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="rounded-none mono-label">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -139,9 +139,9 @@ const MotionFoundation = () => {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <div className="p-3 bg-muted rounded-lg">
-                                <p className="text-xs font-mono text-muted-foreground">
-                                    {selectedEasing.value}
+                            <div className="p-3 bg-muted/50 border rounded-none">
+                                <p className="text-[10px] font-mono font-bold text-primary mono-label uppercase">
+                                    VALUE: {selectedEasing.value}
                                 </p>
                             </div>
                         </div>
@@ -151,11 +151,11 @@ const MotionFoundation = () => {
                         {/* Duration */}
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                    Duration
+                                <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    DURATION_MS
                                 </Label>
-                                <span className="text-xs font-mono font-black bg-primary/10 text-primary px-2 py-1 rounded">
-                                    {duration}ms
+                                <span className="text-[10px] font-mono font-bold bg-primary/10 text-primary px-2 py-1 rounded-none border border-primary/20">
+                                    {duration}MS
                                 </span>
                             </div>
                             <input
@@ -174,7 +174,7 @@ const MotionFoundation = () => {
                                         size="sm"
                                         variant="outline"
                                         onClick={() => updateDuration(parseInt(preset.value))}
-                                        className="h-7 text-xs"
+                                        className="h-7 text-[10px] rounded-none mono-label uppercase"
                                     >
                                         {preset.name}
                                     </Button>
@@ -186,8 +186,8 @@ const MotionFoundation = () => {
 
                         {/* Animation Type */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Animation Type
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                ANIM_UNIT_TYPE
                             </Label>
                             <div className="grid grid-cols-2 gap-2">
                                 {(['fade', 'slide', 'scale', 'rotate'] as const).map((type) => (
@@ -196,7 +196,7 @@ const MotionFoundation = () => {
                                         size="sm"
                                         variant={animationType === type ? 'default' : 'outline'}
                                         onClick={() => setAnimationType(type)}
-                                        className="h-9 text-xs capitalize"
+                                        className="h-9 text-[10px] rounded-none mono-label uppercase"
                                     >
                                         {type}
                                     </Button>
@@ -208,14 +208,14 @@ const MotionFoundation = () => {
 
                         {/* Cubic Bezier Editor */}
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Cubic Bezier
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                CUBIC_VAL_PATH
                             </Label>
                             <div className="grid grid-cols-2 gap-3">
                                 {selectedEasing.cubic.map((value, index) => (
                                     <div key={index} className="space-y-2">
-                                        <Label className="text-xs">
-                                            {index < 2 ? `P1.${index === 0 ? 'x' : 'y'}` : `P2.${index === 2 ? 'x' : 'y'}`}
+                                        <Label className="text-[10px] mono-label uppercase opacity-60">
+                                            {index < 2 ? `P1.${index === 0 ? 'X' : 'Y'}` : `P2.${index === 2 ? 'X' : 'Y'}`}
                                         </Label>
                                         <Input
                                             type="number"
@@ -243,9 +243,9 @@ const MotionFoundation = () => {
                         <Separator />
 
                         {/* Spring Physics (Placeholder) */}
-                        <div className="space-y-3 opacity-50">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                Spring Physics
+                        <div className="space-y-3 opacity-30">
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                SPRING_DYNAMICS
                             </Label>
                             <p className="text-xs text-muted-foreground">
                                 Advanced spring-based animations coming soon
@@ -257,9 +257,9 @@ const MotionFoundation = () => {
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-card/30">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Animation Playground
+                <div className="border-b px-8 py-5 bg-muted/10">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                        ANIMATION_PLAYGROUND_v2
                     </h3>
                 </div>
 
@@ -268,17 +268,17 @@ const MotionFoundation = () => {
                         {/* Main Animation Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                    Live Preview
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                    LIVE_DEBUG_PORT
                                 </h4>
-                                <Button onClick={playAnimation} className="gap-2">
-                                    <Play className="w-4 h-4" />
-                                    Play Animation
+                                <Button onClick={playAnimation} className="gap-2 rounded-none mono-label text-[10px] uppercase">
+                                    <Play className="w-3 h-3" />
+                                    EXEC_ANIM
                                 </Button>
                             </div>
-                            <div className="flex items-center justify-center p-24 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl min-h-[400px]">
+                            <div className="flex items-center justify-center p-24 bg-muted/20 border border-dashed rounded-none min-h-[400px]">
                                 <div
-                                    className="w-32 h-32 bg-primary rounded-2xl shadow-lg flex items-center justify-center"
+                                    className="w-32 h-32 bg-primary rounded-none border border-primary flex items-center justify-center"
                                     style={getAnimationStyle()}
                                 >
                                     <Sparkles className="w-12 h-12 text-primary-foreground" />
@@ -290,10 +290,10 @@ const MotionFoundation = () => {
 
                         {/* Easing Curve Visualization */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Easing Curve
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                CURVE_VISUALIZER
                             </h4>
-                            <div className="p-8 border rounded-xl bg-card">
+                            <div className="p-8 border rounded-none bg-muted/5">
                                 <svg viewBox="0 0 200 200" className="w-full h-64">
                                     {/* Grid */}
                                     <line x1="0" y1="200" x2="200" y2="200" stroke="currentColor" strokeOpacity="0.1" />
@@ -330,17 +330,17 @@ const MotionFoundation = () => {
 
                         {/* Duration Comparison */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Duration Tokens
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                DURATION_SCALE_MAP
                             </h4>
                             <div className="space-y-4">
                                 {DURATION_PRESETS.map((preset) => (
                                     <div key={preset.name} className="space-y-2">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-sm font-bold">{preset.name}</span>
-                                            <span className="text-xs font-mono text-muted-foreground">{preset.value}</span>
+                                            <span className="text-xs font-bold uppercase mono-label">{preset.name}</span>
+                                            <span className="text-[10px] font-mono text-muted-foreground mono-label">{preset.value}</span>
                                         </div>
-                                        <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                        <div className="h-1 bg-muted rounded-none overflow-hidden">
                                             <div
                                                 className="h-full bg-primary"
                                                 style={{
@@ -358,38 +358,38 @@ const MotionFoundation = () => {
 
                         {/* Common Animations */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
-                                Common Patterns
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                COMMON_BEHAVIORS
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
-                                <div className="p-6 border rounded-xl bg-card space-y-4">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Hover Effect
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        INTERACTION_HOVER
                                     </p>
-                                    <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold transition-transform hover:scale-105 duration-200">
-                                        Hover Me
+                                    <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-none font-bold uppercase text-[10px] tracking-widest mono-label transition-transform hover:scale-105 duration-200">
+                                        ACTION_BTN
                                     </button>
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-4">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Fade In
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        VISIBILITY_FADE
                                     </p>
-                                    <div className="w-full h-20 bg-primary/20 rounded-lg animate-in fade-in duration-500" />
+                                    <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-in fade-in duration-500" />
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-4">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Slide Up
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        TRANSITION_SLIDE
                                     </p>
-                                    <div className="w-full h-20 bg-primary/20 rounded-lg animate-in slide-in-from-bottom duration-500" />
+                                    <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-in slide-in-from-bottom duration-500" />
                                 </div>
 
-                                <div className="p-6 border rounded-xl bg-card space-y-4">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                        Pulse
+                                <div className="p-6 border rounded-none bg-muted/5 space-y-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                        BEAT_PULSE
                                     </p>
-                                    <div className="w-full h-20 bg-primary/20 rounded-lg animate-pulse" />
+                                    <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-pulse" />
                                 </div>
                             </div>
                         </div>

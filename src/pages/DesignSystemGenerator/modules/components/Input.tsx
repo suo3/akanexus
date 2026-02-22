@@ -69,7 +69,7 @@ const InputComponentBuilder = () => {
     ]);
 
     const [config, setConfig] = useState({
-        rounded: true,
+        rounded: false,
         leftIcon: true,
         rightIcon: false,
         label: true,
@@ -269,13 +269,13 @@ Input.displayName = 'Input';
             <div className="w-96 border-r flex flex-col bg-card/30">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
                             <Type className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-black tracking-tight">Input Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
-                                Component Workbench
+                            <h2 className="text-lg font-bold tracking-tight uppercase">INPUT_COMPILER</h2>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                COMPONENT_v2.0
                             </p>
                         </div>
                     </div>
@@ -284,16 +284,16 @@ Input.displayName = 'Input';
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="grid grid-cols-3 w-full">
-                                <TabsTrigger value="variants" className="text-xs">Variants</TabsTrigger>
-                                <TabsTrigger value="sizes" className="text-xs">Sizes</TabsTrigger>
-                                <TabsTrigger value="config" className="text-xs">Config</TabsTrigger>
+                            <TabsList className="grid grid-cols-3 w-full rounded-none">
+                                <TabsTrigger value="variants" className="text-xs rounded-none mono-label uppercase">VARIANTS</TabsTrigger>
+                                <TabsTrigger value="sizes" className="text-xs rounded-none mono-label uppercase">SIZES</TabsTrigger>
+                                <TabsTrigger value="config" className="text-xs rounded-none mono-label uppercase">CONFIG</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                        Input Type
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        INPUT_TYPE
                                     </Label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {inputTypes.map((type) => {
@@ -302,13 +302,13 @@ Input.displayName = 'Input';
                                                 <button
                                                     key={type.id}
                                                     onClick={() => setSelectedType(type.id)}
-                                                    className={`p-3 rounded-lg border-2 transition-all ${selectedType === type.id
+                                                    className={`p-3 rounded-none border-2 transition-all ${selectedType === type.id
                                                         ? 'border-primary bg-primary/5'
                                                         : 'border-border hover:border-primary/50'
                                                         }`}
                                                 >
                                                     <Icon className="w-4 h-4 mx-auto mb-1" />
-                                                    <span className="text-xs font-bold">{type.name}</span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest mono-label">{type.name}</span>
                                                 </button>
                                             );
                                         })}
@@ -494,22 +494,22 @@ Input.displayName = 'Input';
                 </ScrollArea>
 
                 <div className="border-t p-4 space-y-2">
-                    <Button onClick={copyCode} variant="outline" className="w-full gap-2">
+                    <Button onClick={copyCode} variant="outline" className="w-full gap-2 rounded-none mono-label text-xs uppercase">
                         <Copy className="w-4 h-4" />
-                        Copy React Code
+                        COPY_REACT_SRC
                     </Button>
-                    <Button onClick={exportComponent} className="w-full gap-2">
+                    <Button onClick={exportComponent} className="w-full gap-2 rounded-none mono-label text-xs uppercase">
                         <Download className="w-4 h-4" />
-                        Export Component
+                        EXPORT_ENTITY
                     </Button>
                 </div>
             </div>
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-card/30">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                        Live Preview
+                <div className="border-b px-8 py-5 bg-muted/10">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                        INPUT_PREVIEW_PORT
                     </h3>
                 </div>
 
@@ -690,7 +690,7 @@ Input.displayName = 'Input';
                                     Copy
                                 </Button>
                             </div>
-                            <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">
+                            <pre className="text-xs font-mono bg-muted/50 p-6 rounded-none border border-dashed overflow-x-auto max-h-96 overflow-y-auto mono-label">
                                 {generateReactCode()}
                             </pre>
                         </div>

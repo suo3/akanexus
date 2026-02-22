@@ -102,11 +102,11 @@ const Documentation = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl" />
           </div>
 
           <div className="container relative z-10 px-6">
@@ -134,9 +134,9 @@ const Documentation = () => {
                     <Link
                       key={section.id}
                       to={`/documentation/${section.slug}`}
-                      className="group glass rounded-xl p-6 hover:border-primary/50 transition-all duration-300"
+                      className="group glass p-6 hover:border-primary/50 transition-all duration-300"
                     >
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                      <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                         <IconComponent className="w-6 h-6 text-primary" />
                       </div>
                       <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">

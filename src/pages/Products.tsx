@@ -59,7 +59,7 @@ const Products = () => {
       .select('*')
       .eq('is_published', true)
       .order('order_index', { ascending: true });
-    
+
     if (!error && data) {
       setProducts(data);
       const uniqueCategories = ['All', ...new Set(data.map((p: Product) => p.category))];
@@ -70,7 +70,7 @@ const Products = () => {
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
@@ -92,12 +92,12 @@ const Products = () => {
         keywords="developer tools, audio mastering, web development, React tools"
       />
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-12 animate-fade-up">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary text-sm font-medium mb-4">
               Our Products
             </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -126,18 +126,17 @@ const Products = () => {
             {categories.map((category) => {
               const colors = getCategoryColors(category);
               const isActive = activeCategory === category;
-              
+
               return (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
-                    isActive
+                  className={`px-4 py-2 text-sm font-medium transition-all duration-200 border ${isActive
                       ? category === 'All'
                         ? 'bg-primary text-primary-foreground border-primary'
                         : `${colors.bg} ${colors.text} ${colors.border}`
                       : 'bg-secondary text-muted-foreground hover:text-foreground border-transparent hover:border-border'
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -169,27 +168,27 @@ const Products = () => {
                       const IconComponent = getIcon(product.icon);
                       const isInternal = isInternalUrl(product.url);
                       const CardWrapper = isInternal ? Link : 'a';
-                      const cardProps = isInternal 
+                      const cardProps = isInternal
                         ? { to: product.url }
                         : { href: product.url, target: '_blank', rel: 'noopener noreferrer' };
-                      
+
                       return (
                         <CardWrapper
                           key={product.id}
                           {...(cardProps as any)}
-                          className="glass rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group flex gap-6"
+                          className="glass p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group flex gap-6"
                           style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                         >
                           {product.preview_image_url ? (
-                            <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                              <img 
-                                src={product.preview_image_url} 
+                            <div className="w-24 h-24 overflow-hidden flex-shrink-0">
+                              <img
+                                src={product.preview_image_url}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />
                             </div>
                           ) : (
-                            <div className="w-24 h-24 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <div className="w-24 h-24 bg-primary/10 flex items-center justify-center flex-shrink-0">
                               <IconComponent className="text-primary" size={36} />
                             </div>
                           )}
@@ -199,7 +198,7 @@ const Products = () => {
                                 <Star size={10} className="mr-1" />
                                 Featured
                               </Badge>
-                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
+                              <span className={`text-xs font-medium px-2 py-0.5 border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
                                 {product.category}
                               </span>
                             </div>
@@ -231,33 +230,33 @@ const Products = () => {
                     const IconComponent = getIcon(product.icon);
                     const isInternal = isInternalUrl(product.url);
                     const CardWrapper = isInternal ? Link : 'a';
-                    const cardProps = isInternal 
+                    const cardProps = isInternal
                       ? { to: product.url }
                       : { href: product.url, target: '_blank', rel: 'noopener noreferrer' };
-                    
+
                     return (
                       <CardWrapper
                         key={product.id}
                         {...(cardProps as any)}
-                        className="glass rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group"
+                        className="glass p-6 hover:border-primary/50 transition-all duration-300 animate-fade-up group"
                         style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                       >
                         <div className="flex items-start gap-4 mb-4">
                           {product.preview_image_url ? (
-                            <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-                              <img 
-                                src={product.preview_image_url} 
+                            <div className="w-12 h-12 overflow-hidden flex-shrink-0">
+                              <img
+                                src={product.preview_image_url}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />
                             </div>
                           ) : (
-                            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <div className="w-12 h-12 bg-primary/10 flex items-center justify-center flex-shrink-0">
                               <IconComponent className="text-primary" size={24} />
                             </div>
                           )}
                           <div>
-                            <span className={`text-xs font-medium px-2 py-1 rounded-full border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
+                            <span className={`text-xs font-medium px-2 py-1 border ${getCategoryColors(product.category).bg} ${getCategoryColors(product.category).text} ${getCategoryColors(product.category).border}`}>
                               {product.category}
                             </span>
                           </div>

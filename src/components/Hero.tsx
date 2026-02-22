@@ -72,7 +72,47 @@ const Hero = () => {
     <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-24 pb-12">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 tool-grid opacity-[0.15]" />
+
+        {/* Light mode: solid B&W gradient — dark top fades to white */}
+        <div
+          className="absolute inset-0 dark:hidden"
+          style={{
+            background: "linear-gradient(to bottom, #1a1a1a 0%, #ffffff 100%)",
+            opacity: 0.08,
+          }}
+        />
+
+        {/* Dark mode: white checkerboard tiles */}
+        <div
+          className="absolute inset-0 hidden dark:block"
+          style={{
+            backgroundImage: `
+              linear-gradient(45deg, #fff 25%, transparent 25%),
+              linear-gradient(-45deg, #fff 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #fff 75%),
+              linear-gradient(-45deg, transparent 75%, #fff 75%)
+            `,
+            backgroundSize: "24px 24px",
+            backgroundPosition: "0 0, 0 12px, 12px -12px, -12px 0",
+            opacity: 0.04,
+          }}
+        />
+        {/* Radial mask for dark mode tiles */}
+        <div
+          className="absolute inset-0 hidden dark:block"
+          style={{
+            background: "radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, hsl(var(--background)) 75%)",
+          }}
+        />
+
+        {/* Subtle color bloom — both modes */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse 55% 45% at 50% 38%, hsl(var(--primary) / 0.08) 0%, hsl(var(--accent) / 0.05) 50%, transparent 75%)",
+          }}
+        />
+
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>

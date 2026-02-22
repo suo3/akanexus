@@ -56,11 +56,11 @@ const Contact = () => {
         keywords="contact Akanexus, frontend development inquiry, custom development, get in touch"
       />
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl" />
           </div>
 
           <div className="container relative z-10 px-6">
@@ -75,7 +75,7 @@ const Contact = () => {
 
             <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
               {/* Contact Form */}
-              <div className="glass rounded-2xl p-8">
+              <div className="glass p-8">
                 <h2 className="text-xl font-semibold mb-6">Send us a message</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -145,9 +145,9 @@ const Contact = () => {
 
               {/* Contact Info */}
               <div className="space-y-6">
-                <div className="glass rounded-xl p-6">
+                <div className="glass p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 flex items-center justify-center shrink-0">
                       <Mail className="w-5 h-5 text-primary" />
                     </div>
                     <div>
@@ -162,9 +162,9 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="glass rounded-xl p-6">
+                <div className="glass p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 flex items-center justify-center shrink-0">
                       <MapPin className="w-5 h-5 text-primary" />
                     </div>
                     <div>
@@ -180,9 +180,9 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="glass rounded-xl p-6">
+                <div className="glass p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-primary/10 flex items-center justify-center shrink-0">
                       <Clock className="w-5 h-5 text-primary" />
                     </div>
                     <div>

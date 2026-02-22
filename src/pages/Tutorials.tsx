@@ -78,6 +78,7 @@ const Tutorials = () => {
     category: "General",
     level: "Beginner",
     submitted_by: "",
+    thumbnail_url: "",
   });
 
   useEffect(() => {
@@ -189,6 +190,7 @@ const Tutorials = () => {
         title: formData.title.trim(),
         url: formData.url.trim(),
         video_url: formData.url.trim(),
+        thumbnail_url: formData.thumbnail_url.trim() || null,
         description: formData.description.trim() || null,
         category: formData.category,
         level: formData.level,
@@ -206,7 +208,7 @@ const Tutorials = () => {
     }
 
     toast.success("Tutorial submitted!");
-    setFormData({ title: "", url: "", description: "", category: "General", level: "Beginner", submitted_by: "" });
+    setFormData({ title: "", url: "", description: "", category: "General", level: "Beginner", submitted_by: "", thumbnail_url: "" });
     setDialogOpen(false);
     fetchTutorials();
   };
@@ -223,7 +225,7 @@ const Tutorials = () => {
       <main className="pt-24 pb-16">
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl" />
           </div>
 
           <div className="container relative z-10 px-6">
@@ -266,6 +268,25 @@ const Tutorials = () => {
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
                     />
+                    <div>
+                      <Input
+                        placeholder="Thumbnail image URL (optional)"
+                        type="url"
+                        value={formData.thumbnail_url}
+                        onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
+                      />
+                      {formData.thumbnail_url && (
+                        <div className="mt-2 h-32 overflow-hidden border border-border">
+                          <img
+                            src={formData.thumbnail_url}
+                            alt="Thumbnail preview"
+                            className="w-full h-full object-cover"
+                            onError={(e) => (e.currentTarget.style.display = "none")}
+                            onLoad={(e) => (e.currentTarget.style.display = "block")}
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <Select
                         value={formData.category}
@@ -318,7 +339,7 @@ const Tutorials = () => {
                   variant={selectedCategory === cat ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedCategory(cat)}
-                  className="rounded-full"
+                  className=""
                 >
                   {cat}
                 </Button>
@@ -340,7 +361,7 @@ const Tutorials = () => {
                 {filteredTutorials.map((tutorial) => (
                   <article
                     key={tutorial.id}
-                    className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+                    className="group glass overflow-hidden hover:border-primary/50 transition-all duration-300"
                   >
                     <a
                       href={tutorial.url || tutorial.video_url || "#"}
@@ -361,7 +382,7 @@ const Tutorials = () => {
                           </span>
                         )}
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/50">
-                          <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
+                          <div className="w-14 h-14 bg-primary flex items-center justify-center">
                             <ExternalLink className="w-6 h-6 text-primary-foreground" />
                           </div>
                         </div>
@@ -375,7 +396,7 @@ const Tutorials = () => {
                         >
                           {tutorial.category}
                         </Badge>
-                        <span className={`text-xs font-medium px-2 py-1 rounded ${getLevelColor(tutorial.level)}`}>
+                        <span className={`text-xs font-medium px-2 py-1 ${getLevelColor(tutorial.level)}`}>
                           {tutorial.level}
                         </span>
                         {tutorial.duration && (

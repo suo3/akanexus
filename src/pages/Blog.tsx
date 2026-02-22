@@ -214,7 +214,7 @@ const Blog = () => {
       <main className="pt-24 pb-16">
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl" />
           </div>
 
           <div className="container relative z-10 px-6">
@@ -323,7 +323,7 @@ const Blog = () => {
             {/* Blog Grid */}
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto" />
+                <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent mx-auto" />
               </div>
             ) : filteredBlogs.length === 0 ? (
               <div className="text-center py-12">
@@ -334,7 +334,7 @@ const Blog = () => {
                 {filteredBlogs.map((post) => (
                   <article
                     key={post.id}
-                    className="group glass rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300"
+                    className="group glass overflow-hidden hover:border-primary/50 transition-all duration-300"
                   >
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-3">

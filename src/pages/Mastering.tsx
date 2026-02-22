@@ -385,6 +385,15 @@ export default function Mastering() {
             </p>
           </div>
 
+          {/* Hidden file input — kept outside AnimatePresence so ref stays mounted */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="audio/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+
           {/* Upload Area */}
           <AnimatePresence mode="wait">
             {!audioFile ? (
@@ -418,13 +427,6 @@ export default function Mastering() {
                     </Button>
                   </CardContent>
                 </Card>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
               </motion.div>
             ) : (
               <motion.div
@@ -937,8 +939,8 @@ export default function Mastering() {
                           key={fmt}
                           onClick={() => setExportFormat(fmt)}
                           className={`px-4 py-1.5 text-xs font-bold mono-label uppercase tracking-widest transition-colors ${exportFormat === fmt
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-transparent text-muted-foreground hover:text-foreground'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-transparent text-muted-foreground hover:text-foreground'
                             }`}
                         >
                           {fmt}

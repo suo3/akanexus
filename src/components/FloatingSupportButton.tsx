@@ -26,7 +26,7 @@ const FloatingSupportButton = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative flex items-center bg-background border border-border overflow-hidden"
+              className="relative flex items-center bg-background border border-border overflow-hidden animate-glow-ring"
             >
               {/* Status indicator line */}
               <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary" />

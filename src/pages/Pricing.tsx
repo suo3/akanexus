@@ -41,7 +41,7 @@ const Pricing = () => {
     }
 
     setLoadingTier(tierName);
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('create-donation', {
         body: {
@@ -53,7 +53,7 @@ const Pricing = () => {
       });
 
       if (error) throw error;
-      
+
       if (data?.url) {
         window.open(data.url, '_blank');
       } else {
@@ -75,7 +75,7 @@ const Pricing = () => {
     }
 
     setLoadingCustom(true);
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('create-donation', {
         body: {
@@ -87,7 +87,7 @@ const Pricing = () => {
       });
 
       if (error) throw error;
-      
+
       if (data?.url) {
         window.open(data.url, '_blank');
       } else {
@@ -104,12 +104,12 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-16 animate-fade-up">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 text-sm font-medium mb-6">
               <Sparkles size={16} />
               100% Free & Open
             </div>
@@ -126,28 +126,27 @@ const Pricing = () => {
             {tiers.map((tier, index) => (
               <div
                 key={tier.name}
-                className={`relative glass rounded-2xl p-8 text-center animate-fade-up ${
-                  tier.popular ? 'border-primary ring-2 ring-primary/20' : ''
-                }`}
+                className={`relative glass p-8 text-center animate-fade-up ${tier.popular ? 'border-primary ring-2 ring-primary/20' : ''
+                  }`}
                 style={{ animationDelay: `${0.1 + index * 0.1}s` }}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <div className="flex items-center gap-1 bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-medium">
+                    <div className="flex items-center gap-1 bg-primary text-primary-foreground px-4 py-1.5 text-sm font-medium">
                       <Heart size={14} />
                       Most Chosen
                     </div>
                   </div>
                 )}
 
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <tier.icon className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{tier.name}</h3>
                 <div className="text-3xl font-bold text-foreground mb-2">${tier.amount}</div>
                 <p className="text-muted-foreground text-sm mb-6">{tier.description}</p>
-                <Button 
-                  variant={tier.popular ? 'hero' : 'glass'} 
+                <Button
+                  variant={tier.popular ? 'hero' : 'glass'}
                   className="w-full"
                   onClick={() => handleDonation(tier.amount, tier.name)}
                   disabled={loadingTier === tier.name}
@@ -166,7 +165,7 @@ const Pricing = () => {
           </div>
 
           {/* Custom Amount */}
-          <div className="glass rounded-2xl p-8 max-w-2xl mx-auto text-center animate-fade-up" style={{ animationDelay: '0.4s' }}>
+          <div className="glass p-8 max-w-2xl mx-auto text-center animate-fade-up" style={{ animationDelay: '0.4s' }}>
             <h3 className="text-xl font-bold text-foreground mb-2">Custom Amount</h3>
             <p className="text-muted-foreground mb-6">
               Want to donate a different amount? Every contribution helps us continue building free resources for the community.
@@ -184,8 +183,8 @@ const Pricing = () => {
                   className="pl-7"
                 />
               </div>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleCustomDonation}
                 disabled={loadingCustom || !customAmount}
               >
@@ -212,7 +211,7 @@ const Pricing = () => {
                 'Documentation',
                 'Code examples',
               ].map((item) => (
-                <div key={item} className="glass rounded-xl p-4">
+                <div key={item} className="glass p-4">
                   <span className="text-foreground font-medium">{item}</span>
                 </div>
               ))}

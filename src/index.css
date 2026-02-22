@@ -165,6 +165,10 @@
   .animate-glow-pulse {
     animation: glowPulse 3s ease-in-out infinite;
   }
+
+  .animate-glow-ring {
+    animation: glowRingPulse 2s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeUp {
@@ -224,5 +228,17 @@
 
   100% {
     transform: translateX(100%);
+  }
+}
+
+@keyframes glowRingPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.2), 0 0 0 1px hsl(var(--primary) / 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.6), 0 0 0 2px hsl(var(--primary) / 0.3);
   }
 }

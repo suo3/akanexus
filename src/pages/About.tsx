@@ -1,28 +1,28 @@
-import { Users, Target, Sparkles, Heart } from "lucide-react";
+import { Users, Target, Wrench, Code2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 const values = [
   {
-    icon: Target,
-    title: "Mission-Driven",
-    description: "We're on a mission to make frontend development accessible, beautiful, and efficient for everyone.",
+    icon: Wrench,
+    title: "Industrial-Grade, Free",
+    description: "Every tool in our workspace is production-ready and 100% free to use — no paywalls, no trials, no hidden limits.",
   },
   {
-    icon: Sparkles,
-    title: "Quality First",
-    description: "Every component and template is crafted with attention to detail, performance, and accessibility.",
+    icon: Target,
+    title: "Built for Creators",
+    description: "Whether you're a solo developer, a designer, or a studio — our tools are engineered to cut work in half and raise the quality bar.",
   },
   {
     icon: Users,
-    title: "Developer-Focused",
-    description: "Built by developers, for developers. We understand your needs because we share them.",
+    title: "Community-Powered",
+    description: "Our blog links and tutorial registry are crowd-sourced. The best content rises to the top, shaped by the people who use it.",
   },
   {
-    icon: Heart,
-    title: "Community-Powered",
-    description: "Our community drives our roadmap. Your feedback shapes the future of Akanexus.",
+    icon: Code2,
+    title: "Custom Work Available",
+    description: "Need something bespoke? Our team takes on custom frontend engineering projects — from greenfield apps to legacy rescues.",
   },
 ];
 
@@ -31,8 +31,8 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="About Us"
-        description="Learn about Akanexus - a frontend software company offering premium React components, templates, and custom development services built on shadcn and Tailwind CSS."
-        keywords="about Akanexus, frontend development company, React developers, web development team"
+        description="Akanexus Studio is a free industrial toolset for creators — including a Design System Generator, community tutorials, and curated resources. Custom development services also available."
+        keywords="about Akanexus, design system generator, free developer tools, custom frontend development, creator tools"
       />
       <Navbar />
 
@@ -40,7 +40,7 @@ const About = () => {
         {/* Hero Section */}
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl" />
           </div>
 
           <div className="container relative z-10 px-6">
@@ -49,36 +49,36 @@ const About = () => {
                 About <span className="text-gradient">Akanexus</span>
               </h1>
               <p className="text-lg text-muted-foreground">
-                We're a team of passionate developers and designers building the future of frontend development. Our mission is to provide high-quality free tools and templates to help you ship faster.
+                We build free, industrial-grade tools for creators — and take on custom work for those who need a dedicated team.
               </p>
             </div>
 
             {/* Story Section */}
             <div className="max-w-4xl mx-auto mb-20">
-              <div className="glass rounded-2xl p-8 md:p-12">
+              <div className="glass p-8 md:p-12">
                 <h2 className="text-2xl font-bold mb-4">Our Story</h2>
                 <p className="text-muted-foreground mb-4">
-                  Akanexus was born from a simple frustration: building beautiful, consistent UIs from scratch takes too long. We spent countless hours recreating the same components, fixing the same edge cases, and wrestling with the same design decisions.
+                  Akanexus started as a workbench — a place to collect the tools we kept rebuilding on every project. Design tokens, component generators, pattern libraries, audio utilities. The kind of unglamorous infrastructure that makes the real work possible.
                 </p>
                 <p className="text-muted-foreground mb-4">
-                  So we decided to change that. We built a library of premium, battle-tested components that just work. Components that look great out of the box but are endlessly customizable. Templates that give you a head start without boxing you in.
+                  Instead of keeping it internal, we opened it up. Everything in the Akanexus workspace is free to use — no license drama, no subscription gates. The Design System Generator, community tutorials, curated blog links: all yours.
                 </p>
                 <p className="text-muted-foreground">
-                  Today, thousands of developers trust Akanexus to help them build better products, faster. And we're just getting started.
+                  We sustain the project two ways: voluntary donations from people who find the tools valuable, and paid custom development work for clients who need a dedicated engineering team. That split keeps the free tools free — and lets us keep building.
                 </p>
               </div>
             </div>
 
             {/* Values Grid */}
             <div className="max-w-5xl mx-auto">
-              <h2 className="text-2xl font-bold text-center mb-12">Our Values</h2>
+              <h2 className="text-2xl font-bold text-center mb-12">What We Stand For</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {values.map((value, index) => (
                   <div
                     key={index}
-                    className="group p-6 rounded-xl glass hover:border-primary/50 transition-all duration-300"
+                    className="group p-6 glass hover:border-primary/50 transition-all duration-300"
                   >
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                       <value.icon className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-lg font-semibold mb-2">{value.title}</h3>

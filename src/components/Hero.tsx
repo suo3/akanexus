@@ -123,7 +123,7 @@ const Hero = () => {
         <div className="text-center mb-12 animate-fade-up">
           <div className="inline-flex items-center gap-3 px-3 py-1.5 border border-border bg-muted/50 mb-8 mono-label">
             <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
-            <span className="text-muted-foreground uppercase tracking-widest">Akanexus Workspace v1.0.4</span>
+            <span className="text-muted-foreground uppercase tracking-widest opacity-80">Akanexus Workspace v1.0.4</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl md:text-[80px] font-bold tracking-tightest leading-[0.9] mb-8">
@@ -132,7 +132,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Explore our collection of <span className="text-primary font-medium">100% Free</span> industrial tools and products designed to supercharge your workflow.
+            A cross-discipline workbench for digital creators. Explore our <span className="text-primary font-medium">100% Free</span> industrial tools designed to supercharge your workflow.
           </p>
         </div>
 

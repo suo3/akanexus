@@ -16,15 +16,6 @@ const services = [
     badge: "Free",
   },
   {
-    icon: Layout,
-    title: "Pre-Built Templates",
-    description: "Free complete frontend solutions for e-commerce, portfolios, dashboards, and more. Launch in hours, not weeks.",
-    features: ["100% Free", "Full Source Code", "Responsive Design", "SEO Optimized"],
-    cta: "Get Free Templates",
-    link: "/templates",
-    badge: "Free",
-  },
-  {
     icon: Code2,
     title: "Custom Development",
     description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations tailored to your needs.",
@@ -63,7 +54,7 @@ const Services = () => {
             </div>
 
             {/* Services Grid */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {services.map((service, index) => (
                 <div
                   key={index}

@@ -49,7 +49,7 @@ const About = () => {
                 About <span className="text-gradient">Akanexus</span>
               </h1>
               <p className="text-lg text-muted-foreground">
-                We build free, industrial-grade tools for creators — and take on custom work for those who need a dedicated team.
+                A cross-discipline workbench for digital creators. We build free, industrial-grade tools — and take on custom work for those who require a dedicated engineering team.
               </p>
             </div>
 

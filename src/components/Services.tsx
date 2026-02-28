@@ -13,15 +13,6 @@ const services = [
     badge: "Free",
   },
   {
-    icon: Layout,
-    title: "Pre-Built Templates",
-    description: "Free complete frontend solutions for e-commerce, portfolios, dashboards, and more. Launch in hours, not weeks.",
-    features: ["100% Free", "Full Source Code", "Responsive Design", "SEO Optimized"],
-    cta: "Get Free Templates",
-    link: "/templates",
-    badge: "Free",
-  },
-  {
     icon: Code2,
     title: "Custom Development",
     description: "Bespoke frontend development services. We build custom web apps, marketing sites, and seamless integrations tailored to your needs.",
@@ -47,13 +38,13 @@ const Services = () => {
             Free industrial tools to{" "}
             <span className="text-gradient">ship faster</span>
           </h2>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90 max-w-2xl mx-auto">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-70 max-w-2xl mx-auto">
             Free-to-use components and templates for the community. Need custom engineering? Our team is here to help.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {services.map((service, index) => (
             <div
               key={index}

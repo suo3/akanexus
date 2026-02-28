@@ -56,7 +56,7 @@ const Navbar = () => {
               className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
-              /Pricing
+              /Support
             </NavLink>
           </div>
 
@@ -122,7 +122,7 @@ const Navbar = () => {
               className="text-muted-foreground hover:text-foreground transition-colors py-2 border-l border-transparent pl-3 mono-label"
               activeClassName="text-foreground font-medium border-l-primary"
             >
-              Pricing
+              Support Us
             </NavLink>
             <div className="flex flex-col gap-2 pt-4 border-t border-border">
               <Button

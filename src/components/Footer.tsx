@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const footerLinks = {
   Product: [
     { label: "Components", href: "/design-system-generator" },
-    { label: "Pricing", href: "/pricing" },
+    { label: "Support Us", href: "/pricing" },
   ],
   Company: [
     { label: "About", href: "/about" },

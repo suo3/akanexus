@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Heart, Sparkles, Coffee, Rocket, Loader2 } from 'lucide-react';
@@ -107,17 +108,21 @@ const Pricing = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-6">
+          <SEO
+            title="Support Our Mission"
+            description="All Akanexus tools are 100% free. Support us through donations to help keep the platform running."
+          />
           {/* Header */}
           <div className="text-center mb-16 animate-fade-up">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 text-sm font-medium mb-6">
               <Sparkles size={16} />
-              100% Free & Open
+              100% Free & Community Supported
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Pay What You <span className="text-gradient">Want</span>
+              Support Our <span className="text-gradient">Mission</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              All components and templates are completely free. If you find them useful, consider supporting our work with a donation.
+              Akanexus tools and templates are completely free for everyone. Your voluntary donations are what keep this platform alive and allow us to continue building for the community.
             </p>
           </div>
 

@@ -128,7 +128,7 @@ const Hero = () => {
 
           <h1 className="text-5xl sm:text-6xl md:text-[80px] font-bold tracking-tightest leading-[0.9] mb-8">
             Industrial grade tools for{" "}
-            <span className="text-gradient">creators</span>
+            <span className="text-gradient px-1">creators</span>
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">

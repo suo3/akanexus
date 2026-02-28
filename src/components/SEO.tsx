@@ -11,7 +11,7 @@ interface SEOProps {
 }
 
 const BASE_TITLE = 'Akanexus';
-const DEFAULT_DESCRIPTION = 'Premium React components, templates, and custom frontend development services. Build stunning interfaces faster with Akanexus.';
+const DEFAULT_DESCRIPTION = '100% Free industrial tools, React components, and templates. Build stunning interfaces faster with Akanexus.';
 const DEFAULT_OG_IMAGE = 'https://lovable.dev/opengraph-image-p98pqg.png';
 
 export default function SEO({

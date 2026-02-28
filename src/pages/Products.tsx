@@ -87,9 +87,9 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Products & Tools"
-        description="Discover Akanexus tools and products designed to help you build better applications. Audio mastering, development utilities, and more."
-        keywords="developer tools, audio mastering, web development, React tools"
+        title="Free Tools & Products"
+        description="100% Free industrial tools and products designed to help you build better applications. Audio mastering, development utilities, and more."
+        keywords="free developer tools, free audio mastering, free React tools, web development"
       />
       <Navbar />
 
@@ -101,7 +101,7 @@ const Products = () => {
               Our Products
             </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Tools & <span className="text-gradient">Products</span>
+              Free Tools & <span className="text-gradient">Products</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Discover our collection of tools and products designed to help you build better applications.
@@ -132,10 +132,10 @@ const Products = () => {
                   key={category}
                   onClick={() => setActiveCategory(category)}
                   className={`px-4 py-2 text-sm font-medium transition-all duration-200 border ${isActive
-                      ? category === 'All'
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : `${colors.bg} ${colors.text} ${colors.border}`
-                      : 'bg-secondary text-muted-foreground hover:text-foreground border-transparent hover:border-border'
+                    ? category === 'All'
+                      ? 'bg-primary text-primary-foreground border-primary'
+                      : `${colors.bg} ${colors.text} ${colors.border}`
+                    : 'bg-secondary text-muted-foreground hover:text-foreground border-transparent hover:border-border'
                     }`}
                 >
                   {category}

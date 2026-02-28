@@ -132,7 +132,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Explore our collection of free industrial tools and products designed to supercharge your workflow.
+            Explore our collection of <span className="text-primary font-medium">100% Free</span> industrial tools and products designed to supercharge your workflow.
           </p>
         </div>
 

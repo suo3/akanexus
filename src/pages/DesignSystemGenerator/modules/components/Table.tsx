@@ -176,7 +176,7 @@ export function DataTable<T extends { id: string | number }>({ data, columns, se
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Table Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ export function DataTable<T extends { id: string | number }>({ data, columns, se
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Appearance</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Appearance</Label>
                             <div className="space-y-3">
                                 <div className="space-y-2">
                                     <Label className="text-xs">Style</Label>
@@ -212,7 +212,7 @@ export function DataTable<T extends { id: string | number }>({ data, columns, se
                         </div>
                         <Separator />
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Features</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Features</Label>
                             {[
                                 { label: 'Sortable Columns', key: 'sortable' },
                                 { label: 'Row Selection', key: 'selectable' },
@@ -243,7 +243,7 @@ export function DataTable<T extends { id: string | number }>({ data, columns, se
                 <ScrollArea className="flex-1">
                     <div className="p-8 space-y-8">
                         <div className="space-y-4">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Interactive Table</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Interactive Table</h4>
 
                             {config.showSearch && (
                                 <Input placeholder="🔍 Search..." value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }} className="max-w-xs h-9 text-sm" />
@@ -324,7 +324,7 @@ export function DataTable<T extends { id: string | number }>({ data, columns, se
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">{generateReactCode()}</pre>

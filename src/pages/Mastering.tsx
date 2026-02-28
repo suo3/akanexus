@@ -759,11 +759,31 @@ export default function Mastering() {
 
                         {/* EQ Sliders */}
                         <div>
-                          <Label className="text-sm font-medium mb-3 block">Manual EQ</Label>
-                          <div className="grid grid-cols-6 gap-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <Label className="text-sm font-medium block">Manual EQ</Label>
+                            <span className="text-[9px] mono-label uppercase text-muted-foreground/40 tracking-widest">
+                              ±12 dB range // 0.5 dB steps
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-6 gap-2">
                             {settings.eqBands.map((band, index) => (
                               <div key={band.label} className="flex flex-col items-center">
-                                <div className="h-32 flex items-center mb-2">
+                                {/* Slider Container with Background */}
+                                <div className="relative h-48 w-full bg-secondary/10 border border-border flex items-center justify-center py-4 mb-2 group">
+                                  {/* dB Markers (Ticks) */}
+                                  <div className="absolute inset-y-4 right-2 flex flex-col justify-between pointer-events-none">
+                                    <span className="text-[8px] mono-label text-muted-foreground/30">+12</span>
+                                    <span className="text-[8px] mono-label text-primary/40">0</span>
+                                    <span className="text-[8px] mono-label text-muted-foreground/30">-12</span>
+                                  </div>
+
+                                  {/* Visual track background grid/lines */}
+                                  <div className="absolute inset-0 flex flex-col justify-around px-2 opacity-5 pointer-events-none">
+                                    {[...Array(5)].map((_, i) => (
+                                      <div key={i} className="h-px bg-foreground w-full" />
+                                    ))}
+                                  </div>
+
                                   <Slider
                                     orientation="vertical"
                                     min={-12}
@@ -771,13 +791,15 @@ export default function Mastering() {
                                     step={0.5}
                                     value={[band.gain]}
                                     onValueChange={([value]) => { updateEQBand(index, value); setActivePreset(null); }}
-                                    className="h-full"
+                                    className="h-full z-10"
                                   />
                                 </div>
-                                <span className="text-xs text-muted-foreground">
-                                  {band.gain > 0 ? '+' : ''}{band.gain.toFixed(1)} dB
-                                </span>
-                                <span className="text-xs font-medium mt-1">{band.label}</span>
+                                <div className="flex flex-col items-center gap-0.5">
+                                  <span className={`text-[10px] mono-label font-bold ${band.gain !== 0 ? 'text-primary' : 'text-muted-foreground'}`}>
+                                    {band.gain > 0 ? '+' : ''}{band.gain.toFixed(1)}
+                                  </span>
+                                  <span className="text-[10px] mono-label uppercase tracking-tighter font-medium text-muted-foreground/80">{band.label}</span>
+                                </div>
                               </div>
                             ))}
                           </div>

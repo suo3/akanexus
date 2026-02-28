@@ -157,7 +157,7 @@ const TypographyFoundation = () => {
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">TYPE_FOUNDRY</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                 FOUNDATION_CORE_v1.0
                             </p>
                         </div>
@@ -176,7 +176,7 @@ const TypographyFoundation = () => {
                             <TabsContent value="families" className="space-y-6 mt-6">
                                 {/* Sans Serif */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Sans Serif
                                     </Label>
                                     <Select
@@ -198,7 +198,7 @@ const TypographyFoundation = () => {
 
                                 {/* Serif */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Serif
                                     </Label>
                                     <Select
@@ -220,7 +220,7 @@ const TypographyFoundation = () => {
 
                                 {/* Monospace */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Monospace
                                     </Label>
                                     <Select
@@ -245,7 +245,7 @@ const TypographyFoundation = () => {
                                 {/* Base Size */}
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60 mono-label">
+                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-90 mono-label">
                                             BASE_SIZE
                                         </Label>
                                         <span className="text-xs font-mono font-bold bg-primary/10 text-primary px-2 py-1 rounded-none border border-primary/20">
@@ -265,7 +265,7 @@ const TypographyFoundation = () => {
 
                                 {/* Scale Ratio */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Scale Ratio
                                     </Label>
                                     <Select
@@ -298,7 +298,7 @@ const TypographyFoundation = () => {
                             <TabsContent value="properties" className="space-y-6 mt-6">
                                 {/* Font Weights */}
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Font Weights
                                     </Label>
                                     <div className="space-y-3">
@@ -323,7 +323,7 @@ const TypographyFoundation = () => {
 
                                 {/* Line Heights */}
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Line Heights
                                     </Label>
                                     <div className="space-y-3">
@@ -361,7 +361,7 @@ const TypographyFoundation = () => {
                     <div className="p-12 space-y-12">
                         {/* Type Scale Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Type Scale
                             </h4>
                             <div className="space-y-4">
@@ -395,7 +395,7 @@ const TypographyFoundation = () => {
 
                         {/* Font Families Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Font Families
                             </h4>
                             <div className="space-y-6">
@@ -439,7 +439,7 @@ const TypographyFoundation = () => {
 
                         {/* Font Weights Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Font Weights
                             </h4>
                             <div className="grid grid-cols-2 gap-4">
@@ -466,7 +466,7 @@ const TypographyFoundation = () => {
 
                         {/* Line Heights Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Line Heights
                             </h4>
                             <div className="grid grid-cols-2 gap-4">

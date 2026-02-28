@@ -126,7 +126,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">List Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Appearance</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Appearance</Label>
                             <div className="space-y-3">
                                 {[
                                     { label: 'Variant', key: 'variant', opts: ['default', 'bordered', 'divided', 'card'] },
@@ -152,7 +152,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                         </div>
                         <Separator />
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Features</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Features</Label>
                             {[
                                 { label: 'Selectable', key: 'selectable' },
                                 { label: 'Multi-Select', key: 'multiSelect' },
@@ -169,7 +169,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
-                                <Label className="text-xs font-bold uppercase tracking-wider opacity-60">List Items</Label>
+                                <Label className="text-xs font-bold uppercase tracking-wider opacity-90">List Items</Label>
                                 <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={() => setItems([...items, { id: Date.now().toString(), label: `Item ${items.length + 1}`, description: 'Description text', icon: '📌', badge: '', disabled: false }])}>
                                     <Plus className="w-3 h-3" />Add
                                 </Button>
@@ -212,7 +212,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                 <ScrollArea className="flex-1">
                     <div className="p-12 space-y-12">
                         <div className="space-y-6 max-w-sm">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Interactive Preview</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Interactive Preview</h4>
                             <div style={getContainerStyle()}>
                                 {items.map((item, i) => (
                                     <div key={item.id} style={getItemStyle(item, i)} onClick={() => !item.disabled && config.selectable && handleSelect(item.id)}>
@@ -231,7 +231,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                         </div>
                         <Separator />
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Variants</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Variants</h4>
                             <div className="grid grid-cols-2 gap-6">
                                 {(['default', 'bordered', 'divided', 'card'] as const).map(variant => {
                                     const cs: React.CSSProperties = variant === 'card' ? { border: '1px solid var(--border)', borderRadius: radius, overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' } : variant === 'bordered' ? { border: '1px solid var(--border)', borderRadius: radius, overflow: 'hidden' } : { borderRadius: radius, overflow: 'hidden' };
@@ -259,7 +259,7 @@ export const List = ({ items, variant = '${config.variant}', selectable, multipl
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">{generateReactCode()}</pre>

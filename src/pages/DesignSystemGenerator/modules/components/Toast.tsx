@@ -183,7 +183,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Toast Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Appearance</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Appearance</Label>
                                     <div className="space-y-3">
                                         {[
                                             { label: 'Style', key: 'style', opts: ['default', 'filled', 'minimal'] },
@@ -221,7 +221,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                                 </div>
                                 <Separator />
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Options</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Options</Label>
                                     {[
                                         { label: 'Show Icon', key: 'showIcon' },
                                         { label: 'Show Close Button', key: 'showClose' },
@@ -245,7 +245,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                             <TabsContent value="content" className="space-y-6 mt-6">
                                 {types.map(t => (
                                     <div key={t.id} className="space-y-3">
-                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60 capitalize">{t.id}</Label>
+                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-90 capitalize">{t.id}</Label>
                                         <div className="space-y-2">
                                             <Input placeholder="Title" value={content[t.id].title} onChange={e => setContent({ ...content, [t.id]: { ...content[t.id], title: e.target.value } })} className="h-9 text-sm" />
                                             <Input placeholder="Description" value={content[t.id].description} onChange={e => setContent({ ...content, [t.id]: { ...content[t.id], description: e.target.value } })} className="h-9 text-sm" />
@@ -271,7 +271,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                 <ScrollArea className="flex-1">
                     <div className="p-12 space-y-12">
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Variants — Click to focus</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Variants — Click to focus</h4>
                             <div className="flex flex-col gap-3">
                                 {types.map(t => (
                                     <div key={t.id} onClick={() => setActiveToast(activeToast === t.id ? null : t.id)} style={{ cursor: 'pointer' }}>
@@ -282,7 +282,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                         </div>
                         <Separator />
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Style Comparison</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Style Comparison</h4>
                             {(['default', 'filled', 'minimal'] as const).map(style => (
                                 <div key={style}>
                                     <p className="text-xs font-bold text-muted-foreground mb-3 capitalize">{style}</p>
@@ -313,7 +313,7 @@ export const Toast = ({ id, type = 'info', title, description, duration = 4000, 
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">{generateReactCode()}</pre>

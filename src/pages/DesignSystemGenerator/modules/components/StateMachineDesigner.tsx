@@ -437,7 +437,7 @@ const StateMachineDesigner = () => {
                                         strokeWidth="2"
                                         markerEnd="url(#arrowhead)"
                                         strokeDasharray="4"
-                                        className="transition-all duration-300 opacity-60 hover:opacity-100 hover:stroke-primary"
+                                        className="transition-all duration-300 opacity-90 hover:opacity-100 hover:stroke-primary"
                                     />
                                 );
                             })

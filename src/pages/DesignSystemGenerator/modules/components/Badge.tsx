@@ -93,7 +93,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
     <span className={cn('inline-flex items-center gap-1 border font-bold rounded-${config.rounded}', sizes[size], styleClass${config.uppercase ? ", 'uppercase tracking-wider'" : ''})}>
       {dotIndicator && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
       {children}
-      {removable && <button onClick={onRemove} className="ml-0.5 opacity-60 hover:opacity-100"><X className="w-3 h-3" /></button>}
+      {removable && <button onClick={onRemove} className="ml-0.5 opacity-90 hover:opacity-100"><X className="w-3 h-3" /></button>}
     </span>
   );
 };
@@ -124,7 +124,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">TAG_COMPILER</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">COMPONENT_v2.0</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">COMPONENT_v2.0</p>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">TAG_VARIANTS</Label>
+                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">TAG_VARIANTS</Label>
                                         <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={() => {
                                             const id = `variant-${Date.now()}`;
                                             setVariants([...variants, { id, name: `Variant ${variants.length + 1}`, background: tokens.colors.primary + '20', foreground: tokens.colors.primary, border: tokens.colors.primary + '40' }]);
@@ -163,7 +163,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Edit {currentVariant.name}</Label>
+                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Edit {currentVariant.name}</Label>
                                             <div className="space-y-3">
                                                 {[
                                                     { label: 'Background', key: 'background' as const },
@@ -186,7 +186,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Appearance</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Appearance</Label>
                                     <div className="space-y-3">
                                         <div className="space-y-2">
                                             <Label className="text-xs">Style</Label>
@@ -225,7 +225,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                                 </div>
                                 <Separator />
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Options</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Options</Label>
                                     {[
                                         { label: 'Removable (×)', key: 'removable' as const },
                                         { label: 'Dot Indicator', key: 'dotIndicator' as const },
@@ -257,7 +257,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                     <div className="p-12 space-y-12">
                         {/* All Variants */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Variants</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Variants</h4>
                             <div className="flex flex-wrap gap-3">
                                 {variants.map(v => (
                                     <span key={v.id} style={getBadgeStyle(v)}>
@@ -273,7 +273,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
 
                         {/* Style Comparison */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Style Comparison</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Style Comparison</h4>
                             <div className="space-y-4">
                                 {(['soft', 'solid', 'outline'] as const).map(style => (
                                     <div key={style} className="flex items-center gap-4">
@@ -295,7 +295,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
 
                         {/* Real-world examples */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Real-World Usage</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Real-World Usage</h4>
                             <div className="space-y-4">
                                 <div className="p-4 border rounded-none bg-muted/5 flex items-center justify-between">
                                     <div>
@@ -324,7 +324,7 @@ ${variants.map(v => `    ${v.id}: { soft: 'bg-[${v.background}] text-[${v.foregr
                         {/* Code */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted/50 p-6 rounded-none border border-dashed overflow-x-auto max-h-96 overflow-y-auto mono-label">{generateReactCode()}</pre>

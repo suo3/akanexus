@@ -274,7 +274,7 @@ Input.displayName = 'Input';
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">INPUT_COMPILER</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                 COMPONENT_v2.0
                             </p>
                         </div>
@@ -292,7 +292,7 @@ Input.displayName = 'Input';
 
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         INPUT_TYPE
                                     </Label>
                                     <div className="grid grid-cols-2 gap-2">
@@ -318,7 +318,7 @@ Input.displayName = 'Input';
                                 <Separator />
 
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Style Variants
                                     </Label>
                                     <div className="space-y-2">
@@ -341,7 +341,7 @@ Input.displayName = 'Input';
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                                 Edit {currentVariant.name}
                                             </Label>
 
@@ -407,7 +407,7 @@ Input.displayName = 'Input';
 
                             <TabsContent value="sizes" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Size Presets
                                     </Label>
                                     <div className="space-y-2">
@@ -434,7 +434,7 @@ Input.displayName = 'Input';
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Component Options
                                     </Label>
 
@@ -517,7 +517,7 @@ Input.displayName = 'Input';
                     <div className="p-12 space-y-12">
                         {/* Interactive Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Interactive Preview
                             </h4>
                             <div className="max-w-md">
@@ -559,7 +559,7 @@ Input.displayName = 'Input';
 
                         {/* States */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 States
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
@@ -615,7 +615,7 @@ Input.displayName = 'Input';
 
                         {/* All Variants */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 All Variants
                             </h4>
                             <div className="space-y-4">
@@ -648,7 +648,7 @@ Input.displayName = 'Input';
 
                         {/* All Sizes */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 All Sizes
                             </h4>
                             <div className="space-y-4">
@@ -682,7 +682,7 @@ Input.displayName = 'Input';
                         {/* Code Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                     Generated Code
                                 </h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2">

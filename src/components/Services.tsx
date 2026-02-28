@@ -47,7 +47,7 @@ const Services = () => {
             Free industrial tools to{" "}
             <span className="text-gradient">ship faster</span>
           </h2>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60 max-w-2xl mx-auto">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90 max-w-2xl mx-auto">
             Free-to-use components and templates for the community. Need custom engineering? Our team is here to help.
           </p>
         </div>

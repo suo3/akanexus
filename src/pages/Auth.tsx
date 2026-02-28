@@ -131,14 +131,14 @@ const Auth = () => {
             <h1 className="text-xl font-bold text-foreground mb-2 uppercase tracking-tighter">
               {mode === 'forgotPassword' ? 'RECOVERY_PROTOCOL' : 'SESSION_INITIALIZER'}
             </h1>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
               {mode === 'forgotPassword' ? 'IDENT_RECOVERY_v2.0' : 'AUTH_GATEWAY_ACCESS_v2.4'}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">USER_IDENTITY</Label>
+              <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest opacity-90 mono-label">USER_IDENTITY</Label>
               <Input
                 id="email"
                 type="email"
@@ -157,7 +157,7 @@ const Auth = () => {
 
             {mode !== 'forgotPassword' && (
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[10px] font-bold uppercase tracking-widest opacity-60 mono-label">ACCESS_KEY</Label>
+                <Label htmlFor="password" className="text-[10px] font-bold uppercase tracking-widest opacity-90 mono-label">ACCESS_KEY</Label>
                 <div className="relative">
                   <Input
                     id="password"

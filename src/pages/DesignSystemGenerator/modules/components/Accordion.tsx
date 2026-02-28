@@ -193,7 +193,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Accordion Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -203,7 +203,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
 
                         {/* Appearance */}
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Appearance</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Appearance</Label>
                             <div className="space-y-3">
                                 <div className="space-y-2">
                                     <Label className="text-xs">Variant</Label>
@@ -234,7 +234,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
 
                         {/* Options */}
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Options</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Options</Label>
                             {([
                                 { label: 'Allow Multiple Open', key: 'multiple' },
                                 { label: 'Show Icons', key: 'showIcons' },
@@ -256,7 +256,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
                         {/* Items */}
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
-                                <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Items</Label>
+                                <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Items</Label>
                                 <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={() =>
                                     setItems([...items, { id: Date.now().toString(), title: `New Item ${items.length + 1}`, content: 'Add your content here.', icon: '📌', disabled: false }])
                                 }>
@@ -322,7 +322,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
 
                         {/* Interactive preview */}
                         <div className="space-y-6 max-w-xl">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Interactive Preview</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Interactive Preview</h4>
                             {renderPreview()}
                         </div>
 
@@ -330,7 +330,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
 
                         {/* All variants */}
                         <div className="space-y-8 max-w-xl">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Variants</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Variants</h4>
                             {(['default', 'bordered', 'card', 'ghost'] as const).map(variant => {
                                 const [variantOpen, setVariantOpen] = useState<Set<string>>(new Set(['1']));
                                 const handleToggle = (id: string) => setVariantOpen(s => {
@@ -352,7 +352,7 @@ export const Accordion = ({ items, variant = '${config.variant}', multiple, defa
                         {/* Generated code */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2">
                                     <Copy className="w-3 h-3" />Copy
                                 </Button>

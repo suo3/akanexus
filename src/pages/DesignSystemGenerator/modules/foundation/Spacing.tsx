@@ -76,7 +76,7 @@ const SpacingFoundation = () => {
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">SPACE_SYSTEM</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                 FOUNDATION_CORE_v1.0
                             </p>
                         </div>
@@ -96,7 +96,7 @@ const SpacingFoundation = () => {
                                 {/* Base Unit */}
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                             BASE_UNIT
                                         </Label>
                                         <div className="flex gap-2">
@@ -128,7 +128,7 @@ const SpacingFoundation = () => {
                                 {/* Spacing Scale */}
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                             SPACE_SCALE
                                         </Label>
                                         <Button
@@ -173,7 +173,7 @@ const SpacingFoundation = () => {
                             <TabsContent value="grid" className="space-y-6 mt-6">
                                 {/* Columns */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         GRID_COLUMNS
                                     </Label>
                                     <Input
@@ -190,7 +190,7 @@ const SpacingFoundation = () => {
 
                                 {/* Gutter */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         GUTTER_SIZE
                                     </Label>
                                     <Input
@@ -202,7 +202,7 @@ const SpacingFoundation = () => {
 
                                 {/* Margin */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         PAGE_MARGIN
                                     </Label>
                                     <Input
@@ -216,7 +216,7 @@ const SpacingFoundation = () => {
 
                                 {/* Max Width */}
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         VIEW_PORT_MAX
                                     </Label>
                                     <Input
@@ -231,7 +231,7 @@ const SpacingFoundation = () => {
 
                             <TabsContent value="breakpoints" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                    <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                         RESPONSIVE_BREAKS
                                     </Label>
                                     {Object.entries(spacing.breakpoints).map(([key, value]) => (
@@ -265,7 +265,7 @@ const SpacingFoundation = () => {
                     <div className="p-12 space-y-12">
                         {/* Spacing Scale Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 SPACING_SCALE_RENDER
                             </h4>
                             <div className="space-y-3">
@@ -290,7 +290,7 @@ const SpacingFoundation = () => {
 
                         {/* Grid Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 GRID_SCHEMA ({spacing.grid.columns}_COL)
                             </h4>
                             <div className="space-y-2">
@@ -335,7 +335,7 @@ const SpacingFoundation = () => {
 
                         {/* Breakpoints Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 BREAK_POINTS
                             </h4>
                             <div className="space-y-3">

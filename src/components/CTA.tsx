@@ -24,7 +24,7 @@ const CTA = () => {
           </h2>
 
           {/* Description */}
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60 max-w-2xl mx-auto mb-10">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90 max-w-2xl mx-auto mb-10">
             All our components and templates are 100% free-to-use. If you find them useful,
             consider supporting the project with a donation.
           </p>

@@ -256,7 +256,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Modal Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">
                                 Component Workbench
                             </p>
                         </div>
@@ -274,7 +274,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 
                             <TabsContent value="sizes" className="space-y-6 mt-6">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Modal Sizes
                                     </Label>
                                     <div className="space-y-2">
@@ -301,7 +301,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                                 <Separator />
 
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Animation
                                     </Label>
                                     <Select value={selectedAnimation} onValueChange={setSelectedAnimation}>
@@ -321,7 +321,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 
                             <TabsContent value="overlay" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Overlay Styling
                                     </Label>
 
@@ -391,7 +391,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Modal Structure
                                     </Label>
 
@@ -425,7 +425,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                                 <Separator />
 
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Behavior
                                     </Label>
 
@@ -509,7 +509,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                     <div className="p-12 space-y-12">
                         {/* Preview Trigger */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Interactive Preview
                             </h4>
                             <div className="p-12 border-2 border-dashed rounded-xl flex items-center justify-center">
@@ -523,7 +523,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
 
                         {/* All Sizes */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 Modal Sizes
                             </h4>
                             <div className="space-y-4">
@@ -549,7 +549,7 @@ export const ModalFooter = ({ children }: { children: React.ReactNode }) => (
                         {/* Code Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                     Generated Code
                                 </h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2">

@@ -107,7 +107,7 @@ const MotionFoundation = () => {
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">TIMING_ENGINE</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                 FOUNDATION_CORE_v1.0
                             </p>
                         </div>
@@ -118,7 +118,7 @@ const MotionFoundation = () => {
                     <div className="p-6 space-y-6">
                         {/* Easing Curves */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                 EASING_CURVE
                             </Label>
                             <Select
@@ -151,7 +151,7 @@ const MotionFoundation = () => {
                         {/* Duration */}
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                     DURATION_MS
                                 </Label>
                                 <span className="text-[10px] font-mono font-bold bg-primary/10 text-primary px-2 py-1 rounded-none border border-primary/20">
@@ -186,7 +186,7 @@ const MotionFoundation = () => {
 
                         {/* Animation Type */}
                         <div className="space-y-3">
-                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                 ANIM_UNIT_TYPE
                             </Label>
                             <div className="grid grid-cols-2 gap-2">
@@ -208,13 +208,13 @@ const MotionFoundation = () => {
 
                         {/* Cubic Bezier Editor */}
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                 CUBIC_VAL_PATH
                             </Label>
                             <div className="grid grid-cols-2 gap-3">
                                 {selectedEasing.cubic.map((value, index) => (
                                     <div key={index} className="space-y-2">
-                                        <Label className="text-[10px] mono-label uppercase opacity-60">
+                                        <Label className="text-[10px] mono-label uppercase opacity-90">
                                             {index < 2 ? `P1.${index === 0 ? 'X' : 'Y'}` : `P2.${index === 2 ? 'X' : 'Y'}`}
                                         </Label>
                                         <Input
@@ -244,7 +244,7 @@ const MotionFoundation = () => {
 
                         {/* Spring Physics (Placeholder) */}
                         <div className="space-y-3 opacity-30">
-                            <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                 SPRING_DYNAMICS
                             </Label>
                             <p className="text-xs text-muted-foreground">
@@ -268,7 +268,7 @@ const MotionFoundation = () => {
                         {/* Main Animation Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                     LIVE_DEBUG_PORT
                                 </h4>
                                 <Button onClick={playAnimation} className="gap-2 rounded-none mono-label text-[10px] uppercase">
@@ -290,7 +290,7 @@ const MotionFoundation = () => {
 
                         {/* Easing Curve Visualization */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 CURVE_VISUALIZER
                             </h4>
                             <div className="p-8 border rounded-none bg-muted/5">
@@ -330,7 +330,7 @@ const MotionFoundation = () => {
 
                         {/* Duration Comparison */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 DURATION_SCALE_MAP
                             </h4>
                             <div className="space-y-4">
@@ -358,12 +358,12 @@ const MotionFoundation = () => {
 
                         {/* Common Animations */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 COMMON_BEHAVIORS
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="p-6 border rounded-none bg-muted/5 space-y-4">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                         INTERACTION_HOVER
                                     </p>
                                     <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-none font-bold uppercase text-[10px] tracking-widest mono-label transition-transform hover:scale-105 duration-200">
@@ -372,21 +372,21 @@ const MotionFoundation = () => {
                                 </div>
 
                                 <div className="p-6 border rounded-none bg-muted/5 space-y-4">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                         VISIBILITY_FADE
                                     </p>
                                     <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-in fade-in duration-500" />
                                 </div>
 
                                 <div className="p-6 border rounded-none bg-muted/5 space-y-4">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                         TRANSITION_SLIDE
                                     </p>
                                     <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-in slide-in-from-bottom duration-500" />
                                 </div>
 
                                 <div className="p-6 border rounded-none bg-muted/5 space-y-4">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                         BEAT_PULSE
                                     </p>
                                     <div className="w-full h-20 bg-primary/20 border border-dashed border-primary/30 rounded-none animate-pulse" />

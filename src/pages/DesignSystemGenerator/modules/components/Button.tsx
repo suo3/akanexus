@@ -308,7 +308,7 @@ Button.displayName = 'Button';
                         </div>
                         <div>
                             <h2 className="text-lg font-bold tracking-tight uppercase">BTN_COMPILER</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-60">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label opacity-90">
                                 COMPONENT_v2.0
                             </p>
                         </div>
@@ -327,7 +327,7 @@ Button.displayName = 'Button';
                             <TabsContent value="variants" className="space-y-6 mt-6">
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-60 mono-label">
+                                        <Label className="text-xs font-bold uppercase tracking-widest opacity-90 mono-label">
                                             VARIANT_LIST
                                         </Label>
                                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 rounded-none mono-label text-[10px] uppercase" onClick={addVariant}>
@@ -367,7 +367,7 @@ Button.displayName = 'Button';
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                                 Edit {currentVariant.name}
                                             </Label>
 
@@ -461,7 +461,7 @@ Button.displayName = 'Button';
                             <TabsContent value="sizes" className="space-y-6 mt-6">
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                        <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                             Size Presets
                                         </Label>
                                         <Button size="sm" variant="ghost" className="h-7 gap-1.5" onClick={addSize}>
@@ -493,7 +493,7 @@ Button.displayName = 'Button';
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">
                                         Component Options
                                     </Label>
 
@@ -562,7 +562,7 @@ Button.displayName = 'Button';
                     <div className="p-12 space-y-12">
                         {/* Interactive Preview */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mono-label">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 RENDER_LIVE_PORT
                             </h4>
                             <div className="flex items-center justify-center p-16 bg-muted/20 border border-dashed rounded-none">
@@ -593,7 +593,7 @@ Button.displayName = 'Button';
 
                         {/* States */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 States
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
@@ -642,7 +642,7 @@ Button.displayName = 'Button';
 
                         {/* All Variants */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 All Variants
                             </h4>
                             <div className="grid grid-cols-2 gap-4">
@@ -677,7 +677,7 @@ Button.displayName = 'Button';
 
                         {/* All Sizes */}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 All Sizes
                             </h4>
                             <div className="space-y-4">
@@ -713,7 +713,7 @@ Button.displayName = 'Button';
                         {/* Code Preview */}
                         <div className="space-y-6">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                     Generated Code
                                 </h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2">

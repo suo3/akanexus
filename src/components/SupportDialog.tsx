@@ -78,7 +78,7 @@ const SupportDialog = ({ open, onOpenChange, toolName = 'this tool' }: SupportDi
         <div className="bg-muted px-6 py-2 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Terminal className="w-3 h-3 text-primary" />
-            <span className="mono-label text-[10px] opacity-60">sys.admin/contribution/v1.0</span>
+            <span className="mono-label text-[10px] opacity-90">sys.admin/contribution/v1.0</span>
           </div>
         </div>
 
@@ -110,8 +110,8 @@ const SupportDialog = ({ open, onOpenChange, toolName = 'this tool' }: SupportDi
                     setCustomAmount('');
                   }}
                   className={`p-4 border transition-all text-left relative group ${selectedAmount === tier.amount && !customAmount
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border bg-muted/30 hover:border-primary/50'
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border bg-muted/30 hover:border-primary/50'
                     }`}
                 >
                   {selectedAmount === tier.amount && !customAmount && (
@@ -121,7 +121,7 @@ const SupportDialog = ({ open, onOpenChange, toolName = 'this tool' }: SupportDi
                   <span className="font-mono text-lg font-bold block leading-none mb-1">
                     ${tier.amount}
                   </span>
-                  <p className="mono-label text-[8px] opacity-60 uppercase">{tier.label}</p>
+                  <p className="mono-label text-[8px] opacity-90 uppercase">{tier.label}</p>
                 </button>
               ))}
             </div>
@@ -151,8 +151,8 @@ const SupportDialog = ({ open, onOpenChange, toolName = 'this tool' }: SupportDi
               <Button
                 onClick={handleDonate}
                 className={`w-full gap-3 py-6 font-bold uppercase tracking-widest rounded-none border ${displayAmount > 0
-                    ? 'bg-foreground text-background hover:bg-foreground/90'
-                    : 'bg-muted text-muted-foreground cursor-not-allowed'
+                  ? 'bg-foreground text-background hover:bg-foreground/90'
+                  : 'bg-muted text-muted-foreground cursor-not-allowed'
                   }`}
                 disabled={isLoading || displayAmount <= 0}
               >

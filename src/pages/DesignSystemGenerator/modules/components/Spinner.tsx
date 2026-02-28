@@ -156,7 +156,7 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Spinner & Progress</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-6">
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Spinner</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Spinner</Label>
                             <div className="space-y-3">
                                 <div className="space-y-2">
                                     <Label className="text-xs">Type</Label>
@@ -210,7 +210,7 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                         </div>
                         <Separator />
                         <div className="space-y-4">
-                            <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Progress</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Progress</Label>
                             <div className="flex items-center justify-between">
                                 <Label className="text-sm">Show Progress</Label>
                                 <Switch checked={config.showProgress} onCheckedChange={c => setConfig({ ...config, showProgress: c })} />
@@ -269,14 +269,14 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                 <ScrollArea className="flex-1">
                     <div className="p-12 space-y-12">
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Spinner</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Spinner</h4>
                             <div className="flex items-center justify-center p-12 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
                                 {renderSpinner(sz)}
                             </div>
                         </div>
                         <Separator />
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Spinner Types</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Spinner Types</h4>
                             <div className="flex flex-wrap items-center gap-10">
                                 {(['spinner', 'ring', 'dots', 'bars', 'pulse'] as const).map(type => {
                                     const prevConfig = { ...config, type };
@@ -316,7 +316,7 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                             <>
                                 <Separator />
                                 <div className="space-y-6">
-                                    <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Progress</h4>
+                                    <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Progress</h4>
                                     {config.progressStyle === 'bar' && (
                                         <div className="space-y-2 max-w-md">
                                             {config.progressLabel && (
@@ -369,7 +369,7 @@ export const Stepper = ({ steps, current, color }: StepperProps) => (
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">{generateReactCode()}</pre>

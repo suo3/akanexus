@@ -116,7 +116,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                         </div>
                         <div>
                             <h2 className="text-lg font-black tracking-tight">Avatar Builder</h2>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-60">Component Workbench</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-90">Component Workbench</p>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
 
                             <TabsContent value="config" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Size & Shape</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Size & Shape</Label>
                                     <div className="space-y-3">
                                         <div className="space-y-2">
                                             <Label className="text-xs">Size</Label>
@@ -159,7 +159,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                                 </div>
                                 <Separator />
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Options</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Options</Label>
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <Label className="text-sm">Show Status Indicator</Label>
@@ -197,7 +197,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
 
                             <TabsContent value="content" className="space-y-6 mt-6">
                                 <div className="space-y-4">
-                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Content</Label>
+                                    <Label className="text-xs font-bold uppercase tracking-wider opacity-90">Content</Label>
                                     <div className="space-y-2">
                                         <Label className="text-xs">Fallback Initials</Label>
                                         <Input value={config.initials} maxLength={2} onChange={e => setConfig({ ...config, initials: e.target.value.toUpperCase() })} className="h-9 font-mono text-sm" placeholder="AK" />
@@ -225,7 +225,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                 <ScrollArea className="flex-1">
                     <div className="p-12 space-y-12">
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Single Avatar</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Single Avatar</h4>
                             <div className="flex items-center justify-center p-12 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
                                 <div className="relative inline-flex">
                                     {renderAvatar(sampleUsers[0])}
@@ -237,7 +237,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                         </div>
                         <Separator />
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Sizes</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Sizes</h4>
                             <div className="flex items-end gap-4 flex-wrap">
                                 {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map(s => {
                                     const sz = sizes[s];
@@ -259,7 +259,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                         {config.showGroup && (
                             <>
                                 <div className="space-y-6">
-                                    <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Avatar Group</h4>
+                                    <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Avatar Group</h4>
                                     <div className="flex items-center gap-6">
                                         <div style={{ display: 'flex' }}>
                                             {sampleUsers.slice(0, config.groupCount).map((u, i) => (
@@ -283,7 +283,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                             </>
                         )}
                         <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">All Shapes</h4>
+                            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">All Shapes</h4>
                             <div className="flex items-center gap-8">
                                 {(['circle', 'rounded', 'square'] as const).map(shape => {
                                     const br = shape === 'circle' ? '50%' : shape === 'rounded' ? `${tokens.radius * 0.75}rem` : '0.25rem';
@@ -301,7 +301,7 @@ export const AvatarGroup = ({ users, max = 4 }: { users: AvatarProps[], max?: nu
                         <Separator />
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60">Generated Code</h4>
+                                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">Generated Code</h4>
                                 <Button size="sm" variant="ghost" onClick={copyCode} className="gap-2"><Copy className="w-3 h-3" />Copy</Button>
                             </div>
                             <pre className="text-xs font-mono bg-muted p-6 rounded-xl overflow-x-auto max-h-96 overflow-y-auto">{generateReactCode()}</pre>

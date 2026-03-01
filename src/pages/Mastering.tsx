@@ -451,19 +451,20 @@ export default function Mastering() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center justify-end gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="rounded-none mono-label text-[10px] uppercase gap-1"
+                          className="rounded-none mono-label text-[10px] uppercase gap-1 h-auto py-2 px-3 whitespace-normal text-center min-w-[80px]"
                           onClick={() => queueInputRef.current?.click()}
                         >
-                          <Plus className="h-3 w-3" />
+                          <Plus className="h-3 w-3 shrink-0" />
                           Add to Queue
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
+                          className="h-auto py-2 px-3 whitespace-normal text-center"
                           onClick={() => {
                             if (fileInputRef.current) {
                               fileInputRef.current.value = '';
@@ -576,7 +577,7 @@ export default function Mastering() {
                 </Card>
 
                 {/* Metering Row: Spectrum Analyzer + Loudness Meter */}
-                <div className="grid grid-cols-[2fr_1fr] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
                   <Card className="overflow-hidden">
                     <CardHeader className="py-2 px-4 border-b border-border">
                       <CardTitle className="text-[10px] mono-label uppercase tracking-widest text-muted-foreground">
@@ -765,7 +766,7 @@ export default function Mastering() {
                               ±12 dB range // 0.5 dB steps
                             </span>
                           </div>
-                          <div className="grid grid-cols-6 gap-2">
+                          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                             {settings.eqBands.map((band, index) => (
                               <div key={band.label} className="flex flex-col items-center">
                                 {/* Slider Container with Background */}
@@ -948,10 +949,10 @@ export default function Mastering() {
                 </Tabs>
 
                 {/* Export + Queue Actions */}
-                <div className="flex flex-col gap-3 pt-4">
+                <div className="flex flex-col gap-4 pt-6">
 
                   {/* Format selector */}
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <span className="text-[10px] mono-label uppercase tracking-widest text-muted-foreground">
                       Export Format
                     </span>
@@ -981,13 +982,13 @@ export default function Mastering() {
                     )}
                   </div>
 
-                  <div className="flex justify-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 px-4 sm:px-0">
                     <Button
                       onClick={handleExport}
                       disabled={isExporting || !audioFile}
                       size="lg"
                       variant="hero"
-                      className="min-w-[200px]"
+                      className="w-full sm:w-auto h-auto py-4 sm:py-2 px-6 sm:px-8 whitespace-normal text-center min-h-[3.5rem]"
                     >
                       {isExporting ? (
                         <>
@@ -1006,7 +1007,7 @@ export default function Mastering() {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="rounded-none gap-2 mono-label uppercase text-xs"
+                      className="w-full sm:w-auto rounded-none gap-2 mono-label uppercase text-xs h-12 sm:h-auto"
                       onClick={() => setQueueOpen(o => !o)}
                     >
                       <ListMusic className="h-4 w-4" />
@@ -1031,10 +1032,10 @@ export default function Mastering() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="rounded-none mono-label uppercase text-[10px] gap-1"
+                            className="rounded-none mono-label uppercase text-[10px] gap-1 h-auto py-2 px-3 whitespace-normal text-center"
                             onClick={() => queueInputRef.current?.click()}
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-3 w-3 shrink-0" />
                             Add Files
                           </Button>
                           <Button

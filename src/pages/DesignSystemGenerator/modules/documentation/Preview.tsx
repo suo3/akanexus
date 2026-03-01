@@ -242,15 +242,15 @@ ${Object.entries(typography.fontFamilies)
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="border-b px-8 py-6 bg-card/30">
-                <div className="flex items-center justify-between">
+            <div className="border-b px-4 md:px-8 py-5 md:py-6 bg-card/30">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                             <BookOpen className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-black tracking-tight">Documentation Preview</h1>
-                            <p className="text-xs text-muted-foreground">
+                            <h1 className="text-2xl md:text-3xl font-black tracking-tight">Preview</h1>
+                            <p className="text-xs md:text-sm text-muted-foreground">
                                 Live preview of your design system documentation
                             </p>
                         </div>
@@ -281,18 +281,19 @@ ${Object.entries(typography.fontFamilies)
                                 <Smartphone className="w-4 h-4" />
                             </button>
                         </div>
-                        <Button variant="outline" className="gap-2" onClick={handleExportDocs}>
+                        <Button variant="outline" size="sm" className="gap-2 font-bold uppercase tracking-widest text-[10px]" onClick={handleExportDocs}>
                             <Code className="w-4 h-4" />
-                            Export Docs
+                            <span className="hidden sm:inline">Export Docs</span>
+                            <span className="sm:hidden">Export</span>
                         </Button>
                     </div>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
                 {/* Sidebar Navigation */}
-                <div className="w-64 border-r bg-card/30 flex flex-col">
+                <div className="w-full lg:w-64 border-b lg:border-b-0 lg:border-r bg-card/30 flex flex-col shrink-0">
                     <div className="p-4 border-b">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                             Documentation
@@ -327,7 +328,7 @@ ${Object.entries(typography.fontFamilies)
                 </div>
 
                 {/* Preview Area */}
-                <div className="flex-1 bg-muted/30 flex items-start justify-center overflow-auto p-8">
+                <div className="flex-1 bg-muted/30 flex items-start justify-center overflow-auto p-4 md:p-8">
                     <div className={`${viewportSizes[viewMode]} transition-all duration-300`}>
                         <div className="bg-background rounded-xl shadow-2xl overflow-hidden min-h-[600px]">
                             {/* Mock Documentation Site */}

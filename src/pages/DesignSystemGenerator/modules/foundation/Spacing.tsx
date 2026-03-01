@@ -66,9 +66,9 @@ const SpacingFoundation = () => {
     };
 
     return (
-        <div className="h-full flex">
+        <div className="h-full flex flex-col lg:flex-row">
             {/* Left Panel - Controls */}
-            <div className="w-96 border-r flex flex-col bg-card/30">
+            <div className="w-full lg:w-96 border-b lg:border-b-0 lg:border-r flex flex-col bg-card/30 shrink-0">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
@@ -255,7 +255,7 @@ const SpacingFoundation = () => {
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-muted/10">
+                <div className="border-b px-4 md:px-8 py-4 md:py-5 bg-muted/10">
                     <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
                         SPACE_PREVIEW_PORT
                     </h3>
@@ -268,18 +268,20 @@ const SpacingFoundation = () => {
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 SPACING_SCALE_RENDER
                             </h4>
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                                 {Object.entries(spacing.scale).map(([key, value]) => (
-                                    <div key={key} className="flex items-center gap-6">
-                                        <span className="text-xs font-mono text-muted-foreground w-12">
-                                            {key}
-                                        </span>
-                                        <span className="text-xs font-mono text-muted-foreground/50 w-20">
-                                            {value}
-                                        </span>
+                                    <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 group hover:bg-muted/20 p-2 transition-colors">
+                                        <div className="flex items-center gap-4 w-full sm:w-auto shrink-0">
+                                            <span className="text-xs font-mono text-muted-foreground w-12 shrink-0">
+                                                {key}
+                                            </span>
+                                            <span className="text-xs font-mono text-muted-foreground/50 w-20 shrink-0">
+                                                {value}
+                                            </span>
+                                        </div>
                                         <div
                                             style={{ width: value }}
-                                            className="h-8 bg-primary/20 border-2 border-primary rounded-none"
+                                            className="h-8 bg-primary/20 border-2 border-primary rounded-none max-w-full"
                                         />
                                     </div>
                                 ))}
@@ -340,12 +342,14 @@ const SpacingFoundation = () => {
                             </h4>
                             <div className="space-y-3">
                                 {Object.entries(spacing.breakpoints).map(([key, value]) => (
-                                    <div key={key} className="flex items-center gap-6 p-4 border rounded-none bg-muted/5">
-                                        <span className="text-sm font-bold uppercase w-12 mono-label">{key}</span>
-                                        <span className="text-sm font-mono text-muted-foreground">{value}</span>
-                                        <div className="flex-1 h-2 bg-muted rounded-none overflow-hidden">
+                                    <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-4 border rounded-none bg-muted/5">
+                                        <div className="flex items-center justify-between w-full sm:w-auto shrink-0 sm:gap-4">
+                                            <span className="text-sm font-bold uppercase w-12 mono-label">{key}</span>
+                                            <span className="text-sm font-mono text-muted-foreground">{value}</span>
+                                        </div>
+                                        <div className="flex-1 h-2 bg-muted rounded-none overflow-hidden hidden xs:block">
                                             <div
-                                                style={{ width: `${(parseInt(value) / 1536) * 100}%` }}
+                                                style={{ width: `${Math.min((parseInt(value) || 0) / 1536 * 100, 100)}%` }}
                                                 className="h-full bg-primary"
                                             />
                                         </div>

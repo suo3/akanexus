@@ -3,17 +3,19 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar } from '../components/Navigation/Sidebar';
 import { CommandPalette, CommandPaletteTrigger } from '../components/Navigation/CommandPalette';
 import { Button } from '@/components/ui/button';
-import { Moon, Sun, Download } from 'lucide-react';
+import { Moon, Sun, Download, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useDesignSystemStore } from '../store/useDesignSystemStore';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { GuidedTour } from '../components/GuidedTour';
 import { SettingsModal } from '../components/Settings/SettingsModal';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export const MainLayout = () => {
     const { theme, setTheme } = useTheme();
     const { toggleSidebar } = useDesignSystemStore();
     const navigate = useNavigate();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
     // Ctrl+/ (or Cmd+/) → toggle sidebar
     React.useEffect(() => {
@@ -32,23 +34,41 @@ export const MainLayout = () => {
     }, [toggleSidebar]);
 
     return (
-        <div className="flex h-screen w-full bg-background overflow-hidden">
+        <div className="flex h-screen w-full bg-background overflow-hidden relative">
             <CommandPalette />
             <GuidedTour />
             <SettingsModal />
 
-            {/* Sidebar */}
-            <Sidebar />
+            {/* Desktop Sidebar */}
+            <div className="hidden lg:block lg:h-full">
+                <Sidebar />
+            </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
                 {/* Top Toolbar */}
-                <header className="h-16 border-b bg-muted/30 backdrop-blur-md flex items-center justify-between px-6 z-10" data-tour="toolbar-actions">
-                    <div className="flex items-center gap-4" data-tour="command-palette">
-                        <CommandPaletteTrigger />
+                <header className="h-16 border-b bg-muted/30 backdrop-blur-md flex items-center justify-between px-4 md:px-6 z-20 shrink-0" data-tour="toolbar-actions">
+                    <div className="flex items-center gap-2 md:gap-4">
+                        {/* Mobile Menu Toggle */}
+                        <div className="lg:hidden">
+                            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                                <SheetTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-none border border-border/50">
+                                        <Menu className="h-4 w-4" />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="left" className="p-0 w-72 border-r bg-background">
+                                    <Sidebar onNavItemClick={() => setIsMobileMenuOpen(false)} />
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+
+                        <div data-tour="command-palette">
+                            <CommandPaletteTrigger />
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3">
                         {/* Theme Toggle */}
                         <Button
                             variant="outline"
@@ -65,11 +85,11 @@ export const MainLayout = () => {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
-                                        className="gap-2 font-bold rounded-none mono-label uppercase text-xs"
+                                        className="gap-2 font-bold rounded-none mono-label uppercase text-[10px] md:text-xs px-2 md:px-4"
                                         onClick={() => navigate('/design-system-generator/developer/export')}
                                     >
-                                        <Download className="w-4 h-4" />
-                                        Export
+                                        <Download className="w-3.5 h-3.5 md:w-4 h-4" />
+                                        <span className="hidden xs:inline">Export</span>
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>Export design system as a React project</TooltipContent>

@@ -113,7 +113,7 @@ const navigationSections: NavSection[] = [
 
 ];
 
-export const Sidebar = () => {
+export const Sidebar = ({ onNavItemClick }: { onNavItemClick?: () => void }) => {
     const { sidebarCollapsed, toggleSidebar } = useDesignSystemStore();
     const [expandedSections, setExpandedSections] = React.useState<string[]>(['Foundation', 'Components']);
     const [searchQuery, setSearchQuery] = React.useState('');
@@ -187,7 +187,7 @@ export const Sidebar = () => {
         <aside className="w-72 border-r bg-muted/30 backdrop-blur-xl flex flex-col" data-tour="sidebar">
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
-                <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+                <Link to="/" onClick={onNavItemClick} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                     <div className="w-9 h-9 rounded-none bg-primary flex items-center justify-center text-primary-foreground">
                         <Palette className="w-5 h-5" />
                     </div>
@@ -202,7 +202,7 @@ export const Sidebar = () => {
                     variant="ghost"
                     size="icon"
                     onClick={toggleSidebar}
-                    className="h-8 w-8 rounded-none"
+                    className="h-8 w-8 rounded-none hidden lg:flex"
                 >
                     <PanelLeftClose className="h-4 w-4" />
                 </Button>
@@ -262,6 +262,7 @@ export const Sidebar = () => {
                                                 <Link
                                                     key={item.path}
                                                     to={item.path}
+                                                    onClick={onNavItemClick}
                                                     className={cn(
                                                         'flex items-center justify-between px-3 py-1.5 rounded-none text-xs transition-all mono-label uppercase',
                                                         isActive
@@ -294,7 +295,10 @@ export const Sidebar = () => {
                 <Button
                     variant="outline"
                     className="w-full justify-start gap-2 font-bold text-xs rounded-none mono-label uppercase"
-                    onClick={() => window.dispatchEvent(new CustomEvent('open-settings'))}
+                    onClick={() => {
+                        window.dispatchEvent(new CustomEvent('open-settings'));
+                        onNavItemClick?.();
+                    }}
                 >
                     <Settings className="h-4 w-4" />
                     Settings

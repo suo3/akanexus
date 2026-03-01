@@ -55,7 +55,13 @@ export const GuidedTour = () => {
     const [currentStep, setCurrentStep] = useState(0);
     const [position, setPosition] = useState({ top: 0, left: 0, width: 0, height: 0 });
 
+    const [isMobile, setIsMobile] = useState(false);
+
     useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
         // Check if tour has been seen
         const hasSeenTour = localStorage.getItem('akanexus-tour-seen');
         if (!hasSeenTour) {
@@ -68,8 +74,14 @@ export const GuidedTour = () => {
             setCurrentStep(0);
         };
         window.addEventListener('start-tour', startHandler);
-        return () => window.removeEventListener('start-tour', startHandler);
+        return () => {
+            window.removeEventListener('start-tour', startHandler);
+            window.removeEventListener('resize', checkMobile);
+        };
     }, []);
+
+    const step = defaultSteps[currentStep];
+    const isCenter = step.position === 'center' || isMobile;
 
     useEffect(() => {
         if (!isOpen) return;
@@ -87,7 +99,8 @@ export const GuidedTour = () => {
         }
 
         const element = document.querySelector(step.target);
-        if (element) {
+
+        if (element && !isCenter) {
             const rect = element.getBoundingClientRect();
             setPosition({
                 top: rect.top,
@@ -96,7 +109,7 @@ export const GuidedTour = () => {
                 height: rect.height,
             });
         } else {
-            // If element not found, default to center
+            // If element not found or center position, default to center
             setPosition({
                 top: window.innerHeight / 2,
                 left: window.innerWidth / 2,
@@ -122,63 +135,63 @@ export const GuidedTour = () => {
 
     const handleClose = () => {
         setIsOpen(false);
-        localStorage.setItem('akanexus-tour-seen', 'true');
+        // Hydration safe localStorage access
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('akanexus-tour-seen', 'true');
+        }
     };
 
     if (!isOpen) return null;
 
-    const step = defaultSteps[currentStep];
-    const isCenter = step.position === 'center';
-
     return (
-        <div className="fixed inset-0 z-[100] pointer-events-none">
+        <div className="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
             {/* Backdrop */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/50 pointer-events-auto"
+                className="absolute inset-0 bg-black/60 pointer-events-auto backdrop-blur-[2px]"
             />
 
-            {/* Spotlight (optional - implemented as SVG clip path or similar in complex tours, 
-          here simplified as just the modal positioning) */}
+            {/* Spotlight */}
             {!isCenter && (
-                <div
-                    className="absolute border-2 border-primary rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.5)] transition-all duration-300 ease-in-out"
-                    style={{
+                <motion.div
+                    initial={false}
+                    animate={{
                         top: position.top - 4,
                         left: position.left - 4,
                         width: position.width + 8,
                         height: position.height + 8,
                     }}
+                    transition={{ type: "spring", damping: 30, stiffness: 250 }}
+                    className="absolute border-2 border-primary rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.5)] z-0"
                 />
             )}
 
             {/* Popover */}
             <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ type: "spring", duration: 0.4 }}
-                className="absolute pointer-events-auto bg-card text-card-foreground border rounded-xl shadow-2xl w-[400px] overflow-hidden"
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="absolute pointer-events-auto bg-card text-card-foreground border rounded-2xl shadow-2xl w-[calc(100%-2rem)] md:w-[420px] overflow-hidden"
                 style={{
                     top: isCenter
                         ? '50%'
                         : step.position === 'bottom'
                             ? position.top + position.height + 20
                             : step.position === 'top'
-                                ? position.top - 200 // Approximate height
-                                : step.position === 'right'
-                                    ? position.top
-                                    : position.top,
+                                ? position.top - 240
+                                : position.top,
                     left: isCenter
                         ? '50%'
                         : step.position === 'right'
                             ? position.left + position.width + 20
                             : step.position === 'left'
-                                ? position.left - 420
+                                ? position.left - 440
                                 : position.left,
                     transform: isCenter ? 'translate(-50%, -50%)' : 'none',
+                    margin: 0,
                 }}
             >
                 {/* Header */}

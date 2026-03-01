@@ -650,6 +650,30 @@ export const useDesignSystemStore = create<DesignSystemStore>()(
                     documentation: state.documentation,
                     exportSettings: state.exportSettings,
                 }),
+                onRehydrateStorage: () => (state) => {
+                    if (state) {
+                        // Ensure color scales are regenerated if empty or missing
+                        const { tokens } = state;
+                        if (tokens && tokens.colors) {
+                            const { colors } = tokens;
+                            const needsUpdate = !colors.primaryScale || Object.keys(colors.primaryScale).length === 0;
+
+                            if (needsUpdate) {
+                                import('../utils/colorUtils').then(({ generateColorScale }) => {
+                                    state.updateTokens({
+                                        colors: {
+                                            ...colors,
+                                            primaryScale: generateColorScale(colors.primary),
+                                            secondaryScale: generateColorScale(colors.secondary),
+                                            accentScale: generateColorScale(colors.accent),
+                                            mutedScale: generateColorScale(colors.muted),
+                                        }
+                                    });
+                                });
+                            }
+                        }
+                    }
+                },
             }
         )
     )

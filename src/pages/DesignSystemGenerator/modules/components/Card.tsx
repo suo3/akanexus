@@ -191,9 +191,9 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
     };
 
     return (
-        <div className="h-full flex">
+        <div className="h-full flex flex-col lg:flex-row">
             {/* Left Panel - Controls */}
-            <div className="w-96 border-r flex flex-col bg-card/30">
+            <div className="w-full lg:w-96 border-b lg:border-b-0 lg:border-r flex flex-col bg-card/30 shrink-0">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
@@ -412,14 +412,14 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
 
             {/* Right Panel - Preview */}
             <div className="flex-1 flex flex-col">
-                <div className="border-b px-8 py-5 bg-muted/10">
+                <div className="border-b px-4 md:px-8 py-4 md:py-5 bg-muted/10">
                     <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mono-label">
                         CARD_PREVIEW_PORT
                     </h3>
                 </div>
 
                 <ScrollArea className="flex-1">
-                    <div className="p-12 space-y-12">
+                    <div className="p-6 md:p-12 space-y-12">
                         {/* Interactive Preview */}
                         <div className="space-y-6">
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
@@ -473,7 +473,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 VARIANT_MATRIX
                             </h4>
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {variants.map((variant) => (
                                     <div key={variant.id} className="space-y-3">
                                         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -506,7 +506,7 @@ export const CardFooter = ({ className, children, ...props }: React.HTMLAttribut
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90 mono-label">
                                 BEHAVIOR_PATTERNS
                             </h4>
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div style={getCardStyle()} className={getCardClassName()}>
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-primary/20" />

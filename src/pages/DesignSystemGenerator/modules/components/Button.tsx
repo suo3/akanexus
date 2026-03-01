@@ -298,9 +298,9 @@ Button.displayName = 'Button';
     };
 
     return (
-        <div className="h-full flex overflow-hidden">
+        <div className="h-full flex flex-col lg:flex-row overflow-hidden">
             {/* Left Panel - Controls */}
-            <div className="w-96 border-r flex flex-col bg-card/30">
+            <div className="w-full lg:w-96 border-b lg:border-b-0 lg:border-r flex flex-col bg-card/30 shrink-0">
                 <div className="border-b px-6 py-5">
                     <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-none bg-primary/10 flex items-center justify-center">
@@ -596,7 +596,7 @@ Button.displayName = 'Button';
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 States
                             </h4>
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="p-6 border rounded-none bg-muted/5 space-y-3">
                                     <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
                                         ST_DEFAULT
@@ -626,9 +626,9 @@ Button.displayName = 'Button';
                                 </div>
 
                                 {config.loadingState && (
-                                    <div className="p-6 border rounded-xl bg-card space-y-3">
-                                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                            Loading
+                                    <div className="p-6 border rounded-none bg-muted/5 space-y-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
+                                            ST_LOADING
                                         </p>
                                         <button style={getButtonStyle()}>
                                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -645,7 +645,7 @@ Button.displayName = 'Button';
                             <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-90">
                                 All Variants
                             </h4>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {variants.map((variant) => (
                                     <div key={variant.id} className="p-6 border rounded-none bg-muted/5 space-y-3">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mono-label">
@@ -664,6 +664,7 @@ Button.displayName = 'Button';
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
+                                                width: '100%'
                                             }}
                                         >
                                             {variant.name} Button

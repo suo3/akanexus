@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ColorScale, getColorContrast } from "../utils/colorUtils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface ColorScalePreviewProps {
     label: string;
@@ -33,7 +34,7 @@ const ColorScalePreview = ({ label, baseColor, scale, onChange }: ColorScalePrev
             </div>
 
             <div className="grid grid-cols-11 h-10 rounded-md overflow-hidden border">
-                {Object.entries(scale).map(([weight, hex]) => (
+                {scale && Object.entries(scale).map(([weight, hex]) => (
                     <div
                         key={weight}
                         className="group relative flex items-center justify-center transition-all hover:scale-110 hover:z-10 cursor-pointer"
@@ -127,4 +128,3 @@ export const ColorEditor = ({ colors, onUpdate }: ColorEditorProps) => {
     );
 };
 
-import { Separator } from "@/components/ui/separator";

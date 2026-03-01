@@ -705,38 +705,39 @@ export default function AutoDocs() {
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="border-b px-8 py-6 bg-card/30">
-                <div className="flex items-center justify-between">
+            <div className="border-b px-4 md:px-8 py-5 md:py-6 bg-card/30">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
                             <BookOpen className="w-6 h-6" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-black tracking-tight">API Reference</h1>
-                            <p className="text-sm text-muted-foreground">Components, tokens, and utilities documentation</p>
+                            <h1 className="text-2xl md:text-3xl font-black tracking-tight">API Reference</h1>
+                            <p className="text-xs md:text-sm text-muted-foreground">Components, tokens, and utilities documentation</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <select
                             value={exportFormat}
                             onChange={(e) => setExportFormat(e.target.value as any)}
-                            className="px-3 py-2 border rounded-lg text-sm bg-background"
+                            className="px-3 py-2 border rounded-lg text-sm bg-background font-mono"
                         >
-                            <option value="typescript">TypeScript</option>
+                            <option value="typescript">TS</option>
                             <option value="json">JSON</option>
                             <option value="css">CSS</option>
                         </select>
-                        <Button variant="outline" className="gap-2" onClick={handleExport}>
+                        <Button variant="outline" size="sm" className="gap-2" onClick={handleExport}>
                             <Download className="w-4 h-4" />
-                            Export API
+                            <span className="hidden sm:inline">Export API</span>
+                            <span className="sm:hidden">Export</span>
                         </Button>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
                 {/* Sidebar */}
-                <div className="w-72 border-r bg-card/30 flex flex-col">
+                <div className="w-full lg:w-72 border-b lg:border-b-0 lg:border-r bg-card/30 flex flex-col shrink-0">
                     <div className="p-4 border-b space-y-3">
                         <div className="relative">
                             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -797,65 +798,65 @@ export default function AutoDocs() {
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-auto bg-background/50">
                     {selectedDoc ? (
-                        <div className="max-w-4xl mx-auto p-8 space-y-8">
+                        <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
                             {selectedDoc.category === 'component' ? (
                                 <>
                                     {/* Component Documentation */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h2 className="text-4xl font-black tracking-tight">{selectedDoc.name}</h2>
+                                            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{selectedDoc.name}</h2>
                                             <Badge variant="outline" className="font-mono text-xs">v1.0.0</Badge>
                                         </div>
-                                        <p className="text-lg text-muted-foreground leading-relaxed">
+                                        <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                                             {selectedDoc.description}
                                         </p>
 
-                                        <div className="p-4 rounded-xl bg-muted/50 border flex items-center justify-between font-mono text-sm">
-                                            <code className="text-primary">{selectedDoc.import}</code>
-                                            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleCopy(selectedDoc.import)}>
+                                        <div className="p-4 rounded-xl bg-muted/50 border flex flex-col md:flex-row md:items-center justify-between gap-3 font-mono text-sm">
+                                            <code className="text-primary break-all">{selectedDoc.import}</code>
+                                            <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" onClick={() => handleCopy(selectedDoc.import)}>
                                                 {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                                             </Button>
                                         </div>
                                     </div>
 
                                     <Tabs defaultValue="props" className="w-full">
-                                        <TabsList className="mb-4">
-                                            <TabsTrigger value="props" className="gap-2">
+                                        <TabsList className="mb-4 flex-wrap h-auto p-1">
+                                            <TabsTrigger value="props" className="gap-2 text-xs md:text-sm">
                                                 <Table className="w-4 h-4" />
-                                                Props API
+                                                Props
                                             </TabsTrigger>
-                                            <TabsTrigger value="examples" className="gap-2">
+                                            <TabsTrigger value="examples" className="gap-2 text-xs md:text-sm">
                                                 <Code className="w-4 h-4" />
                                                 Examples
                                             </TabsTrigger>
                                             {selectedDoc.accessibility && (
-                                                <TabsTrigger value="accessibility" className="gap-2">
+                                                <TabsTrigger value="accessibility" className="gap-2 text-xs md:text-sm">
                                                     <Eye className="w-4 h-4" />
-                                                    Accessibility
+                                                    A11y
                                                 </TabsTrigger>
                                             )}
                                         </TabsList>
 
                                         <TabsContent value="props" className="space-y-4">
-                                            <div className="rounded-xl border bg-card overflow-hidden">
-                                                <table className="w-full text-sm text-left">
+                                            <div className="rounded-xl border bg-card overflow-x-auto">
+                                                <table className="w-full text-sm text-left border-collapse">
                                                     <thead className="bg-muted/50 border-b">
                                                         <tr>
-                                                            <th className="px-6 py-3 font-bold">Prop</th>
-                                                            <th className="px-6 py-3 font-bold">Type</th>
-                                                            <th className="px-6 py-3 font-bold">Default</th>
-                                                            <th className="px-6 py-3 font-bold">Description</th>
+                                                            <th className="px-4 py-3 font-bold">Prop</th>
+                                                            <th className="px-4 py-3 font-bold hidden sm:table-cell">Type</th>
+                                                            <th className="px-4 py-3 font-bold">Default</th>
+                                                            <th className="px-4 py-3 font-bold hidden md:table-cell">Description</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="divide-y">
-                                                        {selectedDoc.props.map((prop: any) => (
+                                                    <tbody className="divide-y text-xs sm:text-sm">
+                                                        {(selectedDoc as ComponentDoc).props.map((prop: any) => (
                                                             <tr key={prop.name} className="hover:bg-muted/10">
-                                                                <td className="px-6 py-4 font-mono text-primary font-bold">{prop.name}</td>
-                                                                <td className="px-6 py-4 font-mono text-xs text-purple-500">{prop.type}</td>
-                                                                <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{prop.default}</td>
-                                                                <td className="px-6 py-4 text-muted-foreground">{prop.description}</td>
+                                                                <td className="px-4 py-4 font-mono text-primary font-bold">{prop.name}</td>
+                                                                <td className="px-4 py-4 font-mono text-purple-500 hidden sm:table-cell">{prop.type}</td>
+                                                                <td className="px-4 py-4 font-mono text-muted-foreground">{prop.default}</td>
+                                                                <td className="px-4 py-4 text-muted-foreground hidden md:table-cell">{prop.description}</td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
@@ -864,16 +865,16 @@ export default function AutoDocs() {
                                         </TabsContent>
 
                                         <TabsContent value="examples" className="space-y-6">
-                                            {selectedDoc.examples.map((example: any, idx: number) => (
+                                            {(selectedDoc as ComponentDoc).examples.map((example: any, idx: number) => (
                                                 <div key={idx} className="space-y-3">
                                                     <h3 className="font-bold text-lg">{example.title}</h3>
                                                     <div className="relative group rounded-xl overflow-hidden border bg-[#0d1117]">
-                                                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="absolute top-3 right-3 opacity-0 md:group-hover:opacity-100 transition-opacity">
                                                             <Button size="icon" variant="secondary" className="h-8 w-8" onClick={() => handleCopy(example.code)}>
                                                                 <Copy className="w-4 h-4" />
                                                             </Button>
                                                         </div>
-                                                        <div className="p-4 overflow-x-auto text-sm font-mono text-gray-300">
+                                                        <div className="p-4 overflow-x-auto text-xs md:text-sm font-mono text-gray-300">
                                                             <pre>{example.code}</pre>
                                                         </div>
                                                     </div>
@@ -885,16 +886,16 @@ export default function AutoDocs() {
                                             <TabsContent value="accessibility" className="space-y-4">
                                                 <div className="p-6 border rounded-xl bg-card">
                                                     <h3 className="font-bold text-lg mb-3">Accessibility Features</h3>
-                                                    <p className="text-muted-foreground">{selectedDoc.accessibility}</p>
-                                                    {selectedDoc.usage && (
+                                                    <p className="text-muted-foreground text-sm md:text-base">{selectedDoc.accessibility}</p>
+                                                    {(selectedDoc as ComponentDoc).usage && (
                                                         <div className="mt-6 space-y-4">
                                                             <div>
                                                                 <h4 className="font-bold mb-2">When to use</h4>
-                                                                <p className="text-sm text-muted-foreground">{selectedDoc.usage.whenToUse}</p>
+                                                                <p className="text-sm text-muted-foreground">{(selectedDoc as ComponentDoc).usage.whenToUse}</p>
                                                             </div>
                                                             <div>
                                                                 <h4 className="font-bold mb-2">When not to use</h4>
-                                                                <p className="text-sm text-muted-foreground">{selectedDoc.usage.whenNotToUse}</p>
+                                                                <p className="text-sm text-muted-foreground">{(selectedDoc as ComponentDoc).usage.whenNotToUse}</p>
                                                             </div>
                                                         </div>
                                                     )}
@@ -906,23 +907,30 @@ export default function AutoDocs() {
                             ) : (
                                 <>
                                     {/* Token Documentation */}
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3">
-                                            {selectedDoc.icon && <selectedDoc.icon className="w-10 h-10 text-primary" />}
+                                    <div className="space-y-8">
+                                        <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                            {(() => {
+                                                const Icon = (selectedDoc as TokenDoc).icon;
+                                                return Icon && <Icon className="w-12 h-12 text-primary shrink-0" />;
+                                            })()}
                                             <div>
-                                                <h2 className="text-4xl font-black tracking-tight">{selectedDoc.name}</h2>
-                                                <p className="text-lg text-muted-foreground">{selectedDoc.description}</p>
+                                                <h2 className="text-3xl md:text-4xl font-black tracking-tight">{selectedDoc.name}</h2>
+                                                <p className="text-base md:text-lg text-muted-foreground leading-relaxed">{selectedDoc.description}</p>
                                             </div>
                                         </div>
+                                        <Separator />
+                                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                            {renderTokenContent()}
+                                        </div>
                                     </div>
-                                    {renderTokenContent()}
                                 </>
                             )}
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-                            <FileText className="w-16 h-16 mb-4 opacity-20" />
-                            <p>Select an item to view documentation</p>
+                        <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-8 text-center">
+                            <FileText className="w-16 h-16 mb-4 opacity-10" />
+                            <h3 className="text-xl font-bold mb-1">No Selection</h3>
+                            <p className="max-w-xs mx-auto">Select a component or token from the sidebar to view its API documentation and usage guidelines.</p>
                         </div>
                     )}
                 </div>

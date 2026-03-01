@@ -778,14 +778,14 @@ export default function PatternLibrary() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="border-b px-8 py-6 bg-card/30">
+      <div className="border-b px-4 md:px-8 py-5 md:py-6 bg-card/30">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
             <LayoutTemplate className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-black tracking-tight">Pattern Library</h1>
-            <p className="text-sm text-muted-foreground">Pre-built composite UI patterns to accelerate development</p>
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight">Pattern Library</h1>
+            <p className="text-xs md:text-sm text-muted-foreground">Pre-built composite UI patterns to accelerate development</p>
           </div>
         </div>
       </div>
@@ -793,83 +793,83 @@ export default function PatternLibrary() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Filter Bar */}
-        <div className="px-8 py-4 border-b bg-card/10 flex flex-wrap items-center gap-4">
-          <div className="flex gap-2">
+        <div className="px-4 md:px-8 py-4 border-b bg-card/10 flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex flex-wrap gap-2">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === cat
-                  ? 'bg-primary text-primary-foreground shadow-md'
-                  : 'bg-background hover:bg-muted text-muted-foreground'
+                className={`px-3 py-1.5 text-xs font-bold uppercase tracking-widest transition-all ${activeCategory === cat
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted/50 hover:bg-muted font-mono'
                   }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-
-          <div className="flex-1 max-w-sm ml-auto relative">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+          <div className="flex-1 max-w-md w-full">
             <input
               type="text"
-              placeholder="Search patterns..."
+              placeholder="SEARCH_PATTERNS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-full px-4 py-2 bg-muted/50 border-2 border-border focus:border-primary outline-none text-sm font-mono mono-label"
             />
           </div>
         </div>
 
-        <ScrollArea className="flex-1 p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {filteredPatterns.map(pattern => (
-              <div key={pattern.id} className="group rounded-2xl border bg-card overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
-                {/* Preview */}
-                <div className="h-48 bg-muted/20 border-b flex items-center justify-center p-6 relative overflow-hidden group/preview">
-                  <div className="absolute inset-0 bg-grid-slate-200/50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] pointer-events-none" />
-                  <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-                    {pattern.preview}
+        <ScrollArea className="flex-1">
+          <div className="p-4 md:p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredPatterns.map(pattern => (
+                <div key={pattern.id} className="group rounded-2xl border bg-card overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
+                  {/* Preview */}
+                  <div className="h-48 bg-muted/20 border-b flex items-center justify-center p-6 relative overflow-hidden group/preview">
+                    <div className="absolute inset-0 bg-grid-slate-200/50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] pointer-events-none" />
+                    <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
+                      {pattern.preview}
+                    </div>
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/preview:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 backdrop-blur-sm z-10">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => handleCopy(pattern.code, pattern.id)}
+                        className="shadow-lg"
+                      >
+                        {copiedId === pattern.id ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
+                        {copiedId === pattern.id ? 'Copied!' : 'Copy Code'}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white/10 text-white hover:bg-white/20 border-white/30 shadow-lg backdrop-blur-sm"
+                        onClick={() => handlePreview(pattern)}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                    </div>
                   </div>
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/preview:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 backdrop-blur-sm z-10">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => handleCopy(pattern.code, pattern.id)}
-                      className="shadow-lg"
-                    >
-                      {copiedId === pattern.id ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-                      {copiedId === pattern.id ? 'Copied!' : 'Copy Code'}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-white/10 text-white hover:bg-white/20 border-white/30 shadow-lg backdrop-blur-sm"
-                      onClick={() => handlePreview(pattern)}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Preview
-                    </Button>
-                  </div>
-                </div>
 
-                {/* Info */}
-                <div className="p-5 flex-1 flex flex-col">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant="outline" className="text-xs font-normal text-muted-foreground">
-                      {pattern.category}
-                    </Badge>
-                    <span className="text-[10px] text-muted-foreground font-mono">
-                      {pattern.files.length} file{pattern.files.length > 1 ? 's' : ''}
-                    </span>
+                  {/* Info */}
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="text-xs font-normal text-muted-foreground">
+                        {pattern.category}
+                      </Badge>
+                      <span className="text-[10px] text-muted-foreground font-mono">
+                        {pattern.files.length} file{pattern.files.length > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-lg mb-1">{pattern.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">
+                      {pattern.description}
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg mb-1">{pattern.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">
-                    {pattern.description}
-                  </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </ScrollArea>
       </div>

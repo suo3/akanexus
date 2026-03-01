@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight, Blocks } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CTA = () => {
@@ -14,8 +14,8 @@ const CTA = () => {
       <div className="container relative z-10 px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Icon */}
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-none bg-primary/10 mb-8">
-            <Zap className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-none bg-primary/10 border border-primary/20 mb-8">
+            <Blocks className="w-8 h-8 text-primary" />
           </div>
 
           {/* Heading */}

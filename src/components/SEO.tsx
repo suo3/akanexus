@@ -23,7 +23,7 @@ export default function SEO({
   ogType = 'website',
   jsonLd,
 }: SEOProps) {
-  const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} - Premium Frontend Solutions`;
+  const fullTitle = title ? `${title} | ${BASE_TITLE}` : `${BASE_TITLE} - Free Industrial Tools & Premium Frontend Solutions`;
 
   useEffect(() => {
     // Update document title

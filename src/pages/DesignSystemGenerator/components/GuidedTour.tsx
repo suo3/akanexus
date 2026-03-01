@@ -171,28 +171,30 @@ export const GuidedTour = () => {
             {/* Popover */}
             <motion.div
                 key={currentStep}
-                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="absolute pointer-events-auto bg-card text-card-foreground border rounded-2xl shadow-2xl w-[calc(100%-2rem)] md:w-[420px] overflow-hidden"
-                style={{
-                    top: isCenter
-                        ? '50%'
-                        : step.position === 'bottom'
+                initial={{ opacity: 0, scale: 0.9, x: isCenter ? '-50%' : 0, y: isCenter ? '-50%' : 30 }}
+                animate={{
+                    opacity: 1,
+                    scale: 1,
+                    x: isCenter ? '-50%' : 0,
+                    y: isCenter ? '-50%' : 0,
+                    top: isCenter ? '50%' : (
+                        step.position === 'bottom'
                             ? position.top + position.height + 20
                             : step.position === 'top'
                                 ? position.top - 240
-                                : position.top,
-                    left: isCenter
-                        ? '50%'
-                        : step.position === 'right'
+                                : position.top
+                    ),
+                    left: isCenter ? '50%' : (
+                        step.position === 'right'
                             ? position.left + position.width + 20
                             : step.position === 'left'
                                 ? position.left - 440
-                                : position.left,
-                    transform: isCenter ? 'translate(-50%, -50%)' : 'none',
-                    margin: 0,
+                                : position.left
+                    )
                 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="absolute pointer-events-auto bg-card text-card-foreground border rounded-2xl shadow-2xl w-[calc(100%-2rem)] md:w-[420px] overflow-hidden"
+                style={{ margin: 0 }}
             >
                 {/* Header */}
                 <div className="relative h-24 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center overflow-hidden">

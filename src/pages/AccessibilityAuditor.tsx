@@ -243,7 +243,9 @@ const AccessibilityAuditor = () => {
                                         <TabsList className="bg-secondary/30 rounded-none w-full justify-start p-1 h-12">
                                             <TabsTrigger value="findings" className="px-6 mono-label text-[10px] uppercase">Automated Findings</TabsTrigger>
                                             <TabsTrigger value="manual" className="px-6 mono-label text-[10px] uppercase">Manual Checklist</TabsTrigger>
-                                            <TabsTrigger value="simulator" className="px-6 mono-label text-[10px] uppercase">Visual Simulator</TabsTrigger>
+                                            {!url && (
+                                                <TabsTrigger value="simulator" className="px-6 mono-label text-[10px] uppercase">Visual Simulator</TabsTrigger>
+                                            )}
                                             <TabsTrigger value="remediation" className="px-6 mono-label text-[10px] uppercase">Remediation Guide</TabsTrigger>
                                         </TabsList>
 
@@ -255,9 +257,11 @@ const AccessibilityAuditor = () => {
                                             <ManualChecklist />
                                         </TabsContent>
 
-                                        <TabsContent value="simulator" className="mt-6">
-                                            <PreviewSimulator html={pastedCode || "<!-- Run an audit to see preview -->"} />
-                                        </TabsContent>
+                                        {!url && (
+                                            <TabsContent value="simulator" className="mt-6">
+                                                <PreviewSimulator html={pastedCode} />
+                                            </TabsContent>
+                                        )}
 
                                         <TabsContent value="remediation" className="mt-6">
                                             <RemediationGuide

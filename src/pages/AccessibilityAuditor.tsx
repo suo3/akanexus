@@ -15,6 +15,7 @@ import { ManualChecklist } from "./AccessibilityAuditor/components/ManualCheckli
 import { PreviewSimulator } from "./AccessibilityAuditor/components/PreviewSimulator";
 import { runAccessibilityAudit, DetailedAuditResponse, detectSemanticViolations } from "@/utils/accessibilityAudit";
 import { generateExecutiveReport } from "@/utils/pdfReportGenerator";
+import SupportDialog from "@/components/SupportDialog";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,7 @@ const AccessibilityAuditor = () => {
     const [isAuditing, setIsAuditing] = useState(false);
     const [auditResults, setAuditResults] = useState<DetailedAuditResponse | null>(null);
     const [pastedCode, setPastedCode] = useState("");
+    const [showSupportDialog, setShowSupportDialog] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
 
     const handleUrlAudit = async () => {
@@ -48,13 +50,24 @@ const AccessibilityAuditor = () => {
             });
 
             if (error) {
-                throw new Error(error.message);
+                throw new Error("Unable to connect to the scanning engine.");
+            }
+
+            if (data && data.success === false) {
+                throw new Error(data.error);
+            }
+
+            if (!data || !data.auditResult) {
+                throw new Error("Invalid response received from the scanning engine.");
             }
 
             setAuditResults(data.auditResult);
             toast.success("Deep Scan complete!");
         } catch (error: any) {
-            toast.error(`Audit failed: ${error.message || "Could not complete the audit."}`);
+            toast.error(error.message || "Could not complete the audit.", {
+                description: "Try using the Local Component Audit tab instead.",
+                duration: 6000
+            });
         } finally {
             setIsAuditing(false);
         }
@@ -106,9 +119,9 @@ const AccessibilityAuditor = () => {
     return (
         <div className="min-h-screen bg-background">
             <SEO
-                title="Accessibility Compliance Auditor"
-                description="Verify your website's WCAG 2.1 Level AA compliance for the April 2026 ADA Title II deadline."
-                keywords="accessibility audit, WCAG 2.1, ADA compliance, web accessibility, React accessibility"
+                title="Free Accessibility Compliance Auditor"
+                description="Verify your website's WCAG 2.1 Level AA compliance for the April 2026 ADA Title II deadline with our 100% free auditing tool."
+                keywords="free accessibility audit, free WCAG 2.1 scanner, ADA compliance, web accessibility tool, free React accessibility auditor"
             />
             <Navbar />
 
@@ -121,9 +134,23 @@ const AccessibilityAuditor = () => {
                             <span className="text-muted-foreground uppercase tracking-widest">ADA TITLE II COMPLIANCE ENGINE v1.0.0</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold tracking-tightest leading-[0.9] mb-8">
+                        <h1 className="text-4xl md:text-5xl font-bold tracking-tightest leading-[0.9] mb-4">
                             Accessibility <span className="text-gradient">Compliance Auditor</span>
                         </h1>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+                            A completely free, industrial-grade auditing engine built to help agencies meet WCAG 2.1 Level AA standards before the 2026 deadline.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Button
+                                variant="outline"
+                                className="mono-label rounded-none border-primary/50 hover:bg-primary/10 transition-colors"
+                                onClick={() => setShowSupportDialog(true)}
+                            >
+                                <ShieldCheck size={16} className="mr-2 text-primary" />
+                                Support Our Free Tools
+                            </Button>
+                        </div>
                     </div>
 
                     {!auditResults ? (
@@ -289,6 +316,12 @@ const AccessibilityAuditor = () => {
             </main>
 
             <Footer />
+
+            <SupportDialog
+                open={showSupportDialog}
+                onOpenChange={setShowSupportDialog}
+                toolName="Accessibility Auditor"
+            />
         </div>
     );
 };

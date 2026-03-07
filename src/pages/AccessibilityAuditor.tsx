@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,12 +21,38 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 const AccessibilityAuditor = () => {
-    const [url, setUrl] = useState("");
+    // Initialize state from localStorage if available
+    const [url, setUrl] = useState(() => {
+        return localStorage.getItem("akanexus_auditor_url") || "";
+    });
+    const [pastedCode, setPastedCode] = useState(() => {
+        return localStorage.getItem("akanexus_auditor_code") || "";
+    });
+    const [auditResults, setAuditResults] = useState<DetailedAuditResponse | null>(() => {
+        const savedResults = localStorage.getItem("akanexus_auditor_results");
+        return savedResults ? JSON.parse(savedResults) : null;
+    });
+
     const [isAuditing, setIsAuditing] = useState(false);
-    const [auditResults, setAuditResults] = useState<DetailedAuditResponse | null>(null);
-    const [pastedCode, setPastedCode] = useState("");
     const [showSupportDialog, setShowSupportDialog] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
+
+    // Persist state to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("akanexus_auditor_url", url);
+    }, [url]);
+
+    useEffect(() => {
+        localStorage.setItem("akanexus_auditor_code", pastedCode);
+    }, [pastedCode]);
+
+    useEffect(() => {
+        if (auditResults) {
+            localStorage.setItem("akanexus_auditor_results", JSON.stringify(auditResults));
+        } else {
+            localStorage.removeItem("akanexus_auditor_results");
+        }
+    }, [auditResults]);
 
     const handleUrlAudit = async () => {
         if (!url) {
@@ -102,6 +128,10 @@ const AccessibilityAuditor = () => {
         setAuditResults(null);
         setPastedCode("");
         setUrl("");
+        // Clear persistence
+        localStorage.removeItem("akanexus_auditor_results");
+        localStorage.removeItem("akanexus_auditor_url");
+        localStorage.removeItem("akanexus_auditor_code");
     };
 
     const handleDownloadReport = async () => {

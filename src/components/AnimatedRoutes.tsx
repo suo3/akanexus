@@ -21,6 +21,7 @@ import Terms from "@/pages/Terms";
 import DonationSuccess from "@/pages/DonationSuccess";
 import Mastering from "@/pages/Mastering";
 import DesignSystemGenerator from "@/pages/DesignSystemGenerator";
+import AccessibilityAuditor from "@/pages/AccessibilityAuditor";
 import NotFound from "@/pages/NotFound";
 
 const AnimatedRoutes = () => {
@@ -56,6 +57,8 @@ const AnimatedRoutes = () => {
 
           {/* Design System Generator - Nested Routes */}
           <Route path="/design-system-generator/*" element={<DesignSystemGenerator />} />
+
+          <Route path="/accessibility-auditor" element={<PageTransition><AccessibilityAuditor /></PageTransition>} />
 
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>

@@ -32,28 +32,28 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-8">
             <NavLink
               to="/services"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label text-xs"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
               /Services
             </NavLink>
             <NavLink
               to="/design-system-generator"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label text-xs"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
               /Components
             </NavLink>
             <NavLink
               to="/products"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label text-xs"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
               /Products
             </NavLink>
             <NavLink
               to="/pricing"
-              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label"
+              className="text-muted-foreground hover:text-foreground transition-colors relative py-1 mono-label text-xs"
               activeClassName="text-foreground font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary"
             >
               /Support

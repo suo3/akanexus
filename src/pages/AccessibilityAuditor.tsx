@@ -14,6 +14,7 @@ import { RemediationGuide } from "./AccessibilityAuditor/components/RemediationG
 import { ManualChecklist } from "./AccessibilityAuditor/components/ManualChecklist";
 import { PreviewSimulator } from "./AccessibilityAuditor/components/PreviewSimulator";
 import { runAccessibilityAudit, DetailedAuditResponse, detectSemanticViolations } from "@/utils/accessibilityAudit";
+import { generateExecutiveReport } from "@/utils/pdfReportGenerator";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -88,6 +89,18 @@ const AccessibilityAuditor = () => {
         setAuditResults(null);
         setPastedCode("");
         setUrl("");
+    };
+
+    const handleDownloadReport = async () => {
+        if (!auditResults) return;
+        toast.info("Generating PDF report...");
+        try {
+            await generateExecutiveReport(auditResults, url);
+            toast.success("Executive Report downloaded successfully!");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to generate PDF document.");
+        }
     };
 
     return (
@@ -190,7 +203,10 @@ const AccessibilityAuditor = () => {
                                     <div className="h-4 w-px bg-border" />
                                     <span className="text-[10px] mono-label text-muted-foreground uppercase">Target: {url || "Pasted Code"}</span>
                                 </div>
-                                <Button className="mono-label text-[10px] uppercase bg-foreground text-background rounded-none">
+                                <Button
+                                    onClick={handleDownloadReport}
+                                    className="mono-label text-[10px] uppercase bg-foreground text-background rounded-none"
+                                >
                                     Download Executive Report
                                 </Button>
                             </div>

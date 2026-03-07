@@ -156,35 +156,35 @@ const AccessibilityAuditor = () => {
                     {!auditResults ? (
                         <div className="max-w-4xl mx-auto animate-fade-up" style={{ animationDelay: "0.1s" }}>
                             <Tabs defaultValue="url" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 h-14 bg-secondary/30 rounded-none mb-8">
-                                    <TabsTrigger value="url" className="mono-label uppercase text-xs gap-2">
+                                <TabsList className="flex flex-col sm:grid w-full sm:grid-cols-2 h-auto sm:h-14 bg-secondary/30 rounded-none mb-4 sm:mb-8 p-1 sm:p-0 gap-1 sm:gap-0">
+                                    <TabsTrigger value="url" className="mono-label uppercase text-xs gap-2 py-3 sm:py-0 w-full">
                                         <Search size={14} /> URL Scanner
                                     </TabsTrigger>
-                                    <TabsTrigger value="code" className="mono-label uppercase text-xs gap-2">
+                                    <TabsTrigger value="code" className="mono-label uppercase text-xs gap-2 py-3 sm:py-0 w-full">
                                         <Code2 size={14} /> Code Auditor (React)
                                     </TabsTrigger>
                                 </TabsList>
 
                                 <TabsContent value="url">
                                     <Card className="glass rounded-none border-border/50">
-                                        <CardContent className="p-8">
+                                        <CardContent className="p-4 sm:p-8">
                                             <div className="flex flex-col gap-6">
                                                 <div>
                                                     <h3 className="text-lg font-bold uppercase mb-2">Universal Site Scanner</h3>
                                                     <p className="text-sm text-muted-foreground mb-6">
                                                         Enter any URL (React SPAs, WordPress, Next.js, etc.). Our cloud engine will execute a headless browser pass to capture dynamically rendered accessibility nodes.
                                                     </p>
-                                                    <div className="flex gap-4">
+                                                    <div className="flex flex-col sm:flex-row gap-4">
                                                         <Input
                                                             value={url}
                                                             onChange={(e) => setUrl(e.target.value)}
                                                             placeholder="https://example.com"
-                                                            className="bg-background border-border h-12 rounded-none"
+                                                            className="bg-background border-border h-12 rounded-none flex-1 w-full"
                                                         />
                                                         <Button
                                                             onClick={handleUrlAudit}
                                                             disabled={isAuditing}
-                                                            className="h-12 px-8 rounded-none mono-label bg-foreground text-background"
+                                                            className="h-12 w-full sm:w-auto px-8 rounded-none mono-label bg-foreground text-background shrink-0"
                                                         >
                                                             {isAuditing ? "SCANNING..." : "INITIATE"}
                                                         </Button>
@@ -222,17 +222,17 @@ const AccessibilityAuditor = () => {
                         </div>
                     ) : (
                         <div className="animate-fade-up">
-                            <div className="flex items-center justify-between mb-8 border-b border-border pb-4">
-                                <div className="flex items-center gap-4">
-                                    <Button variant="ghost" onClick={resetAudit} className="mono-label text-[10px] uppercase gap-2">
-                                        <RotateCcw size={12} /> New Audit
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 border-b border-border pb-4">
+                                <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto overflow-hidden">
+                                    <Button variant="ghost" onClick={resetAudit} className="mono-label text-[10px] uppercase gap-1 sm:gap-2 px-2 sm:px-4 shrink-0">
+                                        <RotateCcw size={12} /> <span className="hidden sm:inline">New Audit</span><span className="sm:hidden">Reset</span>
                                     </Button>
-                                    <div className="h-4 w-px bg-border" />
-                                    <span className="text-[10px] mono-label text-muted-foreground uppercase">Target: {url || "Pasted Code"}</span>
+                                    <div className="h-4 w-px bg-border shrink-0" />
+                                    <span className="text-[10px] mono-label text-muted-foreground uppercase truncate">Target: {url || "Code"}</span>
                                 </div>
                                 <Button
                                     onClick={handleDownloadReport}
-                                    className="mono-label text-[10px] uppercase bg-foreground text-background rounded-none"
+                                    className="mono-label text-[10px] uppercase bg-foreground text-background rounded-none w-full sm:w-auto"
                                 >
                                     Download Executive Report
                                 </Button>
@@ -267,13 +267,13 @@ const AccessibilityAuditor = () => {
                                 {/* Right: Detailed Findings & Remediation */}
                                 <div className="lg:col-span-2 space-y-8">
                                     <Tabs defaultValue="findings" className="w-full">
-                                        <TabsList className="bg-secondary/30 rounded-none w-full justify-start p-1 h-12">
-                                            <TabsTrigger value="findings" className="px-6 mono-label text-[10px] uppercase">Automated Findings</TabsTrigger>
-                                            <TabsTrigger value="manual" className="px-6 mono-label text-[10px] uppercase">Manual Checklist</TabsTrigger>
+                                        <TabsList className="bg-secondary/30 rounded-none w-full justify-start p-1 h-auto flex-wrap gap-1 sm:gap-0">
+                                            <TabsTrigger value="findings" className="px-4 justify-start sm:justify-center sm:px-6 mono-label text-[10px] uppercase w-full sm:w-auto">Automated Findings</TabsTrigger>
+                                            <TabsTrigger value="manual" className="px-4 justify-start sm:justify-center sm:px-6 mono-label text-[10px] uppercase w-full sm:w-auto">Manual Checklist</TabsTrigger>
                                             {!url && (
-                                                <TabsTrigger value="simulator" className="px-6 mono-label text-[10px] uppercase">Visual Simulator</TabsTrigger>
+                                                <TabsTrigger value="simulator" className="px-4 justify-start sm:justify-center sm:px-6 mono-label text-[10px] uppercase w-full sm:w-auto">Visual Simulator</TabsTrigger>
                                             )}
-                                            <TabsTrigger value="remediation" className="px-6 mono-label text-[10px] uppercase">Remediation Guide</TabsTrigger>
+                                            <TabsTrigger value="remediation" className="px-4 justify-start sm:justify-center sm:px-6 mono-label text-[10px] uppercase w-full sm:w-auto">Remediation Guide</TabsTrigger>
                                         </TabsList>
 
                                         <TabsContent value="findings" className="mt-6">
